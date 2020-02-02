@@ -214,3 +214,64 @@ h2 {
   background: #d4af7a;
   text-transform: uppercase;
 }
+
+
+/*Login Styless*/
+img {
+  max-width: 100%;
+}
+
+.login-page{
+  float: left;
+  width: 100%;
+  background: url('../../assets/images/patterns/Pattern\ 5.png');
+  background-size: 100%;
+  opacity: 0.75;
+}
+.header-bg{
+  float: left;
+  width: 100%;
+  background: url('../../assets/images/header-bg.png');
+  background-repeat: no-repeat;
+  height: 70px;
+}
+.login-logo{
+  float: left;
+  width: auto;
+  padding: 0;
+  margin: 10px 0px 10px 50px;
+}
+.login-footer{
+  float: left;
+  width: 100%;
+  background-color: #0000a0;
+  padding: 15px 0;
+  box-shadow: 0px 0px 10px 2px #fff;
+}
+.login-footer-logo{
+  float: left;
+  width: auto;
+  padding: 0;
+  margin: 10px 0px 10px 45px;
+}
+.login-footer-logo img{
+  width: 450px;
+}
+.perfect-bg{
+  float: left;
+  width: 100%;
+  text-align: center;
+}
+.perfect-logo{
+  padding: 0;
+  margin: 0;
+}
+.perfect-logo img{
+  border-radius: 100px;
+  width: 125px;
+}
+#signin{
+  float: left;
+  width: 100%;
+  margin: 35px 0;
+}
