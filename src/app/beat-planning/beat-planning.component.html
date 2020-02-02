@@ -1,0 +1,175 @@
+<div class="page-card pb-4">
+  <app-pagebreadcrumb></app-pagebreadcrumb>
+  <h4 class="card-title">
+    <b>BEAT PLANNING</b>
+  </h4>
+
+  <div *ngIf="EnableFilter" class="ipopup">
+    <div class="ipopup__content">
+      <div class="ipopup__header">
+        <header>Add New Beat Plan</header>
+      </div>
+      <hr />
+      <form (submit)="SubmitAddBeatPlan()" [formGroup]="BeatsAdd" class="pt-2"
+        (keydown.enter)="$event.preventDefault()">
+        <div class="mt-2">
+          <div class="col-md-12 form-group row">
+            <div class="col-md-3">
+              <span>Beat Code:</span>
+            </div>
+            <div class="col-md-9">
+              <input class="form-control" placeholder="Beat Code" formControlName="Code">
+            </div>
+          </div>
+          <div class="col-md-12 form-group row">
+            <div class="col-md-3">
+              <span>Beat Name:</span>
+            </div>
+            <div class="col-md-9">
+              <input class="form-control" placeholder="Beat Name" formControlName="Name">
+            </div>
+          </div>
+          <div class="col-md-12 form-group row">
+            <div class="col-md-3">
+              <span>Beat Desc:</span>
+            </div>
+            <div class="col-md-9">
+              <textarea class="form-control" rows="3" formControlName="Description"></textarea>
+            </div>
+          </div>
+          <div class="col-md-12 form-group row">
+            <div class="col-md-3">
+              <span>Supervisor:</span>
+            </div>
+            <div class="col-md-9">
+              <select class="form-control" formControlName="JobGid">
+                <option value="">Select Supervisor</option>
+                <<ng-container *ngFor="let item of BeatSupervisorData">
+                  <option [attr.value]="item.JobGid">{{item.JobName}} - {{item.Name}}</option>
+                  </ng-container>
+              </select>
+            </div>
+          </div>
+          <div class="col-md-12 form-group row">
+            <div class="col-md-3">
+              <span>Merchandiser:</span>
+            </div>
+            <div class="col-md-9">
+              <select class="form-control" formControlName="SupervisorJobGid">
+                <option value="">Select Merchandiser</option>
+                <<ng-container *ngFor="let item of BeatMerchandiserData">
+                  <option [attr.value]="item.JobGid">{{item.Role}} - {{item.JobName}} {{item.Name}}</option>
+                  </ng-container>
+              </select>
+            </div>
+          </div>
+          <div class="border-top">
+            <div class="form-group d-flex mt-4">
+              <button class="btn btn-outline-dark btn-sm form-control mr-2" (click)="AddBeatPlan()">Close</button>
+              <button class="btn btn-primary btn-sm form-control">Save</button>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="col-md-12 p-0">
+    <div class="text-left">
+      <div class="card shadow-card card-marked mb-3">
+        <div class="card-body text-left pt-3 pb-0">
+          <div class="container p-0 mb-4">
+            <div class="row">
+              <div class="col-md-12 p-0">
+                <input class="form-control" type="text" placeholder="Searh Beat Plan">
+              </div>
+
+              <div class="mt-4 col-md-12 p-0">
+                <div class="mt-2 mb-1">
+                  <button class="btn btn-outline-warning" (click)="AddBeatPlan()">Add</button>
+                </div>
+                <div id="dynamic-grid-table" class="table-responsive border">
+                  <table class="table table-striped">
+                    <thead>
+                      <tr class="headings">
+                        <ng-container *ngFor="let col of BeatPlanningHeader">
+                          <th *ngIf="col.type !== 'hidden'" class=" column-title">
+                            {{col.displayheader}}
+                          </th>
+                        </ng-container>
+                        <th class="column-title text-center w-10 no-link last">
+                          <span class="nobr">Action</span>
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody *ngIf="!IsEmptyRow">
+                      <tr *ngFor="let item of BeatPlanningRows;let odd = odd; let even = even;"
+                        [ngClass]="{odd: odd%2 !== 0 && IsStriped, even: even }">
+                        <ng-container *ngFor="let col of BeatPlanningHeader">
+                          <td *ngIf="col.type !== 'hidden'" class="">
+                            <div [attr.name]="col.column">
+                              <span role="view">{{item[col.column]}}</span>
+                              <input role="edit" name="ItemName" type="text" class="d-none"
+                                [attr.value]="item[col.column]" />
+                            </div>
+                          </td>
+                        </ng-container>
+                        <td class="text-center">
+                          <div class="last dyn-last">
+                            <input type="hidden" name="currentObject" [attr.value]="item | json" />
+                            <div name="editdelete">
+                              <a href="javascript:void(0)" (click)="GetBeatCustomer(item)" id="btnedit"
+                                class="tbl-action-icon-style a-icon">
+                                <i class="fas fa-calendar-alt"></i>
+                                &nbsp;
+                              </a>
+                              <a href="javascript:void(0)" id="btndelete" (click)="RemoveCustomer(item)"
+                                class="tbl-action-icon-style a-icon">
+                                <i class="far fa-trash-alt" style="color:red;"></i>
+                              </a>
+                            </div>
+                          </div>
+                        </td>
+                      </tr>
+                    </tbody>
+                    <tbody *ngIf="IsEmptyRow">
+                      <tr>
+                        <td [attr.colspan]="TotalHeaders">
+                          <div class="empty-row">
+                            No record found.
+                          </div>
+                        </td>
+                      </tr>
+                    </tbody>
+                    <tfoot>
+                      <tr>
+                        <td colspan="50">
+                          <nav aria-label="Page navigation example">
+                            <ul class="pagination">
+                              <li class="page-item">
+                                <a class="page-link" href="#" aria-label="Previous">
+                                  <span aria-hidden="true">&laquo;</span>
+                                  <span class="sr-only">Previous</span>
+                                </a>
+                              </li>
+                              <li class="page-item">
+                                <a class="page-link" href="#" aria-label="Next">
+                                  <span aria-hidden="true">&raquo;</span>
+                                  <span class="sr-only">Next</span>
+                                </a>
+                              </li>
+                            </ul>
+                          </nav>
+                        </td>
+                      </tr>
+                    </tfoot>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

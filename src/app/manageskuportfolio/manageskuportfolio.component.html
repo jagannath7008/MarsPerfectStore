@@ -1,0 +1,211 @@
+<div class="page-card pb-4">
+  <app-pagebreadcrumb></app-pagebreadcrumb>
+  <h4 class="card-title">
+    <b>MANAGE SKUPORTFOLIO</b>
+  </h4>
+  <div *ngIf="EnableFilter" class="ipopup">
+    <div class="ipopup__content">
+      <div class="ipopup__header">
+        <header>Add/Edit SKU Portfolio</header>
+      </div>
+      <form method="POST" (ngSubmit)="Save()" enctype="multipart/form-data" class="pt-2"
+        (keydown.enter)="$event.preventDefault()">
+        <table class="mt-2">
+          <tbody>
+            <tr>
+              <td>
+                <div class="d-md-flex pt-2">
+                  <div class="col-md-3">
+                    <label for="Code">MainAisleModelQty</label>
+                    <input class="plain-input form-control" required [(ngModel)]="entity.MainAisleModelQty"
+                      name="MainAisleModelQty" placeholder="MainAisle Model Qty">
+                  </div>
+                  <div class="col-md-3">
+                    <label for="Name">Is MainAisle Must Have</label>
+                    <input type="checkbox" class="pp-check form-control" required
+                      [(ngModel)]="entity.IsMainAisleMustHave" name="IsMainAisleMustHave">
+                  </div>
+                  <div class="col-md-3">
+                    <label for="Name">TZModel Qty</label>
+                    <input class="plain-input form-control" required [(ngModel)]="entity.TZModelQty" name="TZModelQty"
+                      placeholder="TZ Model Qty">
+                  </div>
+                  <div class="col-md-3">
+                    <label for="IsTZMustHave">Is TZ Must Have</label>
+                    <input type="checkbox" class="pp-check form-control" required [(ngModel)]="entity.IsTZMustHave"
+                      name="IsTZMustHave">
+                  </div>
+                </div>
+                <div class="d-md-flex pt-2">
+                  <div class="col-md-3">
+                    <label for="Name">Secondary Visibility Model Qty</label>
+                    <input class="plain-input form-control" required [(ngModel)]="entity.SecondaryVisibilityModelQty"
+                      name="SecondaryVisibilityModelQty" placeholder="Secondary Visibility Model Qty">
+                  </div>
+                  <div class="col-md-3">
+                    <label for="IsSecondaryVisibilityMustHave">Is Secondary Visibility Must Have</label>
+                    <input type="checkbox" class="pp-check form-control" required
+                      [(ngModel)]="entity.IsSecondaryVisibilityMustHave" name="IsSecondaryVisibilityMustHave">
+                  </div>
+
+                  <div class="col-md-3">
+                    <label for="Name">Stock Model Qty</label>
+                    <input class="plain-input form-control" required [(ngModel)]="entity.StockModelQty"
+                      name="StockModelQty" placeholder="Stock Model Qty">
+                  </div>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+          <tfoot class="border-top">
+            <div class="form-group mt-2">
+              <button class="btn btn-primary form-control">Save</button>
+            </div>
+            <div class="form-group mt-2">
+              <button class="btn btn-outline-dark form-control" (click)="Close()">Close</button>
+            </div>
+          </tfoot>
+        </table>
+      </form>
+    </div>
+  </div>
+  <div class="col-md-12 p-0">
+    <div class="text-left">
+      <div class="card shadow-card card-marked mb-3">
+        <div class="card-body text-left pt-3 pb-0">
+          <div class="container p-0 mb-4">
+            <div class="row">
+              <div class="col-md-12 p-0">
+                <div class="card">
+                  <div class="card-header">
+                    SKU Portfolio Detail
+                  </div>
+                  <div class="card-body">
+                    <div class="col-md-12 row pl-0 pr-0 pt-2 pb-2">
+                      <div class="col-md-4 row">
+                        <span class="col-md-4 p-0 font-weight-bold">Code:</span>
+                        <span class="col-md-8 p-0">{{PageData.Code}}</span>
+                      </div>
+                      <div class="col-md-4 row">
+                        <span class="col-md-4 p-0 font-weight-bold">Name:</span>
+                        <span class="col-md-8 p-0">{{PageData.Name}}</span>
+                      </div>
+                      <div class="col-md-4 row">
+                        <span class="col-md-4 p-0 font-weight-bold">Description:</span>
+                        <span class="col-md-8 p-0">{{PageData.Description}}</span>
+                      </div>
+                    </div>
+                    <div class="col-md-12 row  pl-0 pr-0 pt-2 pb-2">
+                      <div class="col-md-4 row">
+                        <span class="col-md-4 p-0 font-weight-bold">SubChannel:</span>
+                        <span class="col-md-8 p-0">{{PageData.SubChannel}}</span>
+                      </div>
+                      <div class="col-md-4 row">
+                        <span class="col-md-4 p-0 font-weight-bold">Chain:</span>
+                        <span class="col-md-8 p-0">{{PageData.Chain}}</span>
+                      </div>
+                      <div class="col-md-4 row d-none">
+                        <span class="col-md-4 p-0 font-weight-bold">Location:</span>
+                        <span class="col-md-8 p-0">{{PageData.Location}}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="mt-4 col-md-12 p-0">
+                <div class="mt-2 mb-3">
+                  <div class="col-md-12 p-0 row">
+                    <div class="col-md-8 col-sm-12">
+                      <Select class="form-control" id="reason">
+                        <option value="">Select Parent SKU</option>
+                        <option *ngFor="let ctx of CustomerList" [value]="ctx.Gid">{{ctx.Value}}</option>
+                      </Select>
+                    </div>
+                    <div class="col-md-4 col-sm-12">
+                      <button class="btn btn-outline-danger" (click)="AddSkuPortfolioSku()">Add</button>
+                    </div>
+                  </div>
+                </div>
+                <div id="dynamic-grid-table" class="table-responsive border">
+                  <table class="table table-striped">
+                    <thead>
+                      <tr class="headings">
+                        <ng-container *ngFor="let col of ManageSkuPortfolioHeader">
+                          <th *ngIf="col.type !== 'hidden'" class=" column-title">
+                            {{col.displayheader}}
+                          </th>
+                        </ng-container>
+                        <th class="column-title text-center w-10 no-link last">
+                          <span class="nobr">Action</span>
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody *ngIf="!IsEmptyRow">
+                      <tr *ngFor="let item of ManageSkuPortfolioGrid;let odd = odd; let even = even;"
+                        [ngClass]="{odd: odd%2 !== 0 && IsStriped, even: even }">
+                        <ng-container *ngFor="let col of ManageSkuPortfolioHeader" [ngSwitch]="col.type">
+                          <td *ngIf="col.type !== 'hidden'">
+                            <div [attr.name]="col.column">
+                              <span *ngIf="col.type !== 'checkbox'" role="view">{{item[col.column]}}</span>
+                              <input type="checkbox" *ngIf="col.type === 'checkbox'">
+                            </div>
+                          </td>
+                        </ng-container>
+                        <td class="text-center">
+                          <div class="last dyn-last">
+                            <input type="hidden" name="currentObject" [attr.value]="item | json" />
+                            <div name="editdelete">
+                              <a href="javascript:void(0)" (click)="EditCurrent(item)" id="btnedit"
+                                class="tbl-action-icon-style a-icon">
+                                <i class="far fa-edit"></i>&nbsp;
+                              </a>
+                              <a href="javascript:void(0)" id="btndelete" (click)="RemoveManageSKUPortfolio(item)"
+                                class="tbl-action-icon-style a-icon">
+                                <i class="far fa-trash-alt" style="color:red;"></i>
+                              </a>
+                            </div>
+                          </div>
+                        </td>
+                      </tr>
+                    </tbody>
+                    <tbody *ngIf="IsEmptyRow">
+                      <tr>
+                        <td [attr.colspan]="TotalHeaders">
+                          <div class="empty-row">
+                            No record found.
+                          </div>
+                        </td>
+                      </tr>
+                    </tbody>
+                    <tfoot>
+                      <tr>
+                        <td colspan="50">
+                          <nav aria-label="Page navigation example">
+                            <ul class="pagination">
+                              <li class="page-item">
+                                <a class="page-link" href="#" aria-label="Previous">
+                                  <span aria-hidden="true">&laquo;</span>
+                                  <span class="sr-only">Previous</span>
+                                </a>
+                              </li>
+                              <li class="page-item">
+                                <a class="page-link" href="#" aria-label="Next">
+                                  <span aria-hidden="true">&raquo;</span>
+                                  <span class="sr-only">Next</span>
+                                </a>
+                              </li>
+                            </ul>
+                          </nav>
+                        </td>
+                      </tr>
+                    </tfoot>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,30 @@
+agm-map {
+  height: calc(100vh - 250px);
+}
+
+.child {
+  flex: 1;
+  min-width: 15%;
+}
+
+.b-child {
+  min-width: 18%;
+}
+
+body {
+  margin: 10px;
+}
+
+.g-map {}
+
+.low-dv {
+  height: calc(100vh - 270px);
+  padding: 10px;
+}
+
+.s-card {
+  border: 1px solid #d9d9dd;
+  background-color: yellow;
+  color: black;
+  padding: 4px 14px;
+}

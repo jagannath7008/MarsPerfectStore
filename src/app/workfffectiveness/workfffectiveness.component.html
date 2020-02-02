@@ -1,0 +1,227 @@
+<div class="page-card pb-4">
+  <app-pagebreadcrumb></app-pagebreadcrumb>
+  <h4 class="card-title">
+    <b>WORK EFFECTIVENESS</b>
+  </h4>
+  <div class="card">
+    <div class="col-md-12">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Filter</th>
+            <th colspan="2">Selected Date (default today)</th>
+            <th colspan="2">MTD</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Region</td>
+            <td>Attendance (by 11:30AM)</td>
+            <td>Call Compliance</td>
+            <td>Attendance (by 11:30AM)</td>
+            <td>Call Compliance</td>
+          </tr>
+          <tr rowspan="2">
+            <td>State</td>
+            <td>
+              <h3>74%</h3>
+            </td>
+            <td>
+              <h3>70%</h3>
+            </td>
+            <td>
+              <h3>74%</h3>
+            </td>
+            <td>
+              <h3>70%</h3>
+            </td>
+          </tr>
+          <tr>
+            <td>City</td>
+          </tr>
+          <tr>
+            <td>SO</td>
+            <td>
+              <b> 221/300
+              </b>
+            </td>
+            <td>
+              <b>
+                625/890
+              </b></td>
+            <td>
+              <b>
+                221/300</b>
+            </td>
+            <td>
+              <b>
+                625/890
+              </b>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="col-md-12 mt-5">
+    <table class="table border">
+      <thead>
+        <tr>
+          <th>Detailed Report</th>
+          <th>
+            <div class="col-12 row">
+              <div class="col-3 p-0 title-header">
+                Region
+              </div>
+              <div class="col-9 p-0">
+                <select name="region" class="form-control">
+                  <option value="all">
+                    All
+                  </option>
+                </select>
+              </div>
+            </div>
+          </th>
+          <th>
+            <div class="col-12 p-0 row">
+              <div class="col-3 p-0  title-header">
+                State
+              </div>
+              <div class="col-9 p-0">
+                <select name="state" class="form-control">
+                  <option value="all">
+                    All
+                  </option>
+                </select>
+              </div>
+            </div>
+          </th>
+          <th>
+            <div class="col-12 p-0 row">
+              <div class="col-2 p-0 title-header">
+                City
+              </div>
+              <div class="col-8 p-0">
+                <select name="city" class="form-control">
+                  <option value="all">
+                    All
+                  </option>
+                </select>
+              </div>
+            </div>
+          </th>
+          <th>
+            <div class="col-12 p-0 row">
+              <div class="col-2 p-0 title-header">
+                SO
+              </div>
+              <div class="col-8 p-0">
+                <select name="so" class="form-control">
+                  <option value="all">
+                    All
+                  </option>
+                </select>
+              </div>
+            </div>
+          </th>
+        </tr>
+      </thead>
+    </table>
+  </div>
+
+  <div class="card mt-4">
+    <div class="card p-4">
+      <div class="col-md-12 row">
+        <div class="col-md-6 border">
+          <div class="row tbl-header text-center mt-4">
+            <div class="tbl-header-card">
+              <b>Today/Selected Date</b></div>
+          </div>
+          <table class="table">
+            <thead>
+              <tr>
+                <th rowspan="4">SL no</th>
+                <th rowspan="4">User</th>
+                <th rowspan="4">Role</th>
+                <th rowspan="4">Attendance time</th>
+                <th rowspan="4">Planned Calls</th>
+                <th rowspan="4">Actual Calls</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>1</td>
+                <td>Mukesh</td>
+                <td>Merchandiser</td>
+                <td>09:00 AM</td>
+                <td>20</td>
+                <td>18</td>
+              </tr>
+              <tr>
+                <td>2</td>
+                <td>Rani</td>
+                <td>Merchandiser</td>
+                <td>10:00 AM</td>
+                <td>30</td>
+                <td>25</td>
+              </tr>
+              <tr>
+                <td>1</td>
+                <td>Sangram</td>
+                <td>Merchandiser</td>
+                <td>11:00 AM</td>
+                <td>25</td>
+                <td>34</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="col-md-6  border">
+          <div class="row tbl-header text-center  mt-4">
+            <div class="tbl-header1-card">
+              <b>MTD</b></div>
+          </div>
+          <table class="table">
+            <thead>
+              <tr>
+                <th rowspan="4">Total Planned Work Days</th>
+                <th rowspan="4">Total Actual Work Days</th>
+                <th rowspan="4">% Attendance</th>
+                <th rowspan="4">Total Planned Calls</th>
+                <th rowspan="4">Total Actual Calls</th>
+                <th rowspan="4">% Call Compliance</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>25</td>
+                <td>23</td>
+                <td>80</td>
+                <td>100</td>
+                <td>90</td>
+                <td>90</td>
+              </tr>
+              <tr>
+                <td>20</td>
+                <td>20</td>
+                <td>100</td>
+                <td>75</td>
+                <td>75</td>
+                <td>100</td>
+              </tr>
+              <tr>
+                <td>50</td>
+                <td>25</td>
+                <td>50</td>
+                <td>200</td>
+                <td>150</td>
+                <td>75</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

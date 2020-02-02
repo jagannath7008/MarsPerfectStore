@@ -1,0 +1,25 @@
+<div>
+  <!-- Login -->
+  <div *ngIf="IsLogin" class="position-relative">
+    <app-login (AuthenticateUser)="AuthenticateCredential($event)"></app-login>
+  </div>
+
+  <!-- Dashboard -->
+  <div class="wrapper" *ngIf="!IsLogin">
+    <!-- Page Header -->
+    <app-header></app-header>
+    <div id="content-body" class="body-content">
+      <router-outlet></router-outlet>
+    </div>
+  </div>
+
+  <!-- Helper Tag -->
+  <div class="fadeloadscreen d-none" id="fadeloadscreen">
+    <div class="loading">Loading&#8230;</div>
+  </div>
+  <div class="position-fixed bg-warning custom-toast" id="toast">
+    <i id="ok-flag" class="mdi mdi-information text-success"></i>
+    <i id="fail-flag" class="fa fa-window-close-o text-danger d-none" aria-hidden="true"></i>
+    <span id="toastmessage"></span>
+  </div>
+</div>

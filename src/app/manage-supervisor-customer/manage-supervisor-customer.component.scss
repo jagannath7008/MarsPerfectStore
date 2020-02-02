@@ -1,0 +1,106 @@
+.card {
+  &__header {
+    border-bottom: 2px solid var(--border);
+  }
+
+  &__img-div {
+    width: 100px;
+    height: 100px;
+    border: 2px solid var(--border);
+  }
+}
+
+.shadow-card {
+  box-shadow: 0px 5px 6px 0px #ccc;
+}
+
+.card-marked {
+  border-top: 3px solid var(--division-boder-color);
+}
+
+.action {
+  cursor: pointer;
+}
+
+.h-para {
+  p {
+    color: var(--division-boder-color);
+  }
+}
+
+.type-action {
+  color: var(--division-boder-color);
+  text-decoration: underline;
+  font-weight: bold;
+}
+
+.type-action:hover {
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.card {
+  &__header {
+    border-bottom: 2px solid var(--border);
+  }
+
+  &__img-div {
+    width: 100px;
+    height: 100px;
+    border: 2px solid var(--border);
+  }
+
+  &__img-div img {
+    width: 100px;
+    height: 100px;
+  }
+}
+
+.shadow-card {
+  box-shadow: 0px 5px 6px 0px #ccc;
+}
+
+.card-marked {
+  border-top: 3px solid var(--division-boder-color);
+}
+
+.list-pointer {
+  cursor: pointer;
+  padding: 5px 10px !important;
+  background-color: #844949 !important;
+  color: #eee;
+}
+
+.enable-slowly {
+  opacity: 1 !important;
+  transition: opacity .5s ease-in-out;
+}
+
+.table {
+  thead {
+    background: var(--division-boder-color);
+    color: #eee;
+  }
+}
+
+.action:hover {
+  font-size: 16px;
+}
+
+.action {
+  cursor: pointer;
+}
+
+.hide-section {
+  opacity: 0;
+}
+
+.mainaisle-img {
+  height: 280px;
+}
+
+.active-link {
+  background-color: #fff !important;
+  color: #444;
+  border: 2px solid #61b8d4;
+}

@@ -1,0 +1,136 @@
+<div class="page-card pb-4">
+  <div class="container-fluid">
+    <div class="col-md-12 mb-4">
+      <app-pagebreadcrumb></app-pagebreadcrumb>
+      <h4 class="card-title">
+        <b>CUSTOMER FOOTPRINT</b>
+      </h4>
+      <div class="card">
+        <div class="col-md-12">
+          <div class="col-md-12">
+            <div class="row">
+              <div class="form-group child m-3">
+                <label for="Region">Region</label>
+                <select class="form-control" name="Region">
+                  <option value="all">All</option>
+                  <option>South</option>
+                  <option>North</option>
+                </select>
+              </div>
+              <div class="form-group child m-3">
+                <label for="State">State</label>
+                <select class="form-control" name="State">
+                  <option>All</option>
+                  <option>Karnataka</option>
+                  <option>UP</option>
+                  <option>Telangana</option>
+                </select>
+              </div>
+              <div class="form-group child m-3">
+                <label for="City">City</label>
+                <select class="form-control" name="City">
+                  <option>All</option>
+                  <option>Bengaluru</option>
+                  <option>Gurgaon</option>
+                  <option>Hyderabad</option>
+                </select>
+              </div>
+              <div class="form-group child m-3">
+                <label for="Supervisor">Supervisor</label>
+                <select class="form-control" name="Supervisor">
+                  <option>All</option>
+                  <option>Mohan Singh</option>
+                  <option>Amit Kumar</option>
+                </select>
+              </div>
+              <div class="form-group child m-3">
+                <label for="Merchandiser">Merchandiser</label>
+                <select class="form-control" name="Merchandiser">
+                  <option>All</option>
+                  <option>Mohit</option>
+                  <option>Moin</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-12">
+            <div class="row">
+              <div class="form-group b-child m-3">
+                <label for="SubChannel">Sub Channel</label>
+                <select name="SubChannel" class="form-control">
+                  <option value="">All</option>
+                </select>
+              </div>
+              <div class="form-group b-child m-3">
+                <label for="Chain">Chain</label>
+                <select name="SubChannel" class="form-control">
+                  <option value="">All</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-12">
+      <div class="card">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="g-map low-dv">
+              <agm-map [latitude]="latitude" [longitude]="longitude" [zoom]="2"
+                (mapClick)="addMarker($event.coords.lat, $event.coords.lng)">
+                <agm-marker *ngFor="let marker of markers" [latitude]="marker.lat" [longitude]="marker.lng"
+                  [opacity]="marker.alpha" [markerDraggable]="true" (markerClick)="selectMarker($event)">
+                </agm-marker>
+                <agm-rectangle [north]="max('lat')" [east]="max('lng')" [south]="min('lat')" [west]="min('lng')">
+                </agm-rectangle>
+              </agm-map>
+              <p *ngIf="selectedMarker">
+                Lat: {{ selectedMarker.lat }} Lng: {{ selectedMarker.lng }}
+              </p>
+            </div>
+          </div>
+          <!-- <div class="col-md-4">
+                <div class="card low-dv m-2">
+                  <form class="pl-4 pr-4 pb-4 pt-2">
+                    <div class="text-center col-12 mb-5">
+                      <h3>SUMMARY</h3>
+                    </div>
+                    <div class="form-group row">
+                      <label for="SubChannel" class="col-7 col-form-label">Total No Of Account</label>
+                      <div class="col-sm-5">
+                        <label class="s-card">100</label>
+                      </div>
+                    </div>
+                    <div class="form-group row">
+                      <label for="Chain" class="col-7 col-form-label">Primary Aisle</label>
+                      <div class="col-5">
+                        <label class="s-card">100</label>
+                      </div>
+                    </div>
+                    <div class="form-group row">
+                      <label for="Chain" class="col-7 col-form-label">Permanent Secondary Visibility</label>
+                      <div class="col-5">
+                        <label class="s-card">100</label>
+                      </div>
+                    </div>
+                    <div class="form-group row">
+                      <label for="Chain" class="col-7 col-form-label">Total No Of Check Out Points</label>
+                      <div class="col-5">
+                        <label class="s-card">100</label>
+                      </div>
+                    </div>
+                    <div class="form-group row">
+                      <label for="Chain" class="col-7 col-form-label">Total No Of Food Check Out Point.</label>
+                      <div class="col-5">
+                        <label class="s-card">100</label>
+                      </div>
+                    </div>
+                  </form>
+                </div>
+              </div> -->
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

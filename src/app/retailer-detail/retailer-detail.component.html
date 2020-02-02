@@ -1,0 +1,636 @@
+<div class="page-card pb-4">
+  <app-pagebreadcrumb></app-pagebreadcrumb>
+  <h4 class="card-title">
+    <b>RETAILER DETAILS</b>
+  </h4>
+
+  <!-- Modal -->
+  <div class="modal fade bd-example-modal-xl" id="newcontact" tabindex="-1" role="dialog"
+    aria-labelledby="newcontactLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="newcontactLabel">Add New Contact</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form (keydown.enter)="$event.preventDefault()">
+            <div class="d-md-flex">
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="Region">Customer Name</label>
+                  <input class="form-control" id="Name" placeholder="Customer Name">
+                </div>
+                <div class="form-group">
+                  <label for="SubChannel">Gender</label>
+                  <select id="Gender" class="form-control">
+                    <option value="">Gender</option>
+                    <option value="">Male</option>
+                    <option value="">Female</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label>Mobile No.#</label>
+                  <input class="form-control" id="Mobile" placeholder="Mobile no.#">
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>SecondryPhase</label>
+                  <input class="form-control" id="SecondryPhase" placeholder="Secondry Phase">
+                </div>
+                <div class="form-group">
+                  <label>Whats</label>
+                  <input class="form-control" id="WhatsPhase" placeholder="Whats Phase">
+                </div>
+                <div class="form-group">
+                  <label>Email</label>
+                  <input class="form-control" id="Email" placeholder="Email">
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>Designation</label>
+                  <input class="form-control" id="Designation" placeholder="Designation">
+                </div>
+                <div class="form-group">
+                  <label>Date of birth</label>
+                  <input class="form-control" id="Dob" placeholder="Date of birth">
+                </div>
+                <div class="form-group">
+                  <label>Anniversory date</label>
+                  <input class="form-control" id="Anniversorydate" placeholder="Anniversory date">
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary" (click)="AddNewContact()">Add Contact</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="visibilitymodal" class="ipopup">
+    <div class="ipopup__content">
+      <div class="ipopup__header">
+        <header>Manage Retailer Secondry Visibility</header>
+      </div>
+      <form method="POST" (ngSubmit)="VisibilitySave()" enctype="multipart/form-data" class="pt-2"
+        (keydown.enter)="$event.preventDefault()">
+        <table class="mt-2">
+          <tbody>
+            <tr>
+              <td>
+                <div class="d-md-flex pt-2">
+                  <div class="card d-none" style="width: 18rem;">
+                    <img class="card-img-top" [src]="PlannogramImagePath" alt="Card image cap">
+                    <div class="card-body">
+                      <input type="file" value="Browse File" class="btn" (change)="GetFile($event)" />
+                      <p class="card-text">Upload Img</p>
+                    </div>
+                  </div>
+
+                  <div class="col-md-4">
+                    <label for="TypeEnum">TypeEnum</label>
+                    <input class="plain-input form-control" required [(ngModel)]="visibilityEntity.TypeEnum"
+                      name="TypeEnum" placeholder="TypeEnum">
+                  </div>
+                  <div class="col-md-4">
+                    <label for="SubTypeEnum">SubTypeEnum</label>
+                    <input class="plain-input form-control" required [(ngModel)]="visibilityEntity.SubTypeEnum"
+                      name="SubTypeEnum" placeholder="Name">
+                  </div>
+                  <div class="col-md-4">
+                    <label for="Size">Size</label>
+                    <input class="plain-input form-control" required [(ngModel)]="visibilityEntity.Size" name="Size"
+                      placeholder="Size">
+                  </div>
+                </div>
+                <div class="d-md-flex pt-2">
+                  <div class="col-md-3">
+                    <label for="UniqueId">UniqueId</label>
+                    <input class="plain-input form-control" required [(ngModel)]="visibilityEntity.UniqueId"
+                      name="UniqueId" placeholder="UniqueId">
+                  </div>
+                  <div class="col-md-3">
+                    <label for="PlanogramName">PlanogramName</label>
+                    <select class="form-control" [(ngModel)]="visibilityEntity.planogramGid">
+                      <option value="" [selected]="selected">Select Planogram Seceoundry Visitility</option>
+                      <option *ngFor="let plano of PlanogramdVisibilityModal" [value]="plano.Gid">{{plano.Name}}
+                      </option>
+                    </select>
+                  </div>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+          <tfoot class="border-top">
+            <div class="form-group mt-2">
+              <button class="btn btn-primary form-control">Save</button>
+            </div>
+            <div class="form-group mt-2">
+              <button class="btn btn-outline-dark form-control" (click)="CloseVisibilityModal()">Close</button>
+            </div>
+          </tfoot>
+        </table>
+      </form>
+    </div>
+  </div>
+
+  <div class="col-md-12 p-0">
+    <div class="text-left">
+      <div class="mt-3 p-0 col-md-12" *ngIf="IsPageReady">
+        <div class="card shadow-card card-marked mb-3">
+          <div class="card-body text-left pt-3 pb-0">
+            <div class="container p-0 mb-4">
+              <form class="row">
+                <div class="col-md-2">
+                  <div class="text-center justify-content-center">
+                    <div class="card__img-div">
+                      <img src="assets/user.jpg" class="rounded" alt="User">
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-10">
+                  <div class="container p-0">
+                    <div class="row">
+                      <div class="col-md-6">
+                        <div class="form-group">
+                          <label for="Code" class="mb-0">Code:</label>
+                          <p class="font-weight-bold pt-0 mt-0" for="name">{{RetailerDetail.Code}}</p>
+                        </div>
+
+                        <div class="form-group">
+                          <label for="Channel" class="mb-0">Channel:</label>
+                          <p class="font-weight-bold pt-0 mt-0" for="name">{{RetailerDetail.Channel}}</p>
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="form-group">
+                          <label for="name" class="mb-0">Name:</label>
+                          <p class="font-weight-bold pt-0 mt-0" for="name">{{RetailerDetail.Name}}</p>
+                        </div>
+
+                        <div class="form-group">
+                          <label for="Channel" class="mb-0">Sub Channel:</label>
+                          <p class="font-weight-bold pt-0 mt-0" for="name">{{RetailerDetail.SubChannel}}</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-12 p-0">
+          <div class="d-md-flex">
+            <div class="col-md-4 pl-0">
+              <div class="p-3 border">
+                <ul class="list-group">
+                  <li class="list-pointer list-group-item" [ngClass]="{'active-link': first}"
+                    *ngFor="let link of CurrentSection;let first=first;" (click)="ManageDectionDetail(link.Name)"
+                    name="linkitem">
+                    {{link.Name}}
+                    <span class="list-pointer__angle">
+                      <i class="fas fa-chevron-right"></i>
+                    </span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+            <div [ngSwitch]="ActiveSection" class="col-8 p-0">
+              <div [attr.id]="'id_' + ActiveSection" *ngSwitchCase="'Contacts'" class="hide-section col-md-12 border">
+                <form>
+                  <div class="pt-4 pb-4 pl-0 pr-0">
+                    <h5 class="font-weight-bold">Retailer Contact</h5>
+                    <a class="text-muted action" data-toggle="modal" data-target="#newcontact" title="Add new row">Add
+                      New</a>
+                    <table class="table table-striped">
+                      <thead>
+                        <tr>
+                          <th scope="col">SNo</th>
+                          <th scope="col">Name</th>
+                          <th scope="col">Designation</th>
+                          <th scope="col">Mobile</th>
+                          <th scope="col">WhatsAppMobile</th>
+                          <th scope="col">BirthDate</th>
+                          <th scope="col">AnniversaryDate</th>
+                          <th scope="col">Action</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr *ngFor="let row of RetailerContactsGrid; let index = index;">
+                          <td>{{index + 1}}</td>
+                          <td>{{row.Name}}</td>
+                          <td>{{row.Designation}}</td>
+                          <td>{{row.Mobile}}</td>
+                          <td>{{row.WhatsAppPhone}}</td>
+                          <td>{{row.BirthDate}}</td>
+                          <td>NA</td>
+                          <td>
+                            <div class="d-flex">
+                              <a class="action mr-2">
+                                <i class="fas fa-pencil-alt"></i>
+                              </a>
+                              <a>
+                                <i class="action fas fa-trash-alt"></i>
+                              </a>
+                            </div>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </form>
+              </div>
+
+              <div [attr.id]="'id_' + ActiveSection" *ngSwitchCase="'Address'" class="hide-section col-md-12 border">
+                <div class="p-4">
+                  <div class="col-12 p-0">
+                    <h5 class="col-md-11 p-0 font-weight-bold d-inline-block">
+                      <span class="text-left">Retailer Address</span>
+                    </h5>
+                    <div class="text-right p-0 col-md-1 d-inline-block">
+                      <a class="type-action">Edit</a>
+                    </div>
+                  </div>
+                  <div class="container p-0">
+                    <div class="row h-para">
+                      <div class="col-md-12 row">
+                        <div class="form-group col-md-4">
+                          <label class="mb-0">HouseNo:</label>
+                          <p class="font-weight-bold pt-0 mt-0">{{RetailerDetailAddress.HouseNo}}</p>
+                        </div>
+                        <div class="form-group col-md-4">
+                          <label class="mb-0">Street:</label>
+                          <p class="font-weight-bold pt-0 mt-0">{{RetailerDetailAddress.Street}}</p>
+                        </div>
+                        <div class="form-group col-md-4">
+                          <label class="mb-0">Locality:</label>
+                          <p class="font-weight-bold pt-0 mt-0">{{RetailerDetailAddress.Locality}}</p>
+                        </div>
+                      </div>
+                      <div class="col-md-12 row">
+                        <div class="form-group col-md-4">
+                          <label class="mb-0">Landmark:</label>
+                          <p class="font-weight-bold pt-0 mt-0">{{RetailerDetailAddress.Landmark}}</p>
+                        </div>
+                        <div class="form-group col-md-4">
+                          <label class="mb-0">City:</label>
+                          <p class="font-weight-bold pt-0 mt-0">{{RetailerDetailAddress.City}}</p>
+                        </div>
+                        <div class="form-group col-md-4">
+                          <label for="status" class="mb-0">Postal Code:</label>
+                          <p class="font-weight-bold pt-0 mt-0">{{RetailerDetailAddress.PostalCode}}</p>
+                        </div>
+                      </div>
+                      <div class="col-md-12 row">
+                        <div class="form-group col-md-4">
+                          <label class="mb-0">State:</label>
+                          <p class="font-weight-bold pt-0 mt-0">{{RetailerDetailAddress.State}}</p>
+                        </div>
+                        <div class="form-group col-md-4">
+                          <label class="mb-0">Region:</label>
+                          <p class="font-weight-bold pt-0 mt-0">{{RetailerDetailAddress.Region}}</p>
+                        </div>
+                        <div class="form-group col-md-4">
+                          <label class="mb-0">Country:</label>
+                          <p class="font-weight-bold pt-0 mt-0">{{RetailerDetailAddress.Country}}</p>
+                        </div>
+                      </div>
+                      <div class="col-md-12 row">
+                        <div class="form-group col-md-4">
+                          <label class="mb-0">Phone:</label>
+                          <p class="font-weight-bold pt-0 mt-0">{{RetailerDetailAddress.Phone}}</p>
+                        </div>
+                        <div class="form-group col-md-4">
+                          <label class="mb-0">Email:</label>
+                          <p class="font-weight-bold pt-0 mt-0">{{RetailerDetailAddress.Email}}</p>
+                        </div>
+                        <div class="form-group col-md-4">
+                          <label for="status" class="mb-0">Fax:</label>
+                          <p class="font-weight-bold pt-0 mt-0">{{RetailerDetailAddress.Fax}}</p>
+                        </div>
+                      </div>
+                      <div class="col-md-12 row">
+                        <div class="form-group col-md-4">
+                          <label class="mb-0">Latitude:</label>
+                          <p class="font-weight-bold pt-0 mt-0">{{RetailerDetailAddress.Latitude}}</p>
+                        </div>
+                        <div class="form-group col-md-4">
+                          <label class="mb-0">Longitude:</label>
+                          <p class="font-weight-bold pt-0 mt-0">{{RetailerDetailAddress.Longitude}}</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div [attr.id]="'id_' + ActiveSection" *ngSwitchCase="'Detail'"
+                class="hide-section enable-slowly enable col-md-12 border">
+                <div name="customer-detail">
+                  <div class="p-4">
+                    <div class="col-12 p-0">
+                      <h5 class="col-md-11 p-0 font-weight-bold d-inline-block">
+                        <span class="text-left">Retailer Details</span>
+                      </h5>
+                      <div class="text-right p-0 col-md-1 d-inline-block">
+                        <a class="type-action">Edit</a>
+                      </div>
+                    </div>
+                    <div class="container p-0">
+                      <div class="row">
+                        <div class="form-group col-md-4 col-sm-12">
+                          <label class="mb-0">City:</label>
+                          <p class="font-weight-bold pt-0 mt-0">{{RetailerDetail.City}}</p>
+                        </div>
+                        <div class="form-group col-md-4 col-sm-12">
+                          <label class="mb-0">Region:</label>
+                          <p class="font-weight-bold pt-0 mt-0">{{RetailerDetail.Region}}</p>
+                        </div>
+                        <div class="form-group col-md-4 col-sm-12">
+                          <label class="mb-0">State:</label>
+                          <p class="font-weight-bold pt-0 mt-0">{{RetailerDetail.State}}</p>
+                        </div>
+                        <div class="form-group col-md-4 col-sm-12">
+                          <label class="mb-0">Country:</label>
+                          <p class="font-weight-bold pt-0 mt-0">{{RetailerDetail.Country}}</p>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="form-group col-md-4 col-sm-12">
+                          <label class="mb-0">ChainName:</label>
+                          <p class="font-weight-bold pt-0 mt-0">{{RetailerDetail.ChainName}}</p>
+                        </div>
+                        <div class="form-group col-md-4 col-sm-12">
+                          <label for="status" class="mb-0">HouseNo:</label>
+                          <p class="font-weight-bold pt-0 mt-0">{{RetailerDetail.HouseNo}}</p>
+                        </div>
+                        <div class="form-group col-md-4 col-sm-12">
+                          <label for="status" class="mb-0">Street:</label>
+                          <p class="font-weight-bold pt-0 mt-0">{{RetailerDetail.Street}}</p>
+                        </div>
+                        <div class="form-group col-md-4 col-sm-12">
+                          <label class="mb-0">Phone:</label>
+                          <p class="font-weight-bold pt-0 mt-0">{{RetailerDetail.Phone}}</p>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="form-group col-md-4 col-sm-12">
+                          <label class="mb-0">Type:</label>
+                          <p class="font-weight-bold pt-0 mt-0">{{RetailerDetail.Type}}</p>
+                        </div>
+                        <div class="form-group col-md-4 col-sm-12">
+                          <label class="mb-0">KYCProgress:</label>
+                          <p class="font-weight-bold pt-0 mt-0">{{RetailerDetail.KYCProgress}}</p>
+                        </div>
+                        <div class="form-group col-md-4 col-sm-12">
+                          <label for="status" class="mb-0">SupplyFrequency:</label>
+                          <p class="font-weight-bold pt-0 mt-0">{{RetailerDetail.SupplyFrequency}}</p>
+                        </div>
+                        <div class="form-group col-md-4 col-sm-12">
+                          <label for="status" class="mb-0">SupplyFrom:</label>
+                          <p class="font-weight-bold pt-0 mt-0">{{RetailerDetail.SupplyFrom}}</p>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="form-group col-md-4 col-sm-12">
+                          <label for="status" class="mb-0">SupplyDay:</label>
+                          <p class="font-weight-bold pt-0 mt-0">{{RetailerDetail.SupplyDay}}</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div [attr.id]="'id_' + ActiveSection" *ngSwitchCase="'Mainaisle'" class="hide-section col-md-12 border">
+                <div class="container p-4">
+                  <div *ngFor="let item of RetailerMainasles">
+                    <div name="planogrammainaisle" class="row">
+                      <div class="col-8">
+                        <div class="form-group col-12">
+                          <select class="form-control" (change)="GetCurrentPlanogram($event)"
+                            [(ngModel)]="item.PlanogramGid">
+                            <option value="">Select Planogram</option>
+                            <option *ngFor="let p of PlanogrammainaisleModal" [value]="p.Gid">
+                              {{p.Name}}
+                            </option>
+                          </select>
+                        </div>
+
+                        <div class="form-group col-4">
+                          <button class="btn btn-dark" (click)="AddtoRetailerMainAisle(item)">Add Planogram</button>
+                        </div>
+                      </div>
+                      <div class="col-md-4 mb-4">
+                        <img [src]="ServerUrl + item.RelativePathText + '\\' + item.Label + '.' + item.FileExtension"
+                          class="mainaisle-img-thumbanail" alt="User">
+                        <p class="mt-2">Thumbnail</p>
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <div class="card text-center mb-2">
+                        <img [src]="ServerUrl + item.RelativePathText + '\\' + item.Label + '.' + item.FileExtension"
+                          class="mainaisle-img" alt="User">
+                        <div class="card-body">
+                          <h5 class="card-title">{{item.TypeEnum}}</h5>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div [attr.id]="'id_' + ActiveSection.replace(' ', '')" *ngSwitchCase="'SecondryVsibility'"
+                class="hide-section col-md-12 border">
+                <form>
+                  <div class="pt-4 pb-4 pl-0 pr-0">
+                    <h5 class="font-weight-bold">Retailer Secondry Visibility</h5>
+                    <table class="table table-striped">
+                      <thead>
+                        <tr>
+                          <th scope="col">SNo</th>
+                          <th scope="col">Size</th>
+                          <th scope="col">Unique Id</th>
+                          <th scope="col">Image</th>
+                          <th scope="col">Planogram Name</th>
+                          <th scope="col">Action</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr *ngFor="let rowintem of RetailerSecoundryVisibility; let index = index;">
+                          <td>{{index + 1}}</td>
+                          <td>{{rowintem.Size}}</td>
+                          <td>{{rowintem.UniqueId}}</td>
+                          <td>
+                            <img class="row-image"
+                              [src]="ServerUrl + rowintem.RelativePathText + '\\' + rowintem.Label + '.' +  rowintem.FileExtension"
+                              alt="">
+                          </td>
+                          <td>{{rowintem.PlanogramName}}</td>
+                          <td>
+                            <div class="d-flex">
+                              <a class="action mr-2" (click)="EditSecondryVisibility(rowintem)">
+                                <i class="fas fa-pencil-alt"></i>
+                              </a>
+                            </div>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </form>
+              </div>
+
+              <div [attr.id]="'id_' + ActiveSection.replace(' ', '')" *ngSwitchCase="'TransactionalZone'"
+                class="hide-section col-md-12 border">
+
+                <form class="pt-4 pb-4 pl-0 pr-0">
+                  <div class="pt-4 pb-4 pl-0 pr-0">
+                    <h5 class="font-weight-bold">Transactional Checkout Count</h5>
+                    <div class="form-group">
+                      <label>Total Count</label>
+                      <input type="text" class="form-control" [value]="RetailerDetail.TZCheckOutCount" readonly
+                        placeholder="Transactional Checkout Count">
+                    </div>
+                    <div class="form-group">
+                      <label>Transactional Food Checkout Count</label>
+                      <input type="text" class="form-control" [value]="RetailerDetail.TZFoodCheckOutCount" readonly
+                        placeholder="Transactional Food Checkout Count">
+                    </div>
+                  </div>
+                </form>
+              </div>
+
+              <div [attr.id]="'id_' + ActiveSection" *ngSwitchCase="'Competition'"
+                class="hide-section col-md-12 border">
+                <form>
+                  <div class="pt-4 pb-4 pl-0 pr-0">
+                    <h5 class="font-weight-bold">Competition</h5>
+                    <div class="pt-4 pb-4 pl-0 pr-0">
+                      <form>
+                        <div class="form-group">
+                          <label>Competition</label>
+                          <div class="col-md-12 d-flex p-0">
+                            <div class="col-md-2 pl-0">
+                              <button class="btn btn-outline-warning" (click)="AddNewCompetition()">Add</button>
+                            </div>
+                            <div class="col-md-6 pr-0">
+                              <select class="form-control" id="retailer-competition">
+                                <option value="" [selected]=" selected">Select Competition</option>
+                                <option *ngFor="let c of Competition" [value]="c.Gid">{{c.Name}}</option>
+                              </select>
+                            </div>
+                          </div>
+                        </div>
+                      </form>
+                      <h5 class="font-weight-bold">Competition</h5>
+                      <table class="table table-striped">
+                        <thead>
+                          <tr>
+                            <th scope="col">SNo</th>
+                            <th scope="col">Competition</th>
+                            <th scope="col">Action</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr *ngFor="let item of RetailerCompetition; let index = index;">
+                            <td>{{index + 1}}</td>
+                            <td>{{item.Name}}</td>
+                            <td>
+                              <div class="d-flex">
+                                <a class="action mr-2">
+                                  <i class="fas fa-pencil-alt"></i>
+                                </a>
+                                <a>
+                                  <i class="action fas fa-trash-alt"></i>
+                                </a>
+                              </div>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </form>
+              </div>
+
+              <div [attr.id]="'id_' + ActiveSection" *ngSwitchCase="'SKUPorfolio'"
+                class="hide-section col-md-12 border">
+                <div class="pt-4 pb-4 pl-0 pr-0">
+                  <form>
+                    <div class="form-group">
+                      <h5 class="font-weight-bold">SKU Porfolio</h5>
+                      <div class="col-md-12 d-flex p-0">
+                        <div class="col-md-2 pl-0">
+                          <button class="btn btn-outline-danger">Save</button>
+                        </div>
+                        <div class="col-md-6 pr-0">
+                          <select class="form-control" id="competition">
+                            <option value="" [selected]="selected">Select SKUPorfolio</option>
+                            <option *ngFor="let sku of SkuPortfolio" [value]="sku.Gid">{{sku.Name}}</option>
+                          </select>
+                        </div>
+                      </div>
+                    </div>
+                  </form>
+                </div>
+              </div>
+
+              <div [attr.id]="'id_' + ActiveSection.replace(' ', '')" *ngSwitchCase="'MSLSKU'"
+                class="hide-section col-md-12 border">
+                <div class="pt-4 pb-4 pl-0 pr-0">
+                  <h5 class="font-weight-bold">MSL SKU</h5>
+                </div>
+              </div>
+
+              <div [attr.id]="'id_' + ActiveSection.replace(' ', '')" *ngSwitchCase="'MerchandiserPlan'"
+                class="hide-section col-md-12 border">
+                <form>
+                  <div class="pt-4 pb-4 pl-0 pr-0">
+                    <h5 class="font-weight-bold">Merchandiser Plan</h5>
+                    <table class="table table-striped">
+                      <thead>
+                        <tr>
+                          <th scope="col">Sno.#</th>
+                          <th scope="col">Merchandiser</th>
+                          <th scope="col">Mon</th>
+                          <th scope="col">Tue</th>
+                          <th scope="col">Wed</th>
+                          <th scope="col">Thu</th>
+                          <th scope="col">Fri</th>
+                          <th scope="col">Sat</th>
+                          <th scope="col">Sun</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr *ngFor="let item of RetailerMerchandisingPlan; let index = index;">
+                          <td>{{index + 1}}</td>
+                          <td>{{item.Name}}</td>
+                          <td>{{item.Mon}}</td>
+                          <td>{{item.Tue}}</td>
+                          <td>{{item.Wed}}</td>
+                          <td>{{item.Thu}}</td>
+                          <td>{{item.Fri}}</td>
+                          <td>{{item.Sat}}</td>
+                          <td>{{item.Sun}}</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>

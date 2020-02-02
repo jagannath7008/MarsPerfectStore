@@ -1,0 +1,134 @@
+<div class="page-card pb-4">
+  <app-pagebreadcrumb></app-pagebreadcrumb>
+  <div class="container p-0 m-0">
+    <h4>{{HeaderName | uppercase}}</h4>
+  </div>
+  <div *ngIf="EnableFilter" class="ipopup">
+    <div class="ipopup__content">
+      <div class="ipopup__header">
+        <header>Add/Edit Office</header>
+      </div>
+      <form (submit)="SubmitSearchCriateria()" class="pt-2" (keydown.enter)="$event.preventDefault()">
+        <table class="mt-2">
+          <tbody>
+            <tr>
+              <td>
+                <div class="d-md-flex pt-2">
+                  <div class="col-md-3">
+                    <label for="Code">Code</label>
+                    <input class="plain-input form-control" name="Code" required [(ngModel)]="entity.Code"
+                      placeholder="Code">
+                  </div>
+                  <div class="col-md-3">
+                    <label for="Name">Name</label>
+                    <input class="plain-input form-control" required [(ngModel)]="entity.Name" name="Name"
+                      placeholder="Name">
+                  </div>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+          <tfoot class="border-top">
+            <div class="form-group mt-2">
+              <button class="btn btn-primary form-control" (click)="Save()">Save</button>
+            </div>
+            <div class="form-group mt-2">
+              <button class="btn btn-outline-dark form-control" (click)="Close()">Close</button>
+            </div>
+          </tfoot>
+        </table>
+      </form>
+    </div>
+  </div>
+  <div class="pl-0 pr-1 d-inline-block panel-body col-md-12 col-xs-12">
+    <div class="row">
+      <div class="col-md-6">
+        <div class="pl-0 pr-0 form-group col-md-12 col-sm-12 d-inline-block">
+          <input id="ShopFilter" placeholder="Global search" class="form-control" [(ngModel)]="searchQuery"
+            (keyup)="FilterLocaldata()" required="required" type="text">
+        </div>
+      </div>
+      <div class="col-md-6 d-inline-block text-right no-padding">
+        <button type="submit" (click)="ResetFilter()" class="btn btn-outline-info mr-1"><i
+            class="fas fa-sync"></i>&ensp;Reset</button>
+        <button type="button" (click)="Open()" class="btn btn-success"><i class="fa fa-plus"></i>&ensp;Create</button>
+      </div>
+    </div>
+    <div id="viewfeestimetable-dv" class="h-tbl">
+      <div id="dynamic-grid-table" class="table-responsive border">
+        <table class="table table-striped">
+          <thead>
+            <tr class="headings">
+              <ng-container *ngFor="let col of BindingHeader">
+                <th *ngIf="col.type !== 'hidden'" class=" column-title">
+                  {{col.displayheader}}
+                </th>
+              </ng-container>
+              <th class="column-title text-center w-10 no-link last">
+                <span class="nobr">Action</span>
+              </th>
+            </tr>
+          </thead>
+          <tbody *ngIf="!IsEmptyRow">
+            <tr *ngFor="let item of TableResultSet;let odd = odd; let even = even;"
+              [ngClass]="{odd: odd%2 !== 0 && IsStriped, even: even }">
+              <ng-container *ngFor="let col of BindingHeader">
+                <td *ngIf="col.type !== 'hidden'" class="">
+                  <div [attr.name]="col.column">
+                    <span role="view">{{item[col.column]}}</span>
+                    <input role="edit" name="ItemName" type="text" class="d-none" [attr.value]="item[col.column]" />
+                  </div>
+                </td>
+              </ng-container>
+              <td class="text-center">
+                <div class="last dyn-last">
+                  <input type="hidden" name="currentObject" [attr.value]="item | json" />
+                  <div name="editdelete">
+                    <a href="javascript:void(0)" (click)="Edit(item)" id="btnedit" class="tbl-action-icon-style a-icon">
+                      <i class="far fa-edit"></i>&nbsp;
+                    </a>
+                    <a href="javascript:void(0)" id="btndelete" (click)="Remove(item)"
+                      class="tbl-action-icon-style a-icon">
+                      <i class="far fa-trash-alt" style="color:red;"></i>
+                    </a>
+                  </div>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+          <tbody *ngIf="IsEmptyRow">
+            <tr>
+              <td [attr.colspan]="TotalHeaders">
+                <div class="empty-row">
+                  No record found.
+                </div>
+              </td>
+            </tr>
+          </tbody>
+          <tfoot>
+            <tr>
+              <td colspan="50">
+                <nav aria-label="Page navigation example">
+                  <ul class="pagination">
+                    <li class="page-item">
+                      <a class="page-link" href="#" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                        <span class="sr-only">Previous</span>
+                      </a>
+                    </li>
+                    <li class="page-item">
+                      <a class="page-link" href="#" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                        <span class="sr-only">Next</span>
+                      </a>
+                    </li>
+                  </ul>
+                </nav>
+              </td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
