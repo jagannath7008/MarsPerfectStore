@@ -12,7 +12,7 @@ import { ApplicationStorage } from "./ApplicationStorage";
 
 const TokenName = "x-request-token";
 const NoAuth: boolean = true;
-const UseIP = "173.225.102.199";
+const UseIP = "173.225.111.13";
 const UseLocal = "localhost:9300/api/";
 @Injectable()
 export class AjaxService {
@@ -34,6 +34,15 @@ export class AjaxService {
   public GetImageBasePath() {
     let ImageBaseUrl = this.baseUrl.replace("api", "UploadedFiles");
     return ImageBaseUrl;
+  }
+
+  public GetImageBaseUrl() {
+    let ServerBasePath = this.BaseUrl().replace("api/", "");
+    ServerBasePath = ServerBasePath.replace(
+      "MarsAuth",
+      "MarsMerchandiserMobile"
+    );
+    return ServerBasePath;
   }
 
   LoadStaticJson(StaticUrl): Observable<any> {

@@ -1,41 +1,34 @@
 import { Component, OnInit } from "@angular/core";
-import { IGrid } from "../../providers/Generic/Interface/IGrid";
-import { FormBuilder } from "@angular/forms";
-import { FormGroup } from "@angular/forms";
-import { FormControl } from "@angular/forms";
+import { FormBuilder, FormGroup, FormControl } from "@angular/forms";
+import { IGrid } from "src/providers/Generic/Interface/IGrid";
 import {
   CommonService,
   IsValidType
-} from "../../providers/common-service/common.service";
-import * as $ from "jquery";
-import { JourneyPlan, Planogrammainaisle } from "../../providers/constants";
-import { iNavigation } from "../../providers/iNavigation";
+} from "src/providers/common-service/common.service";
+import { iNavigation } from "src/providers/iNavigation";
 import { AjaxService } from "src/providers/ajax.service";
 
 @Component({
-  selector: "app-planogrammainaisle",
-  templateUrl: "./planogrammainaisle.component.html",
-  styleUrls: ["./planogrammainaisle.component.scss"]
+  selector: "app-planogramtransactionzone",
+  templateUrl: "./planogramtransactionzone.component.html",
+  styleUrls: ["./planogramtransactionzone.component.scss"]
 })
-export class PlanogrammainaisleComponent implements OnInit {
-  entity: any = new PlanogrammainaisleModel();
-  TableResultSet: Array<PlanogrammainaisleModel>;
+export class PlanogramtransactionzoneComponent implements OnInit {
+  entity: any = new PlanogramtraxzoneModal();
+  TableResultSet: Array<PlanogramtraxzoneModal>;
   BindingHeader: Array<IGrid>;
   IsEmptyRow: boolean = true;
   HeaderName: string = "Page Name";
   EnableFilter: boolean = false;
   TotalHeaders: number = 5;
   searchQuery: string = "";
-  PlannogramImage: Array<File>;
-  PlannogramImagePath: Array<any>;
-  PlannogramExistingImagePath: Array<any>;
+  PlannogramImage: any;
+  PlannogramImagePath: any;
   TypeEnum: string = "BO";
-  SubChannelRecord: Array<any>;
-  SubChainRecord: Array<any>;
-  SubLocationRecord: Array<any>;
   AdvanceFilterObject: FormGroup;
-  OnEdit: boolean = false;
-  OnCreate: boolean = false;
+  SubChannelRecord: Array<any> = [];
+  SubChainRecord: Array<any> = [];
+  SubLocationRecord: Array<any> = [];
   ServerBasePath: string;
   constructor(
     private fb: FormBuilder,
@@ -49,7 +42,7 @@ export class PlanogrammainaisleComponent implements OnInit {
       "MarsAuth",
       "MarsMerchandiserMobile"
     );
-    this.HeaderName = "Planogram main aisle";
+    this.HeaderName = "Planogram Transaction Zone";
     this.AdvanceFilterObject = this.fb.group({
       Region: new FormControl(""),
       SubChannel: new FormControl(""),
@@ -75,7 +68,7 @@ export class PlanogrammainaisleComponent implements OnInit {
     let input: any = {
       meta: {
         app: "MerchandiserApp",
-        action: "FetchPlanogrammainaisles",
+        action: "FetchPlanogramsecondaryvisibilitys",
         requestId: "0",
         deviceId: "web"
       },
@@ -90,12 +83,12 @@ export class PlanogrammainaisleComponent implements OnInit {
 
     input.content.searchString = this.searchQuery;
     this.http
-      .post("Webportal/FetchPlanogrammainaisles", input)
+      .post("Webportal/FetchPlanogramtransactoinZone", input)
       .then(response => {
         this.TableResultSet = [];
         if (this.commonService.IsValidResponse(response)) {
           let Data = response.content.data;
-          if (Data != null && Data != "") {
+          if (IsValidType(Data)) {
             this.IsEmptyRow = false;
             let index = 0;
             while (index < Data.length) {
@@ -104,51 +97,39 @@ export class PlanogrammainaisleComponent implements OnInit {
                 Name: Data[index].Name,
                 Description: Data[index].Description,
                 SubChannel: Data[index].SubChannel,
-                Chain: Data[index].Chain,
-                Location: Data[index].Location,
+                Label: Data[index].Label,
                 RelativePathText: Data[index].RelativePathText,
                 FileExtension: Data[index].FileExtension,
-                Label: Data[index].Label,
-                ImageFilePath:
+                RetailerGid: Data[index].RetailerGid,
+                AFileGid: Data[index].AFileGid,
+                Chain: Data[index].Chain,
+                Location: Data[index].Location,
+                FilePath:
                   this.ServerBasePath +
                   Data[index].RelativePathText +
                   "//" +
                   Data[index].Label +
                   "." +
-                  Data[index].FileExtension,
-                AFileGid: Data[index].AFileGid
+                  Data[index].FileExtension
               });
               index++;
             }
-
-            this.commonService.ShowToast("Data retrieve successfully.");
-            this.SubChannelRecord = [];
-            this.GetDropdownData("retailerSubChannel");
-            this.SubChainRecord = [];
-            this.GetDropdownData("retailerChainName");
-            this.SubLocationRecord = [];
-            this.GetDropdownData("locationTypeEnum");
           } else {
             this.IsEmptyRow = true;
             this.commonService.ShowToast("Got empty dataset.");
           }
+
+          this.SubChannelRecord = [];
+          this.GetDropdownData("retailerSubChannel");
+          this.SubChainRecord = [];
+          this.GetDropdownData("retailerChainName");
+          this.SubLocationRecord = [];
+          this.GetDropdownData("locationTypeEnum");
+          this.commonService.ShowToast("Data retrieve successfully.");
         } else {
           this.commonService.ShowToast("Unable to get data.");
         }
       });
-  }
-
-  ngOnInit() {
-    this.BindingHeader = [
-      { column: "Name", displayheader: "Name", width: 10 },
-      { column: "Description", displayheader: "Description", width: 10 },
-      { column: "SubChannel", displayheader: "SubChannel", width: 10 },
-      { column: "Chain", displayheader: "Chain", width: 10 },
-      { column: "Location", displayheader: "Location", type: "hidden" },
-      { column: "Gid", type: "hidden" }
-    ];
-    this.LoadData();
-    this.LoadTableData();
   }
 
   GetDropdownData(SearchString: string) {
@@ -195,10 +176,22 @@ export class PlanogrammainaisleComponent implements OnInit {
     }
   }
 
+  ngOnInit() {
+    this.BindingHeader = [
+      { column: "Name", displayheader: "Name", width: 10 },
+      { column: "Description", displayheader: "Description", width: 10 },
+      { column: "SubChannel", displayheader: "SubChannel", width: 10 },
+      { column: "Chain", displayheader: "Chain", width: 10 },
+      { column: "Location", displayheader: "Location", type: "hidden" },
+      { column: "Gid", type: "hidden" }
+    ];
+    this.LoadData();
+
+    this.LoadTableData();
+  }
+
   Close() {
     this.EnableFilter = false;
-    this.OnCreate = false;
-    this.OnEdit = false;
   }
 
   ResetFilter() {
@@ -211,93 +204,71 @@ export class PlanogrammainaisleComponent implements OnInit {
   }
 
   Open() {
-    this.entity = new PlanogrammainaisleModel();
+    this.entity = new PlanogramtraxzoneModal();
+    this.PlannogramImagePath = "";
     this.entity.SubChannel = "";
     this.entity.Location = "";
     this.entity.Chain = "";
     this.EnableFilter = true;
   }
-
   Edit(editEntity: any) {
     this.Open();
-    this.OnEdit = true;
-    this.OnCreate = false;
-    this.PlannogramExistingImagePath = [];
-    this.PlannogramExistingImagePath.push(editEntity.ImageFilePath);
     this.entity = editEntity;
-  }
-
-  ChooseFile() {
-    event.preventDefault();
-    event.stopPropagation();
-    $("#BrowseFile").click();
+    this.PlannogramImagePath =
+      this.ServerBasePath +
+      editEntity.RelativePathText +
+      "//" +
+      editEntity.Label +
+      "." +
+      editEntity.FileExtension;
   }
 
   GetFile(fileInput: any) {
-    this.OnCreate = true;
-    this.OnEdit = false;
-    this.PlannogramImage = [];
-    this.PlannogramImagePath = [];
     let Files = fileInput.target.files;
     if (Files.length > 0) {
-      let index = 0;
-      while (index < Files.length) {
-        this.PlannogramImage.push(<File>Files[index]);
-        let reader = new FileReader();
-        reader.readAsDataURL(this.PlannogramImage[index]);
-        reader.onload = fileEvent => {
-          this.PlannogramImagePath.push(reader.result);
-        };
-        // let mimeType: any = <File>Files[index].type;
-        // if (mimeType.match(/image\/*/) == null) {
-        //   this.commonService.ShowToast("Only images are supported.");
-        //   return;
-        // }
-        index++;
+      this.PlannogramImage = <File>Files[0];
+      let mimeType = this.PlannogramImage.type;
+      if (mimeType.match(/image\/*/) == null) {
+        console.log("Only images are supported.");
+        return;
       }
+
+      let reader = new FileReader();
+      reader.readAsDataURL(this.PlannogramImage);
+      reader.onload = fileEvent => {
+        this.PlannogramImagePath = reader.result;
+      };
     } else {
       this.commonService.ShowToast("No file selected");
     }
   }
 
   Save() {
-    if (IsValidType(this.entity)) {
-      let formData = new FormData();
-      let index = 0;
-      if (IsValidType(this.PlannogramImage)) {
-        while (index < this.PlannogramImage.length) {
-          formData.append("image_" + index, this.PlannogramImage[index]);
-          index++;
-        }
-      }
+    let formData = new FormData();
+    formData.append("image", this.PlannogramImage);
+    formData.append("TzPlanogramNewData", JSON.stringify(this.entity));
 
-      formData.append("planogramNewData", JSON.stringify(this.entity));
-      this.Close();
-      this.http.upload("Webportal/SavePlanogrammainaisle", formData).then(
-        response => {
-          if (this.commonService.IsValidResponse(response)) {
-            this.commonService.ShowToast("Office details saved successfully.");
-
-            let Data = response.content.data;
-            if (Data != null && Data != "") {
-              this.IsEmptyRow = false;
-              this.TableResultSet = Data;
-              this.commonService.ShowToast("Data retrieve successfully.");
-            } else {
-              this.TableResultSet = [];
-              this.IsEmptyRow = true;
-            }
+    this.Close();
+    this.http.upload("Webportal/SavePlanogramTramsactionZone", formData).then(
+      response => {
+        if (this.commonService.IsValidResponse(response)) {
+          let Data = response.content.data;
+          if (Data != null && Data != "") {
+            this.IsEmptyRow = false;
+            this.TableResultSet = Data;
+            this.commonService.ShowToast("Data saved successfully.");
           } else {
-            this.commonService.ShowToast("Unable to save data.");
+            this.TableResultSet = [];
+            this.IsEmptyRow = true;
           }
-        },
-        error => {
-          this.commonService.ShowToast(
-            "Server error. Please contact to admin."
-          );
+        } else {
+          this.commonService.ShowToast("Unable to save data.");
         }
-      );
-    }
+      },
+      error => {
+        this.commonService.ShowToast("Server error. Please contact to admin.");
+      }
+    );
   }
 
   Remove(editEntity: any) {
@@ -305,16 +276,18 @@ export class PlanogrammainaisleComponent implements OnInit {
       return;
     }
     this.entity = editEntity;
-
     this.Close();
     this.http
-      .post("Webportal/RemovePlanogrammainaisle", JSON.stringify(this.entity))
+      .post(
+        "Webportal/RemovePlanogramsecondaryvisibilitys",
+        JSON.stringify(this.entity)
+      )
       .then(response => {
         if (this.commonService.IsValidResponse(response)) {
           this.commonService.ShowToast("Office removed successfully.");
 
           let Data = response.content.data;
-          if (IsValidType(Data)) {
+          if (Data != null && Data != "" && Data.lenght > 0) {
             this.IsEmptyRow = false;
             this.TableResultSet = Data;
             this.commonService.ShowToast("Data retrieve successfully.");
@@ -325,6 +298,9 @@ export class PlanogrammainaisleComponent implements OnInit {
         } else {
           this.commonService.ShowToast("Unable to save data.");
         }
+      })
+      .catch(err => {
+        this.commonService.ShowToast("Unable to remove. Getting server error.");
       });
   }
 
@@ -334,16 +310,34 @@ export class PlanogrammainaisleComponent implements OnInit {
   }
 }
 
-export class PlanogrammainaisleModel {
+export class PlanogramtraxzoneModal {
   Gid: string;
   Name: string;
   Description: string;
   SubChannel: string;
   Chain: string;
+  Label: string;
   Location: string;
-  ImageFilePath: string;
+  RetailerGid: string;
   RelativePathText: string;
   FileExtension: string;
-  Label: string;
   AFileGid: string;
+  FilePath: string;
+}
+
+interface RetailerPlanogramTZ {
+  Id: string;
+  Gid: string;
+  SS: string;
+  CT: string;
+  MT: string;
+  SCT: string;
+  SMT: string;
+  RetailerGid: string;
+  TypeEnum: string;
+  Size: string;
+  UniqueId: string;
+  Remarks: string;
+  Location: string;
+  PlanogramGid: string;
 }

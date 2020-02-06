@@ -218,16 +218,20 @@ export class SkuporfolioComponent implements OnInit {
     this.http.upload("Webportal/SaveSkuportfolio", formData).then(
       response => {
         if (this.commonService.IsValidResponse(response)) {
-          this.commonService.ShowToast("Office details saved successfully.");
-
           let Data = response.content.data;
           if (Data != null && Data != "") {
             this.IsEmptyRow = false;
             this.TableResultSet = Data;
+            this.SubChannelRecord = [];
+            this.GetDropdownData("retailerSubChannel");
+            this.SubChainRecord = [];
+            this.GetDropdownData("retailerChainName");
+            this.SubLocationRecord = [];
+            this.GetDropdownData("locationTypeEnum");
             this.commonService.ShowToast("Data retrieve successfully.");
           } else {
-            this.TableResultSet = [];
             this.IsEmptyRow = true;
+            this.commonService.ShowToast("Got empty dataset.");
           }
         } else {
           this.commonService.ShowToast("Unable to save data.");

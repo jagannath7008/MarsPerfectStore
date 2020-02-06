@@ -86,44 +86,53 @@
           <tbody>
             <tr>
               <td>
-                <div class="d-md-flex pt-2">
-                  <div class="card d-none" style="width: 18rem;">
-                    <img class="card-img-top" [src]="PlannogramImagePath" alt="Card image cap">
-                    <div class="card-body">
-                      <input type="file" value="Browse File" class="btn" (change)="GetFile($event)" />
-                      <p class="card-text">Upload Img</p>
+                <div class="col-12 row">
+                  <div class="col-10">
+                    <div class="d-md-flex pt-2">
+                      <div class="card d-none" style="width: 18rem;">
+                        <img class="card-img-top" [src]="PlannogramImagePath" alt="">
+                        <div class="card-body">
+                          <input type="file" value="Browse File" class="btn" (change)="GetFile($event)" />
+                          <p class="card-text">Upload Img</p>
+                        </div>
+                      </div>
+
+                      <div class="col-md-4">
+                        <label for="TypeEnum">TypeEnum</label>
+                        <input class="plain-input form-control" required [(ngModel)]="visibilityEntity.TypeEnum"
+                          name="TypeEnum" placeholder="TypeEnum">
+                      </div>
+                      <div class="col-md-4">
+                        <label for="SubTypeEnum">SubTypeEnum</label>
+                        <input class="plain-input form-control" required [(ngModel)]="visibilityEntity.SubTypeEnum"
+                          name="SubTypeEnum" placeholder="Name">
+                      </div>
+                      <div class="col-md-4">
+                        <label for="Size">Size</label>
+                        <input class="plain-input form-control" required [(ngModel)]="visibilityEntity.Size" name="Size"
+                          placeholder="Size">
+                      </div>
+                    </div>
+
+                    <div class="d-md-flex pt-2">
+                      <div class="col-md-4">
+                        <label for="UniqueId">UniqueId</label>
+                        <input class="plain-input form-control" required [(ngModel)]="visibilityEntity.UniqueId"
+                          name="UniqueId" placeholder="UniqueId">
+                      </div>
+                      <div class="col-md-4">
+                        <label for="PlanogramName">Planogram Name</label>
+                        <select class="form-control" (change)="ShowImage()" name="planogramsecondaryvisibility"
+                          [(ngModel)]="visibilityEntity.PlanogramGid" id="planogramsecondaryvisibility">
+                          <option value="" [selected]="selected">Select Planogram Seceoundry Visitility</option>
+                          <option *ngFor="let plano of PlanogramdVisibilityModal" [value]="plano.Gid">{{plano.Name}}
+                          </option>
+                        </select>
+                      </div>
                     </div>
                   </div>
-
-                  <div class="col-md-4">
-                    <label for="TypeEnum">TypeEnum</label>
-                    <input class="plain-input form-control" required [(ngModel)]="visibilityEntity.TypeEnum"
-                      name="TypeEnum" placeholder="TypeEnum">
-                  </div>
-                  <div class="col-md-4">
-                    <label for="SubTypeEnum">SubTypeEnum</label>
-                    <input class="plain-input form-control" required [(ngModel)]="visibilityEntity.SubTypeEnum"
-                      name="SubTypeEnum" placeholder="Name">
-                  </div>
-                  <div class="col-md-4">
-                    <label for="Size">Size</label>
-                    <input class="plain-input form-control" required [(ngModel)]="visibilityEntity.Size" name="Size"
-                      placeholder="Size">
-                  </div>
-                </div>
-                <div class="d-md-flex pt-2">
-                  <div class="col-md-3">
-                    <label for="UniqueId">UniqueId</label>
-                    <input class="plain-input form-control" required [(ngModel)]="visibilityEntity.UniqueId"
-                      name="UniqueId" placeholder="UniqueId">
-                  </div>
-                  <div class="col-md-3">
-                    <label for="PlanogramName">PlanogramName</label>
-                    <select class="form-control" [(ngModel)]="visibilityEntity.planogramGid">
-                      <option value="" [selected]="selected">Select Planogram Seceoundry Visitility</option>
-                      <option *ngFor="let plano of PlanogramdVisibilityModal" [value]="plano.Gid">{{plano.Name}}
-                      </option>
-                    </select>
+                  <div class="col-2 card">
+                    <img class="card-img-top cust-img" [src]="DdsecondaryvisibilityImage" alt="">
                   </div>
                 </div>
               </td>
@@ -367,7 +376,7 @@
                       </div>
                       <div class="row">
                         <div class="form-group col-md-4 col-sm-12">
-                          <label class="mb-0">ChainName:</label>
+                          <label class="mb-0">Chain Name:</label>
                           <p class="font-weight-bold pt-0 mt-0">{{RetailerDetail.ChainName}}</p>
                         </div>
                         <div class="form-group col-md-4 col-sm-12">
@@ -389,7 +398,7 @@
                           <p class="font-weight-bold pt-0 mt-0">{{RetailerDetail.Type}}</p>
                         </div>
                         <div class="form-group col-md-4 col-sm-12">
-                          <label class="mb-0">KYCProgress:</label>
+                          <label class="mb-0">KYC Progress:</label>
                           <p class="font-weight-bold pt-0 mt-0">{{RetailerDetail.KYCProgress}}</p>
                         </div>
                         <div class="form-group col-md-4 col-sm-12">
@@ -397,13 +406,13 @@
                           <p class="font-weight-bold pt-0 mt-0">{{RetailerDetail.SupplyFrequency}}</p>
                         </div>
                         <div class="form-group col-md-4 col-sm-12">
-                          <label for="status" class="mb-0">SupplyFrom:</label>
+                          <label for="status" class="mb-0">Supply From:</label>
                           <p class="font-weight-bold pt-0 mt-0">{{RetailerDetail.SupplyFrom}}</p>
                         </div>
                       </div>
                       <div class="row">
                         <div class="form-group col-md-4 col-sm-12">
-                          <label for="status" class="mb-0">SupplyDay:</label>
+                          <label for="status" class="mb-0">Supply Day:</label>
                           <p class="font-weight-bold pt-0 mt-0">{{RetailerDetail.SupplyDay}}</p>
                         </div>
                       </div>
@@ -427,13 +436,12 @@
                           </select>
                         </div>
 
-                        <div class="form-group col-4">
-                          <button class="btn btn-dark" (click)="AddtoRetailerMainAisle(item)">Add Planogram</button>
+                        <div class="form-group col-6">
+                          <button class="btn btn-dark" (click)="AddtoRetailerMainAisle(item)">Update Planogram</button>
                         </div>
                       </div>
                       <div class="col-md-4 mb-4">
-                        <img [src]="ServerUrl + item.RelativePathText + '\\' + item.Label + '.' + item.FileExtension"
-                          class="mainaisle-img-thumbanail" alt="User">
+                        <img [src]="OptionsPlanogramImpagePath" class="mainaisle-img-thumbanail" alt="User">
                         <p class="mt-2">Thumbnail</p>
                       </div>
                     </div>
@@ -450,16 +458,17 @@
                 </div>
               </div>
 
-              <div [attr.id]="'id_' + ActiveSection.replace(' ', '')" *ngSwitchCase="'SecondryVsibility'"
+              <div [attr.id]="'id_' + ActiveSection.replace(' ', '')" *ngSwitchCase="'SecondaryVisibility'"
                 class="hide-section col-md-12 border">
                 <form>
                   <div class="pt-4 pb-4 pl-0 pr-0">
-                    <h5 class="font-weight-bold">Retailer Secondry Visibility</h5>
+                    <h5 class="font-weight-bold">Retailer Secondary Visibility</h5>
                     <table class="table table-striped">
                       <thead>
                         <tr>
                           <th scope="col">SNo</th>
                           <th scope="col">Size</th>
+                          <th scope="col">Sub Type</th>
                           <th scope="col">Unique Id</th>
                           <th scope="col">Image</th>
                           <th scope="col">Planogram Name</th>
@@ -470,6 +479,7 @@
                         <tr *ngFor="let rowintem of RetailerSecoundryVisibility; let index = index;">
                           <td>{{index + 1}}</td>
                           <td>{{rowintem.Size}}</td>
+                          <td>{{rowintem.SubTypeEnum}}</td>
                           <td>{{rowintem.UniqueId}}</td>
                           <td>
                             <img class="row-image"
@@ -491,10 +501,33 @@
                 </form>
               </div>
 
-              <div [attr.id]="'id_' + ActiveSection.replace(' ', '')" *ngSwitchCase="'TransactionalZone'"
+              <div [attr.id]="'id_' + ActiveSection.replace(' ', '')" *ngSwitchCase="'TransactionZone'"
                 class="hide-section col-md-12 border">
 
-                <form class="pt-4 pb-4 pl-0 pr-0">
+                <div class="pt-4 pb-4 pl-0 pr-0">
+                  <div name="tzplanogram" class="row">
+                    <div class="col-8">
+                      <div class="form-group col-12">
+                        <select class="form-control" (change)="GetTZImage()">
+                          <option value="">Select Planogram Transaction Zone</option>
+                          <option *ngFor="let p of TransactionZonePlanogram" [value]="p.Gid">
+                            {{p.Name}}
+                          </option>
+                        </select>
+                      </div>
+
+                      <div class="form-group col-6">
+                        <button class="btn btn-dark" (click)="UpdateTransactionZonePlanogram()">Update
+                          Planogram</button>
+                      </div>
+                    </div>
+                    <div class="col-md-4 mb-4">
+                      <img [src]="OptionsTransactionZonePlanogramImpagePath" class="mainaisle-img-thumbanail"
+                        alt="User">
+                      <p class="mt-2">Thumbnail</p>
+                    </div>
+                  </div>
+
                   <div class="pt-4 pb-4 pl-0 pr-0">
                     <h5 class="font-weight-bold">Transactional Checkout Count</h5>
                     <div class="form-group">
@@ -508,7 +541,7 @@
                         placeholder="Transactional Food Checkout Count">
                     </div>
                   </div>
-                </form>
+                </div>
               </div>
 
               <div [attr.id]="'id_' + ActiveSection" *ngSwitchCase="'Competition'"

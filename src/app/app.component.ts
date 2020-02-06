@@ -19,7 +19,8 @@ import {
   SKUPortfolio,
   ManageSKUPortfolio,
   WorkEffectiveness,
-  CustomerFootprint
+  CustomerFootprint,
+  PlanogramTransactionzone
 } from "src/providers/constants";
 import { CommonService } from "src/providers/common-service/common.service";
 import { AjaxService } from "src/providers/ajax.service";
@@ -106,6 +107,8 @@ export class AppComponent {
               case "/" + CustomerFootprint:
                 break;
               case "/" + WorkEffectiveness:
+                break;
+              case "/" + PlanogramTransactionzone:
                 break;
               default:
                 this.commonService.EnableAuthBase();

@@ -23,6 +23,7 @@ export class RetailerDetailComponent implements OnInit {
   RetailerMerchandisingPlan: Array<RetailerMershandisingPlanModal>;
   RetailerMainasles: Array<RetailerMainasleModal>;
   CurrentSection: any = {};
+  TzGid: string;
   ActiveSection: string = "";
   CompetitionGrid: Array<string>;
   RetailerSecoundryVisibility: Array<RetailerSecoundryVisibilityModal>;
@@ -34,12 +35,16 @@ export class RetailerDetailComponent implements OnInit {
   SkuPortfolio: Array<SkuportfolioViewModel>;
   PlanogramdVisibilityModal: Array<PlanogramSecondryVisibilityModal>;
   Competition: Array<any>;
+  DdsecondaryvisibilityImage: string = "";
   IsPageReady: boolean = false;
   visibilityEntity: RetailerSecoundryVisibilityModal;
   ServerUrl: string = "";
   visibilitymodal: boolean = false;
   NewCompetition: string = "";
   SelectedPlanogramImageUrl: string = "";
+  OptionsPlanogramImpagePath: string = "";
+  OptionsTransactionZonePlanogramImpagePath: string = "";
+  TransactionZonePlanogram: Array<TransactionZonePlanogramModal>;
   constructor(
     private fb: FormBuilder,
     private commonService: CommonService,
@@ -52,8 +57,8 @@ export class RetailerDetailComponent implements OnInit {
       { Name: "Address", IsEnabled: false },
       { Name: "Contacts", IsEnabled: false },
       { Name: "Mainaisle", IsEnabled: false },
-      { Name: "Secondry Vsibility", IsEnabled: false },
-      { Name: "Transactional Zone", IsEnabled: false },
+      { Name: "Secondary Visibility", IsEnabled: false },
+      { Name: "Transaction Zone", IsEnabled: false },
       { Name: "Competition", IsEnabled: false },
       { Name: "SKUPorfolio", IsEnabled: false },
       { Name: "Merchandiser Plan", IsEnabled: false }
@@ -61,7 +66,7 @@ export class RetailerDetailComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.ServerUrl = this.http.BaseUrl().replace("api/", "");
+    this.ServerUrl = this.http.GetImageBaseUrl();
     let PageData = this.nav.getValue();
     if (PageData !== null) {
       this.CurrentPageData = PageData;
@@ -120,6 +125,16 @@ export class RetailerDetailComponent implements OnInit {
 
           if (IsValidType(Data["retailerMainasles"])) {
             this.RetailerMainasles = Data["retailerMainasles"];
+            if (this.RetailerMainasles.length > 0) {
+              let CurrentPlanogramItem: any = this.RetailerMainasles[0];
+              this.OptionsPlanogramImpagePath =
+                this.ServerUrl +
+                CurrentPlanogramItem.RelativePathText +
+                "\\" +
+                CurrentPlanogramItem.Label +
+                "." +
+                CurrentPlanogramItem.FileExtension;
+            }
           }
 
           if (IsValidType(Data["retailerMerchandisingPlan"])) {
@@ -152,6 +167,11 @@ export class RetailerDetailComponent implements OnInit {
               Data["planogramsecondaryvisibilityViewModel"];
           }
 
+          this.TransactionZonePlanogram = [];
+          if (IsValidType(Data["transactionzoneplanogram"])) {
+            this.TransactionZonePlanogram = Data["transactionzoneplanogram"];
+          }
+
           this.IsPageReady = true;
           this.commonService.ShowToast("Data loaded successfully.");
         } else {
@@ -181,8 +201,10 @@ export class RetailerDetailComponent implements OnInit {
         }
       };
 
-      if (IsValidType(this.visibilityEntity.planogramGid)) {
-        this.visibilityEntity.planogramGid = $("#snd-visibility").val();
+      if (IsValidType(this.visibilityEntity.PlanogramGid)) {
+        this.visibilityEntity.PlanogramGid = $(
+          "#planogramsecondaryvisibility"
+        ).val();
       }
 
       this.visibilitymodal = false;
@@ -194,10 +216,8 @@ export class RetailerDetailComponent implements OnInit {
         .then(response => {
           if (this.commonService.IsValidResponse(response)) {
             let Data = response.content.data;
-            if (Data != null && Data != "") {
-              if (IsValidType(Data["retailerViewModel"])) {
-                this.RetailerDetail = Data["retailerViewModel"][ZerothIndex];
-              }
+            if (IsValidType(Data)) {
+              this.RetailerSecoundryVisibility = Data;
               this.commonService.ShowToast("Data loaded successfully.");
             } else {
               this.commonService.ShowToast("Got empty dataset.");
@@ -219,7 +239,7 @@ export class RetailerDetailComponent implements OnInit {
         let input: any = {
           meta: {
             app: "MerchandiserApp",
-            action: "FetchPlanogrammainaisles",
+            action: "UpdatePlanogrammainaisle",
             requestId: "0",
             deviceId: "web"
           },
@@ -234,21 +254,22 @@ export class RetailerDetailComponent implements OnInit {
 
         input.content.planogramGid = planogrammainaisleGid;
         input.content.retailermainaisleGid = CurrentRetailerMainAisle.Gid;
-        this.http.post("Webportal/AddPlanogram", input).then(response => {
-          if (this.commonService.IsValidResponse(response)) {
-            let Data = response.content.data;
-            if (Data != null && Data != "") {
-              if (IsValidType(Data["retailerViewModel"])) {
-                this.RetailerDetail = Data["retailerViewModel"][ZerothIndex];
+        input.content.aFileGid = CurrentRetailerMainAisle.AFileGid;
+        this.http
+          .post("Webportal/UpdatePlanogrammainaisle", input)
+          .then(response => {
+            if (this.commonService.IsValidResponse(response)) {
+              let Data = response.content.data;
+              if (IsValidType(Data)) {
+                this.RetailerMainasles = Data;
+                this.commonService.ShowToast("Data loaded successfully.");
+              } else {
+                this.commonService.ShowToast("Got empty dataset.");
               }
-              this.commonService.ShowToast("Data loaded successfully.");
             } else {
-              this.commonService.ShowToast("Got empty dataset.");
+              this.commonService.ShowToast("Unable to get data.");
             }
-          } else {
-            this.commonService.ShowToast("Unable to get data.");
-          }
-        });
+          });
       }
     }
   }
@@ -517,6 +538,13 @@ export class RetailerDetailComponent implements OnInit {
   EditSecondryVisibility(entity: any) {
     this.visibilitymodal = !this.visibilitymodal;
     this.visibilityEntity = entity;
+    this.DdsecondaryvisibilityImage =
+      this.ServerUrl +
+      entity.RelativePathText +
+      "\\" +
+      entity.Label +
+      "." +
+      entity.FileExtension;
   }
 
   CloseVisibilityModal() {
@@ -617,51 +645,97 @@ export class RetailerDetailComponent implements OnInit {
   }
 
   GetCurrentPlanogram(value: any) {
-    alert(value);
-    //   let CompetitionGid = $("#retailer-competition").val();
-    //   if (IsValidType(CompetitionGid)) {
-    //     let CurrentCompetition = this.Competition.filter(
-    //       x => x.Gid == CompetitionGid
-    //     );
-    //     if (CurrentCompetition.length > 0) {
-    //       CurrentCompetition = CurrentCompetition[ZerothIndex];
-    //       CurrentCompetition["RetailerGid"] = this.CurrentPageData.Gid;
-    //       let input: any = {
-    //         meta: {
-    //           app: "MerchandiserApp",
-    //           action: "FetchPlanogrammainaisles",
-    //           requestId: "0",
-    //           deviceId: "web"
-    //         },
-    //         content: {
-    //           deviceId: "web",
-    //           deviceType: "web",
-    //           deviceOS: "Windows",
-    //           deviceVersion: "web",
-    //           deviceInfo: "web"
-    //         }
-    //       };
+    let CurrentPlanogramGid = $(event.currentTarget).val();
+    if (IsValidType(CurrentPlanogramGid)) {
+      let PlanogramRecord = this.PlanogrammainaisleModal.filter(
+        x => x.Gid === CurrentPlanogramGid
+      );
+      if (PlanogramRecord.length > 0) {
+        let CurrentPlanogramItem: any = PlanogramRecord[0];
+        this.OptionsPlanogramImpagePath =
+          this.ServerUrl +
+          CurrentPlanogramItem.RelativePathText +
+          "\\" +
+          CurrentPlanogramItem.Label +
+          "." +
+          CurrentPlanogramItem.FileExtension;
+      }
+    }
+  }
 
-    //       this.http
-    //         .post(
-    //           "Webportal/AddUpdateCompetition",
-    //           JSON.stringify(CurrentCompetition)
-    //         )
-    //         .then(response => {
-    //           if (this.commonService.IsValidResponse(response)) {
-    //             let Data = response.content.data;
-    //             if (Data != null && Data != "") {
-    //               this.RetailerCompetition = Data;
-    //               this.commonService.ShowToast("Data loaded successfully.");
-    //             } else {
-    //               this.commonService.ShowToast("Got empty dataset.");
-    //             }
-    //           } else {
-    //             this.commonService.ShowToast("Unable to get data.");
-    //           }
-    //         });
-    //     }
-    //   }
+  ShowImage() {
+    let ImageGid = $(event.currentTarget).val();
+    let CurrentObject = this.PlanogramdVisibilityModal.filter(
+      x => x.Gid === ImageGid
+    );
+    if (CurrentObject.length) {
+      let Current: any = CurrentObject[0];
+      this.DdsecondaryvisibilityImage =
+        this.ServerUrl +
+        Current.RelativePathText +
+        "\\" +
+        Current.Label +
+        "." +
+        Current.FileExtension;
+    }
+  }
+
+  UpdateTransactionZonePlanogram() {
+    if (IsValidType(this.TzGid)) {
+      let input: any = {
+        meta: {
+          app: "MerchandiserApp",
+          action: "UpdatePlanogrammainaisle",
+          requestId: "0",
+          deviceId: "web"
+        },
+        content: {
+          deviceId: "web",
+          deviceType: "web",
+          deviceOS: "Windows",
+          deviceVersion: "web",
+          deviceInfo: "web"
+        }
+      };
+
+      input.content.planogramGid = this.TzGid;
+      input.content.retailerGid = this.RetailerDetail.Gid;
+      this.http
+        .post("Webportal/UpdatePlanogrammainaisle", input)
+        .then(response => {
+          if (this.commonService.IsValidResponse(response)) {
+            let Data = response.content.data;
+            if (IsValidType(Data)) {
+              this.RetailerMainasles = Data;
+              this.commonService.ShowToast("Data loaded successfully.");
+            } else {
+              this.commonService.ShowToast("Got empty dataset.");
+            }
+          } else {
+            this.commonService.ShowToast("Unable to get data.");
+          }
+        });
+    }
+  }
+
+  GetTZImage() {
+    this.OptionsTransactionZonePlanogramImpagePath = "";
+    this.TzGid = $(event.currentTarget).val();
+    if (IsValidType(this.TzGid)) {
+      let CurrentObject = this.TransactionZonePlanogram.filter(
+        x => x.Gid === this.TzGid
+      );
+      if (CurrentObject.length) {
+        let Current: TransactionZonePlanogramModal = CurrentObject[ZerothIndex];
+        this.OptionsTransactionZonePlanogramImpagePath =
+          this.ServerUrl +
+          Current.RelativePathText +
+          "//" +
+          Current.Label +
+          "." +
+          Current.FileExtension;
+      }
+    }
   }
 }
 
@@ -832,7 +906,7 @@ interface RetailerSecoundryVisibilityModal {
   Label: string;
   FileExtension: string;
   PlanogramName: string;
-  planogramGid: string;
+  PlanogramGid: string;
 }
 
 interface RetailerMershandisingPlanModal {
@@ -891,6 +965,7 @@ interface RetailerMainasleModal {
   Label: string;
   FileExtension: string;
   PlanogramGid: string;
+  AFileGid: string;
 }
 
 interface RetailerCompetitionModal {
@@ -919,4 +994,18 @@ interface SkuportfolioViewModel {
 interface PlanogramSecondryVisibilityModal {
   Gid: string;
   Name: string;
+}
+
+interface TransactionZonePlanogramModal {
+  Gid: string;
+  Name: string;
+  Description: string;
+  SubChannel: string;
+  Chain: string;
+  Label: string;
+  Location: string;
+  RetailerGid: string;
+  RelativePathText: string;
+  FileExtension: string;
+  AFileGid: string;
 }

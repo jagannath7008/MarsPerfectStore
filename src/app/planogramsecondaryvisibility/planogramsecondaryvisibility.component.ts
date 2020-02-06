@@ -39,7 +39,7 @@ export class PlanogramsecondaryvisibilityComponent implements OnInit {
       "MarsAuth",
       "MarsMerchandiserMobile"
     );
-    this.HeaderName = "Planogram secoundry visibility";
+    this.HeaderName = "Planogram secondary visibility";
     this.AdvanceFilterObject = this.fb.group({
       Region: new FormControl(""),
       SubChannel: new FormControl(""),

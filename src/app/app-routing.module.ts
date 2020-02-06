@@ -20,7 +20,8 @@ import {
   SKUPortfolio,
   ManageSKUPortfolio,
   CustomerFootprint,
-  WorkEffectiveness
+  WorkEffectiveness,
+  PlanogramTransactionzone
 } from "src/providers/constants";
 import { LoginComponent } from "./login/login.component";
 import { DashboardComponent } from "./dashboard/dashboard.component";
@@ -43,6 +44,7 @@ import { SkuporfolioComponent } from "./skuporfolio/skuporfolio.component";
 import { ManageskuportfolioComponent } from "./manageskuportfolio/manageskuportfolio.component";
 import { WorkfffectivenessComponent } from "./workfffectiveness/workfffectiveness.component";
 import { CustomerfootprintComponent } from "./customerfootprint/customerfootprint.component";
+import { PlanogramtransactionzoneComponent } from "./planogramtransactionzone/planogramtransactionzone.component";
 
 const routes: Routes = [
   { path: "", component: LoginComponent },
@@ -72,7 +74,11 @@ const routes: Routes = [
   { path: SKUPortfolio, component: SkuporfolioComponent },
   { path: ManageSKUPortfolio, component: ManageskuportfolioComponent },
   { path: CustomerFootprint, component: CustomerfootprintComponent },
-  { path: WorkEffectiveness, component: WorkfffectivenessComponent }
+  { path: WorkEffectiveness, component: WorkfffectivenessComponent },
+  {
+    path: PlanogramTransactionzone,
+    component: PlanogramtransactionzoneComponent
+  }
 ];
 
 @NgModule({
