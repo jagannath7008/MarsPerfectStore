@@ -10,6 +10,7 @@ import { FormBuilder } from "@angular/forms";
 import { FormGroup } from "@angular/forms";
 import { FormControl } from "@angular/forms";
 import { iNavigation } from "src/providers/iNavigation";
+import * as $ from "jquery";
 
 @Component({
   selector: "app-beat-planning",
@@ -25,7 +26,12 @@ export class BeatPlanningComponent implements OnInit {
   EnableFilter: boolean = false;
   IsEmptyRow: boolean = false;
   BeatsAdd: FormGroup = null;
-  searchQuery: string = "";
+  searchQuery: string = " 1=1 ";
+  sortBy: string = "";
+  pageIndex: number = 1;
+  pageSize: number = 15;
+  TotalCount: number = 0;
+  TotalPageCount: number = 0;
   constructor(
     private http: AjaxService,
     private commonService: CommonService,
@@ -45,6 +51,7 @@ export class BeatPlanningComponent implements OnInit {
 
   InitGridHeader() {
     this.BeatPlanningHeader = [
+      { column: "Index", type: "hidden" },
       { column: "Gid", type: "hidden" },
       { column: "Code", displayheader: "Code" },
       { column: "Name", displayheader: "Name" },
@@ -86,8 +93,9 @@ export class BeatPlanningComponent implements OnInit {
     this.http
       .post("Beat/GetBeats", MSData)
       .then(result => {
-        if (this.commonService.IsValid(result)) {
-          this.CheckAndBindData(result);
+        if (this.commonService.IsValidResponse(result)) {
+          let Data = JSON.parse(result.content.beats);
+          this.CheckAndBindData(Data);
         } else {
           this.commonService.ShowToast(
             "Unable to add customer. Please contact to admin."
@@ -100,7 +108,7 @@ export class BeatPlanningComponent implements OnInit {
   }
 
   CheckAndBindData(ResultData: any) {
-    if (this.commonService.IsValid(ResultData)) {
+    if (IsValidType(ResultData)) {
       this.BeatPlanningRows = [];
       this.BeatMerchandiserData = [];
       this.BeatSupervisorData = [];
@@ -113,12 +121,100 @@ export class BeatPlanningComponent implements OnInit {
     this.EnableFilter = !this.EnableFilter;
   }
 
+  GetBeatCustomer($CurrentItem: any) {
+    if (IsValidType($CurrentItem)) {
+      this.nav.navigate(BeatPlan, $CurrentItem);
+    }
+  }
+
+  GetFilteredData() {
+    let data = "";
+    data = $(event.currentTarget).val();
+    if (data.length >= 3) {
+      this.searchQuery = ` 1=1 and b.Code like '%${data}%'`;
+      this.FilterResult();
+    } else if (data.length === 0) {
+      this.searchQuery = ` 1=1 `;
+      this.FilterResult();
+    }
+  }
+
+  NextPage() {
+    if (this.pageIndex + 1 <= this.TotalPageCount) {
+      this.pageIndex = this.pageIndex + 1;
+      this.FilterResult();
+    }
+  }
+
+  PreviousPage() {
+    if (this.pageIndex > 1) {
+      this.pageIndex = this.pageIndex - 1;
+      this.FilterResult();
+    }
+  }
+
+  FilterResult() {
+    let MSData = JSON.parse(PostParam);
+    MSData.content.searchString = this.searchQuery;
+    MSData.content.sortBy = this.sortBy;
+    MSData.content.pageIndex = this.pageIndex;
+    MSData.content.pageSize = this.pageSize;
+    this.TotalCount = 0;
+
+    this.http
+      .post("Beat/GetBeatsFilterData", MSData)
+      .then(result => {
+        if (this.commonService.IsValid(result)) {
+          if (IsValidType(result)) {
+            this.BeatPlanningRows = [];
+            let Data = JSON.parse(result.content.beats);
+            if (
+              typeof Data["Record"] !== "undefined" &&
+              typeof Data["Count"] !== "undefined"
+            ) {
+              let Record = Data["Record"];
+              this.TotalCount = Data["Count"][0].Total;
+              this.TotalPageCount = this.TotalCount / this.pageSize;
+              if (this.TotalCount % this.pageSize > 0) {
+                this.TotalPageCount = parseInt(
+                  (this.TotalPageCount + 1).toString()
+                );
+              }
+              this.IsEmptyRow = false;
+              let index = 0;
+              while (index < Record.length) {
+                this.BeatPlanningRows.push(Record[index]);
+                index++;
+              }
+            }
+          }
+        } else {
+          this.commonService.ShowToast(
+            "Unable to add customer. Please contact to admin."
+          );
+        }
+      })
+      .catch(e => {
+        this.commonService.ShowToast("Getting server error.");
+      });
+  }
+
   BuildGrid(ResultData: any) {
-    if (ResultData.status.code === "SUCCESS") {
-      let Data = ResultData.content.beats;
-      this.BeatMerchandiserData = ResultData.content.merchandiserlist;
-      this.BeatSupervisorData = ResultData.content.supervisorlist;
-      if (Data != null && Data != "") {
+    if (
+      typeof ResultData["Record"] !== "undefined" &&
+      typeof ResultData["Count"] !== "undefined" &&
+      typeof ResultData["Supervisor"] !== "undefined" &&
+      typeof ResultData["Merchandiser"] !== "undefined"
+    ) {
+      let Data = ResultData["Record"];
+      this.TotalCount = ResultData["Count"][0].TotalCount;
+      this.TotalPageCount = this.TotalCount / this.pageSize;
+      if (this.TotalCount % this.pageSize > 0) {
+        this.TotalPageCount = parseInt(this.TotalPageCount.toString());
+      }
+      this.BeatMerchandiserData = ResultData["Merchandiser"];
+      this.BeatSupervisorData = ResultData["Supervisor"];
+      if (IsValidType(Data)) {
         this.IsEmptyRow = false;
         let index = 0;
         while (index < Data.length) {
@@ -126,12 +222,6 @@ export class BeatPlanningComponent implements OnInit {
           index++;
         }
       }
-    }
-  }
-
-  GetBeatCustomer($CurrentItem: any) {
-    if (IsValidType($CurrentItem)) {
-      this.nav.navigate(BeatPlan, $CurrentItem);
     }
   }
 }
