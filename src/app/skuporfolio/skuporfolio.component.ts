@@ -7,8 +7,9 @@ import {
 import { iNavigation } from "src/providers/iNavigation";
 import { AjaxService } from "src/providers/ajax.service";
 import { IGrid } from "src/providers/Generic/Interface/IGrid";
-import { ManageSKUPortfolio } from "src/providers/constants";
+import { ManageSKUPortfolio, PostParam } from "src/providers/constants";
 import { SKUPortfolioModal } from "src/providers/modals";
+import * as $ from "jquery";
 
 @Component({
   selector: "app-skuporfolio",
@@ -23,7 +24,6 @@ export class SkuporfolioComponent implements OnInit {
   HeaderName: string = "Page Name";
   EnableFilter: boolean = false;
   TotalHeaders: number = 5;
-  searchQuery: string = "";
   PlannogramImage: any;
   PlannogramImagePath: any;
   TypeEnum: string = "BO";
@@ -31,6 +31,13 @@ export class SkuporfolioComponent implements OnInit {
   SubChannelRecord: Array<any> = [];
   SubChainRecord: Array<any> = [];
   SubLocationRecord: Array<any> = [];
+  searchQuery: string = " 1=1 ";
+  sortBy: string = "";
+  pageIndex: number = 1;
+  pageSize: number = 15;
+  TotalCount: number = 0;
+  TotalPageCount: number = 0;
+  IsFirstLoad = true;
   constructor(
     private fb: FormBuilder,
     private commonService: CommonService,
@@ -55,43 +62,72 @@ export class SkuporfolioComponent implements OnInit {
     });
   }
 
-  LoadData() {
-    let FilterQuery = {
-      SearchString: "1=1",
-      SortBy: "Name",
-      Index: 1,
-      Offset: 10
-    };
-    let input: any = {
-      meta: {
-        app: "MerchandiserApp",
-        action: "FetchSkuportfolios",
-        requestId: "0",
-        deviceId: "web"
-      },
-      content: {
-        deviceId: "web",
-        deviceType: "web",
-        deviceOS: "Windows",
-        deviceVersion: "web",
-        deviceInfo: "web"
-      }
-    };
+  NextPage() {
+    if (this.pageIndex + 1 <= this.TotalPageCount) {
+      this.pageIndex = this.pageIndex + 1;
+      this.LoadData();
+    }
+  }
 
-    input.content.searchString = this.searchQuery;
-    this.http.post("Webportal/FetchSkuportfolios", input).then(response => {
+  PreviousPage() {
+    if (this.pageIndex > 1) {
+      this.pageIndex = this.pageIndex - 1;
+      this.LoadData();
+    }
+  }
+
+  FilterLocaldata() {
+    let data = "";
+    data = $(event.currentTarget).val();
+    if (data.length >= 3) {
+      this.searchQuery = ` 1=1 and (j.Code like '${data}%' or j.Name like '${data}%'
+      or j.Description like '${data}%' or j.SubChannel like '${data}%' or j.Chain like '${data}%')`;
+      this.LoadData();
+    } else if (data.length === 0) {
+      this.searchQuery = ` 1=1 `;
+      this.LoadData();
+    }
+  }
+
+  LoadData() {
+    let MSData = JSON.parse(PostParam);
+    MSData.content.searchString = this.searchQuery;
+    MSData.content.sortBy = this.sortBy;
+    MSData.content.pageIndex = this.pageIndex;
+    MSData.content.pageSize = this.pageSize;
+
+    this.http.post("Webportal/FetchSkuportfolios", MSData).then(result => {
       this.TableResultSet = [];
-      if (this.commonService.IsValidResponse(response)) {
-        let Data = response.content.data;
-        if (Data != null && Data != "") {
+      if (this.commonService.IsValidResponse(result)) {
+        if (IsValidType(result)) {
           this.IsEmptyRow = false;
-          this.TableResultSet = Data;
-          this.SubChannelRecord = [];
-          this.GetDropdownData("retailerSubChannel");
-          this.SubChainRecord = [];
-          this.GetDropdownData("retailerChainName");
-          this.SubLocationRecord = [];
-          this.GetDropdownData("locationTypeEnum");
+          let Data = JSON.parse(result.content.data);
+          if (
+            typeof Data["Record"] !== "undefined" &&
+            typeof Data["Count"] !== "undefined"
+          ) {
+            let Record = Data["Record"];
+            this.TotalCount = Data["Count"][0].Total;
+            this.TotalPageCount = this.TotalCount / this.pageSize;
+            if (this.TotalCount % this.pageSize > 0) {
+              this.TotalPageCount = parseInt(
+                (this.TotalPageCount + 1).toString()
+              );
+            }
+            this.IsEmptyRow = false;
+            this.TableResultSet = Record;
+          }
+
+          if (this.IsFirstLoad) {
+            this.IsFirstLoad = false;
+            this.SubChannelRecord = [];
+            this.GetDropdownData("retailerSubChannel");
+            this.SubChainRecord = [];
+            this.GetDropdownData("retailerChainName");
+            this.SubLocationRecord = [];
+            this.GetDropdownData("locationTypeEnum");
+          }
+
           this.commonService.ShowToast("Data retrieve successfully.");
         } else {
           this.IsEmptyRow = true;
@@ -167,7 +203,13 @@ export class SkuporfolioComponent implements OnInit {
   }
 
   ResetFilter() {
-    this.searchQuery = "";
+    $("#ShopFilter").val("");
+    this.searchQuery = " 1=1 ";
+    this.sortBy = "";
+    this.pageIndex = 1;
+    this.pageSize = 15;
+    this.TotalCount = 0;
+    this.TotalPageCount = 0;
     this.LoadData();
   }
 
@@ -268,10 +310,5 @@ export class SkuporfolioComponent implements OnInit {
           this.commonService.ShowToast("Unable to save data.");
         }
       });
-  }
-
-  FilterLocaldata() {
-    console.log(this.searchQuery);
-    this.LoadData();
   }
 }
