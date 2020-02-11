@@ -81,13 +81,23 @@
           <div class="container p-0 mb-4">
             <div class="row">
               <div class="col-md-12 p-0">
-                <input class="form-control" type="text" (keyup)="GetFilteredData()" placeholder="Searh Beat Plan">
+                <div class="row">
+                  <div class="col-md-6">
+                    <div class="pl-0 pr-0 form-group col-md-12 col-sm-12 d-inline-block">
+                      <input id="ShopFilter" placeholder="Global search" class="form-control"
+                        (keyup)="GetFilteredData()" required="required" type="text">
+                    </div>
+                  </div>
+                  <div class="col-md-6 d-inline-block text-right no-padding">
+                    <button type="submit" (click)="ResetFilter()" class="btn btn-outline-info mr-1"><i
+                        class="fas fa-sync"></i>&ensp;Reset</button>
+                    <button type="button" (click)="AddBeatPlan()" class="btn btn-success"><i
+                        class="fa fa-plus"></i>&ensp;Create</button>
+                  </div>
+                </div>
               </div>
 
               <div class="mt-4 col-md-12 p-0">
-                <div class="mt-2 mb-1">
-                  <button class="btn btn-outline-warning" (click)="AddBeatPlan()">Add</button>
-                </div>
                 <div id="dynamic-grid-table" class="table-responsive border">
                   <table class="table table-striped">
                     <thead>

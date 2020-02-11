@@ -85,8 +85,8 @@
     <div class="row">
       <div class="col-md-6">
         <div class="pl-0 pr-0 form-group col-md-12 col-sm-12 d-inline-block">
-          <input id="ShopFilter" placeholder="Global search" class="form-control" [(ngModel)]="searchQuery"
-            (keyup)="FilterLocaldata()" required="required" type="text">
+          <input id="ShopFilter" placeholder="Global search" class="form-control" (keyup)="FilterLocaldata()"
+            required="required" type="text">
         </div>
       </div>
       <div class="col-md-6 d-inline-block text-right no-padding">
@@ -149,22 +149,15 @@
           <tfoot>
             <tr>
               <td colspan="50">
-                <nav aria-label="Page navigation example">
-                  <ul class="pagination">
-                    <li class="page-item">
-                      <a class="page-link" href="#" aria-label="Previous">
-                        <span aria-hidden="true">&laquo;</span>
-                        <span class="sr-only">Previous</span>
-                      </a>
-                    </li>
-                    <li class="page-item">
-                      <a class="page-link" href="#" aria-label="Next">
-                        <span aria-hidden="true">&raquo;</span>
-                        <span class="sr-only">Next</span>
-                      </a>
-                    </li>
-                  </ul>
-                </nav>
+                <div class="d-flex flex-row-reverse">
+                  <div class="d-inline-block font-weight-bold">
+                    <a class="round" (click)="PreviousPage()">&#8249;</a>
+                    <a class="round" (click)="NextPage()">&#8250;</a>
+                  </div>
+                  <div class="ml-2 d-inline-block p-text mr-4">
+                    Showing page: <b>{{this.pageIndex}} of {{TotalPageCount}}</b>
+                  </div>
+                </div>
               </td>
             </tr>
           </tfoot>

@@ -3,9 +3,12 @@ import { IGrid } from "../../providers/Generic/Interface/IGrid";
 import { FormBuilder } from "@angular/forms";
 import { FormGroup } from "@angular/forms";
 import { FormControl } from "@angular/forms";
-import { CommonService } from "../../providers/common-service/common.service";
+import {
+  CommonService,
+  IsValidType
+} from "../../providers/common-service/common.service";
 import * as $ from "jquery";
-import { JourneyPlan, Region } from "../../providers/constants";
+import { JourneyPlan, Region, PostParam } from "../../providers/constants";
 import { iNavigation } from "../../providers/iNavigation";
 import { AjaxService } from "src/providers/ajax.service";
 
@@ -23,8 +26,13 @@ export class RegionComponent implements OnInit {
   HeaderName: string = "Page Name";
   EnableFilter: boolean = false;
   TotalHeaders: number = 5;
-  searchQuery: string = "";
   TypeEnum: string = "REG";
+  searchQuery: string = " 1=1 ";
+  sortBy: string = "";
+  pageIndex: number = 1;
+  pageSize: number = 15;
+  TotalCount: number = 0;
+  TotalPageCount: number = 0;
   AdvanceFilterObject: FormGroup;
   constructor(
     private fb: FormBuilder,
@@ -49,39 +57,56 @@ export class RegionComponent implements OnInit {
     });
   }
 
-  LoadData() {
-    let FilterQuery = {
-      SearchString: "1=1",
-      SortBy: "Name",
-      Index: 1,
-      Offset: 10
-    };
-    let input: any = {
-      meta: {
-        app: "MerchandiserApp",
-        action: "WebLogin",
-        requestId: "0",
-        deviceId: "web"
-      },
-      content: {
-        deviceId: "web",
-        deviceType: "web",
-        deviceOS: "Windows",
-        deviceVersion: "web",
-        deviceInfo: "web"
+  FilterLocaldata() {
+    let data = "";
+    data = $(event.currentTarget).val();
+    if (data.length >= 3) {
+      let FilteColumns = ["j.Code", "j.Name"];
+      this.searchQuery = " 1=1 ";
+      let searchStmt = "";
+      let index = 0;
+      while (index < FilteColumns.length) {
+        if (searchStmt === "")
+          searchStmt += ` ${FilteColumns[index]} like '${data}%' `;
+        else searchStmt += ` or ${FilteColumns[index]} like '${data}%' `;
+        index++;
       }
-    };
 
-    input.content.searchString = this.searchQuery;
-    input.content.locType = this.TypeEnum;
-    this.http.post("Webportal/FetchLocations", input).then(response => {
+      if (searchStmt !== "") this.searchQuery = ` 1=1 and (${searchStmt})`;
+      this.LoadData();
+    } else if (data.length === 0) {
+      this.searchQuery = ` 1=1 `;
+      this.LoadData();
+    }
+  }
+
+  LoadData() {
+    let MSData = JSON.parse(PostParam);
+    MSData.content.searchString = this.searchQuery;
+    MSData.content.sortBy = this.sortBy;
+    MSData.content.pageIndex = this.pageIndex;
+    MSData.content.pageSize = this.pageSize;
+    MSData.content.locType = this.TypeEnum;
+
+    this.http.post("Webportal/FetchLocations", MSData).then(response => {
       this.TableResultSet = [];
       if (this.commonService.IsValidResponse(response)) {
         let Data = response.content.data;
         if (Data != null && Data != "") {
-          this.IsEmptyRow = false;
-          this.TableResultSet = Data;
-          this.commonService.ShowToast("Data loaded successfully.");
+          let Data = JSON.parse(response.content.data);
+          if (IsValidType(Data["Record"]) && IsValidType(Data["Count"])) {
+            let Record = Data["Record"];
+            this.TotalCount = Data["Count"][0].Total;
+            this.TotalPageCount = this.TotalCount / this.pageSize;
+            if (this.TotalCount % this.pageSize > 0) {
+              this.TotalPageCount = parseInt(
+                (this.TotalPageCount + 1).toString()
+              );
+            }
+            this.IsEmptyRow = false;
+            this.TableResultSet = Record;
+          }
+          this.commonService.ShowToast("Data retrieve successfully.");
         } else {
           this.IsEmptyRow = true;
           this.commonService.ShowToast("Got empty dataset.");
@@ -90,6 +115,20 @@ export class RegionComponent implements OnInit {
         this.commonService.ShowToast("Unable to get data.");
       }
     });
+  }
+
+  NextPage() {
+    if (this.pageIndex + 1 <= this.TotalPageCount) {
+      this.pageIndex = this.pageIndex + 1;
+      this.LoadData();
+    }
+  }
+
+  PreviousPage() {
+    if (this.pageIndex > 1) {
+      this.pageIndex = this.pageIndex - 1;
+      this.LoadData();
+    }
   }
 
   BindParent() {
@@ -139,7 +178,7 @@ export class RegionComponent implements OnInit {
   }
 
   ResetFilter() {
-    this.searchQuery = "";
+    this.searchQuery = " 1=1 ";
     this.LoadData();
   }
 
@@ -200,11 +239,6 @@ export class RegionComponent implements OnInit {
           this.commonService.ShowToast("Unable to save data.");
         }
       });
-  }
-
-  FilterLocaldata() {
-    console.log(this.searchQuery);
-    this.LoadData();
   }
 }
 

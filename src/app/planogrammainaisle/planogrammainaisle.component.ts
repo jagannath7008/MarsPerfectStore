@@ -8,7 +8,11 @@ import {
   IsValidType
 } from "../../providers/common-service/common.service";
 import * as $ from "jquery";
-import { JourneyPlan, Planogrammainaisle } from "../../providers/constants";
+import {
+  JourneyPlan,
+  Planogrammainaisle,
+  PostParam
+} from "../../providers/constants";
 import { iNavigation } from "../../providers/iNavigation";
 import { AjaxService } from "src/providers/ajax.service";
 
@@ -25,7 +29,6 @@ export class PlanogrammainaisleComponent implements OnInit {
   HeaderName: string = "Page Name";
   EnableFilter: boolean = false;
   TotalHeaders: number = 5;
-  searchQuery: string = "";
   PlannogramImage: Array<File>;
   PlannogramImagePath: Array<any>;
   PlannogramExistingImagePath: Array<any>;
@@ -37,6 +40,12 @@ export class PlanogrammainaisleComponent implements OnInit {
   OnEdit: boolean = false;
   OnCreate: boolean = false;
   ServerBasePath: string;
+  searchQuery: string = " 1=1 ";
+  sortBy: string = "";
+  pageIndex: number = 1;
+  pageSize: number = 15;
+  TotalCount: number = 0;
+  TotalPageCount: number = 0;
   constructor(
     private fb: FormBuilder,
     private commonService: CommonService,
@@ -65,58 +74,86 @@ export class PlanogrammainaisleComponent implements OnInit {
     });
   }
 
-  LoadData() {
-    let FilterQuery = {
-      SearchString: "1=1",
-      SortBy: "Name",
-      Index: 1,
-      Offset: 10
-    };
-    let input: any = {
-      meta: {
-        app: "MerchandiserApp",
-        action: "FetchPlanogrammainaisles",
-        requestId: "0",
-        deviceId: "web"
-      },
-      content: {
-        deviceId: "web",
-        deviceType: "web",
-        deviceOS: "Windows",
-        deviceVersion: "web",
-        deviceInfo: "web"
-      }
-    };
+  NextPage() {
+    if (this.pageIndex + 1 <= this.TotalPageCount) {
+      this.pageIndex = this.pageIndex + 1;
+      this.LoadData();
+    }
+  }
 
-    input.content.searchString = this.searchQuery;
+  PreviousPage() {
+    if (this.pageIndex > 1) {
+      this.pageIndex = this.pageIndex - 1;
+      this.LoadData();
+    }
+  }
+
+  FilterLocaldata() {
+    let data = "";
+    data = $(event.currentTarget).val();
+    if (data.length >= 3) {
+      let FilteColumns = ["j.Name", "j.Description", "j.SubChannel", "j.Chain"];
+      this.searchQuery = " 1=1 ";
+      let searchStmt = "";
+      let index = 0;
+      while (index < FilteColumns.length) {
+        if (searchStmt === "")
+          searchStmt += ` ${FilteColumns[index]} like '${data}%' `;
+        else searchStmt += ` or ${FilteColumns[index]} like '${data}%' `;
+        index++;
+      }
+
+      if (searchStmt !== "") this.searchQuery = ` 1=1 and (${searchStmt})`;
+      this.LoadData();
+    } else if (data.length === 0) {
+      this.searchQuery = ` 1=1 `;
+      this.LoadData();
+    }
+  }
+
+  LoadData() {
+    let MSData = JSON.parse(PostParam);
+    MSData.content.searchString = this.searchQuery;
+    MSData.content.sortBy = this.sortBy;
+    MSData.content.pageIndex = this.pageIndex;
+    MSData.content.pageSize = this.pageSize;
+
     this.http
-      .post("Webportal/FetchPlanogrammainaisles", input)
+      .post("Webportal/FetchPlanogrammainaisles", MSData)
       .then(response => {
         this.TableResultSet = [];
         if (this.commonService.IsValidResponse(response)) {
-          let Data = response.content.data;
-          if (Data != null && Data != "") {
+          let Data = JSON.parse(response.content.data);
+          if (IsValidType(Data["Record"]) && IsValidType(Data["Count"])) {
             this.IsEmptyRow = false;
+            let Record = Data["Record"];
+            this.TotalCount = Data["Count"][0].Total;
+            this.TotalPageCount = this.TotalCount / this.pageSize;
+            if (this.TotalCount % this.pageSize > 0) {
+              this.TotalPageCount = parseInt(
+                (this.TotalPageCount + 1).toString()
+              );
+            }
             let index = 0;
-            while (index < Data.length) {
+            while (index < Record.length) {
               this.TableResultSet.push({
-                Gid: Data[index].Gid,
-                Name: Data[index].Name,
-                Description: Data[index].Description,
-                SubChannel: Data[index].SubChannel,
-                Chain: Data[index].Chain,
-                Location: Data[index].Location,
-                RelativePathText: Data[index].RelativePathText,
-                FileExtension: Data[index].FileExtension,
-                Label: Data[index].Label,
+                Gid: Record[index].Gid,
+                Name: Record[index].Name,
+                Description: Record[index].Description,
+                SubChannel: Record[index].SubChannel,
+                Chain: Record[index].Chain,
+                Location: Record[index].Location,
+                RelativePathText: Record[index].RelativePathText,
+                FileExtension: Record[index].FileExtension,
+                Label: Record[index].Label,
                 ImageFilePath:
                   this.ServerBasePath +
-                  Data[index].RelativePathText +
+                  Record[index].RelativePathText +
                   "//" +
-                  Data[index].Label +
+                  Record[index].Label +
                   "." +
-                  Data[index].FileExtension,
-                AFileGid: Data[index].AFileGid
+                  Record[index].FileExtension,
+                AFileGid: Record[index].AFileGid
               });
               index++;
             }
@@ -202,7 +239,8 @@ export class PlanogrammainaisleComponent implements OnInit {
   }
 
   ResetFilter() {
-    this.searchQuery = "";
+    this.searchQuery = " 1=1 ";
+    $("#ShopFilter").val("");
     this.LoadData();
   }
 
@@ -326,11 +364,6 @@ export class PlanogrammainaisleComponent implements OnInit {
           this.commonService.ShowToast("Unable to save data.");
         }
       });
-  }
-
-  FilterLocaldata() {
-    console.log(this.searchQuery);
-    this.LoadData();
   }
 }
 

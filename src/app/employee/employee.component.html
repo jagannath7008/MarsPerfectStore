@@ -8,25 +8,26 @@
       <div class="ipopup__header">
         <header>Add/Edit Employee</header>
       </div>
-      <form (submit)="SubmitSearchCriateria()" class="pt-2" (keydown.enter)="$event.preventDefault()"
-        >
+      <form (submit)="SubmitSearchCriateria()" class="pt-2" (keydown.enter)="$event.preventDefault()">
         <table class="mt-2">
           <tbody>
             <tr>
               <td>
                 <div class="d-md-flex pt-2">
-                  
+
                   <div class="col-md-4">
                     <label for="Name">Employee Name</label>
-                    <input class="plain-input form-control" required [(ngModel)]="entity.Name" name="Name" placeholder="Name">
+                    <input class="plain-input form-control" required [(ngModel)]="entity.Name" name="Name"
+                      placeholder="Name">
                   </div>
                   <div class="col-md-4">
                     <label for="ParentName">Gender</label>
-                    <select class="plain-input form-control" [value]="entity.GenderEnum" required (change)="entity.GenderEnum = $event.target.value">
+                    <select class="plain-input form-control" [value]="entity.GenderEnum" required
+                      (change)="entity.GenderEnum = $event.target.value">
                       <option value="">--Select--</option>
-                      <option value="Male" >Male</option>
-                      <option value="Female" >Female</option>
-                  </select>
+                      <option value="Male">Male</option>
+                      <option value="Female">Female</option>
+                    </select>
                   </div>
                   <div class="col-md-4">
                     <label for="Code">LoginId</label>
@@ -49,8 +50,9 @@
                     <label for="Code">Join Date</label>
                     <input class="plain-input form-control" name="JoinDate" required [(ngModel)]="entity.JoinDate"
                       placeholder="JoinDate">
-                  </div></div>
-                  <div class="d-md-flex pt-2">
+                  </div>
+                </div>
+                <div class="d-md-flex pt-2">
                   <div class="col-md-4">
                     <label for="Code">Birth Date</label>
                     <input class="plain-input form-control" name="BirthDate" required [(ngModel)]="entity.BirthDate"
@@ -58,31 +60,33 @@
                   </div>
                   <div class="col-md-4">
                     <label for="Code">Password</label>
-                    <input class="plain-input form-control" name="EncryptedPassword" required [(ngModel)]="entity.EncryptedPassword"
-                      placeholder="EncryptedPassword">
+                    <input class="plain-input form-control" name="EncryptedPassword" required
+                      [(ngModel)]="entity.EncryptedPassword" placeholder="EncryptedPassword">
                   </div>
                   <div class="col-md-4">
                     <label for="Code">Primary Phone</label>
-                    <input class="plain-input form-control" name="PrimaryPhone" required [(ngModel)]="entity.PrimaryPhone"
-                      placeholder="PrimaryPhone">
-                  </div></div>
-                  <div class="d-md-flex pt-2">
+                    <input class="plain-input form-control" name="PrimaryPhone" required
+                      [(ngModel)]="entity.PrimaryPhone" placeholder="PrimaryPhone">
+                  </div>
+                </div>
+                <div class="d-md-flex pt-2">
                   <div class="col-md-4">
                     <label for="Code">Secondary Phone</label>
-                    <input class="plain-input form-control" name="SecondaryPhone" required [(ngModel)]="entity.SecondaryPhone"
-                      placeholder="SecondaryPhone">
+                    <input class="plain-input form-control" name="SecondaryPhone" required
+                      [(ngModel)]="entity.SecondaryPhone" placeholder="SecondaryPhone">
                   </div>
                   <div class="col-md-4">
                     <label for="Code">WhatsApp Phone</label>
-                    <input class="plain-input form-control" name="WhatsAppPhone" required [(ngModel)]="entity.WhatsAppPhone"
-                      placeholder="WhatsAppPhone">
+                    <input class="plain-input form-control" name="WhatsAppPhone" required
+                      [(ngModel)]="entity.WhatsAppPhone" placeholder="WhatsAppPhone">
                   </div>
                   <div class="col-md-4">
                     <label for="Code">Email</label>
                     <input class="plain-input form-control" name="Email" required [(ngModel)]="entity.Email"
                       placeholder="Email">
-                  </div> </div>
-                  <div class="d-md-flex pt-2">
+                  </div>
+                </div>
+                <div class="d-md-flex pt-2">
                   <div class="col-md-4">
                     <label for="Code">Designation</label>
                     <input class="plain-input form-control" name="Designation" required [(ngModel)]="entity.Designation"
@@ -97,20 +101,23 @@
                     <label for="Code">Job Code</label>
                     <input class="plain-input form-control" name="Code" required [(ngModel)]="entity.Code"
                       placeholder="Job Code">
-                  </div> </div>
-                  <div class="d-md-flex pt-2">
+                  </div>
+                </div>
+                <div class="d-md-flex pt-2">
                   <div class="col-md-4">
                     <label for="ParentName">Office</label>
-                    <select class="plain-input form-control" [value]="entity.LinkGid" required (change)="entity.LinkGid = $event.target.value">
+                    <select class="plain-input form-control" [value]="entity.LinkGid" required
+                      (change)="entity.LinkGid = $event.target.value">
                       <option value="">--Select--</option>
-                      <option *ngFor="let obj of buCollection" value="{{obj.Gid}}" >
-                          {{obj.Name}}
+                      <option *ngFor="let obj of buCollection" value="{{obj.Gid}}">
+                        {{obj.Name}}
                       </option>
-                  </select>
+                    </select>
                   </div>
                   <div class="col-md-4">
                     <label for="ParentName">WebPortal Role</label>
-                    <select class="plain-input form-control" [value]="entity.WebPortalRole" required (change)="entity.WebPortalRole = $event.target.value">
+                    <select class="plain-input form-control" [value]="entity.WebPortalRole" required
+                      (change)="entity.WebPortalRole = $event.target.value">
                       <option value="">--Select--</option>
                       <option value="Admin">Admin</option>
                       <option value="Central Resource">Central Resource</option>
@@ -118,15 +125,16 @@
                       <option value="Area Manager">Area Manager</option>
                       <option value="Merchandising Supervisor">Merchandising Supervisor</option>
                       <option value="Other">Other</option>
-                  </select>
+                    </select>
                   </div>
                   <div class="col-md-4">
                     <label for="ParentName">Mobile Role</label>
-                    <select class="plain-input form-control" [value]="entity.MobileAppRole" required (change)="entity.MobileAppRole = $event.target.value">
+                    <select class="plain-input form-control" [value]="entity.MobileAppRole" required
+                      (change)="entity.MobileAppRole = $event.target.value">
                       <option value="">--Select--</option>
                       <option value="Merchandiser">Merchandiser</option>
                       <option value="Promoter">Promoter</option>
-                  </select>
+                    </select>
                   </div>
                 </div>
               </td>
@@ -148,15 +156,14 @@
     <div class="row">
       <div class="col-md-6">
         <div class="pl-0 pr-0 form-group col-md-12 col-sm-12 d-inline-block">
-          <input id="ShopFilter" placeholder="Global search" class="form-control" [(ngModel)]="searchQuery" (keyup)="FilterLocaldata()"
+          <input id="ShopFilter" placeholder="Global search" class="form-control" (keyup)="FilterLocaldata()"
             required="required" type="text">
         </div>
       </div>
       <div class="col-md-6 d-inline-block text-right no-padding">
         <button type="submit" (click)="ResetFilter()" class="btn btn-outline-info mr-1"><i
             class="fas fa-sync"></i>&ensp;Reset</button>
-        <button type="button" (click)="Open()" class="btn btn-success"><i
-            class="fa fa-plus"></i>&ensp;Create</button>
+        <button type="button" (click)="Open()" class="btn btn-success"><i class="fa fa-plus"></i>&ensp;Create</button>
       </div>
     </div>
     <div id="viewfeestimetable-dv" class="h-tbl">
@@ -189,8 +196,7 @@
                 <div class="last dyn-last">
                   <input type="hidden" name="currentObject" [attr.value]="item | json" />
                   <div name="editdelete">
-                    <a href="javascript:void(0)" (click)="Edit(item)" id="btnedit"
-                      class="tbl-action-icon-style a-icon">
+                    <a href="javascript:void(0)" (click)="Edit(item)" id="btnedit" class="tbl-action-icon-style a-icon">
                       <i class="far fa-edit"></i>&nbsp;
                     </a>
                     <a href="javascript:void(0)" id="btndelete" (click)="Remove(item)"
@@ -214,22 +220,15 @@
           <tfoot>
             <tr>
               <td colspan="50">
-                <nav aria-label="Page navigation example">
-                  <ul class="pagination">
-                    <li class="page-item">
-                      <a class="page-link" href="#" aria-label="Previous">
-                        <span aria-hidden="true">&laquo;</span>
-                        <span class="sr-only">Previous</span>
-                      </a>
-                    </li>
-                    <li class="page-item">
-                      <a class="page-link" href="#" aria-label="Next">
-                        <span aria-hidden="true">&raquo;</span>
-                        <span class="sr-only">Next</span>
-                      </a>
-                    </li>
-                  </ul>
-                </nav>
+                <div class="d-flex flex-row-reverse">
+                  <div class="d-inline-block font-weight-bold">
+                    <a class="round" (click)="PreviousPage()">&#8249;</a>
+                    <a class="round" (click)="NextPage()">&#8250;</a>
+                  </div>
+                  <div class="ml-2 d-inline-block p-text mr-4">
+                    Showing page: <b>{{this.pageIndex}} of {{TotalPageCount}}</b>
+                  </div>
+                </div>
               </td>
             </tr>
           </tfoot>

@@ -8,8 +8,7 @@
       <div class="ipopup__header">
         <header>Add/Edit Office</header>
       </div>
-      <form (submit)="SubmitSearchCriateria()" class="pt-2" (keydown.enter)="$event.preventDefault()"
-        >
+      <form (submit)="SubmitSearchCriateria()" class="pt-2" (keydown.enter)="$event.preventDefault()">
         <table class="mt-2">
           <tbody>
             <tr>
@@ -22,11 +21,13 @@
                   </div>
                   <div class="col-md-3">
                     <label for="Name">Name</label>
-                    <input class="plain-input form-control" required [(ngModel)]="entity.Name" name="Name" placeholder="Name">
+                    <input class="plain-input form-control" required [(ngModel)]="entity.Name" name="Name"
+                      placeholder="Name">
                   </div>
                   <div class="col-md-3">
                     <label for="Name">Short Name</label>
-                    <input class="plain-input form-control" required [(ngModel)]="entity.ShortName" name="ShortName" placeholder="Short Name">
+                    <input class="plain-input form-control" required [(ngModel)]="entity.ShortName" name="ShortName"
+                      placeholder="Short Name">
                   </div>
                 </div>
                 <div class="d-md-flex pt-2">
@@ -37,26 +38,30 @@
                   </div>
                   <div class="col-md-3">
                     <label for="Name">UOM</label>
-                    <input class="plain-input form-control" required [(ngModel)]="entity.UoM" name="UoM" placeholder="UOM">
+                    <input class="plain-input form-control" required [(ngModel)]="entity.UoM" name="UoM"
+                      placeholder="UOM">
                   </div>
                   <div class="col-md-3">
                     <label for="Name">Parent SKU</label>
-                    <input class="plain-input form-control" required [(ngModel)]="entity.ParentSKU" name="ParentSKU" placeholder="Parent SKU">
+                    <input class="plain-input form-control" required [(ngModel)]="entity.ParentSKU" name="ParentSKU"
+                      placeholder="Parent SKU">
                   </div>
                 </div>
                 <div class="d-md-flex pt-2">
                   <div class="col-md-3">
                     <label for="Code">Sub Brand</label>
-                    <input class="plain-input form-control" name="SubBrandName" required [(ngModel)]="entity.SubBrandName"
-                      placeholder="Sub Brand">
+                    <input class="plain-input form-control" name="SubBrandName" required
+                      [(ngModel)]="entity.SubBrandName" placeholder="Sub Brand">
                   </div>
                   <div class="col-md-3">
                     <label for="Name">Brand</label>
-                    <input class="plain-input form-control" required [(ngModel)]="entity.BrandName" name="BrandName" placeholder="Brand">
+                    <input class="plain-input form-control" required [(ngModel)]="entity.BrandName" name="BrandName"
+                      placeholder="Brand">
                   </div>
                   <div class="col-md-3">
                     <label for="Name">Segment</label>
-                    <input class="plain-input form-control" required [(ngModel)]="entity.SegmentName" name="SegmentName" placeholder="Segment">
+                    <input class="plain-input form-control" required [(ngModel)]="entity.SegmentName" name="SegmentName"
+                      placeholder="Segment">
                   </div>
                 </div>
               </td>
@@ -78,15 +83,14 @@
     <div class="row">
       <div class="col-md-6">
         <div class="pl-0 pr-0 form-group col-md-12 col-sm-12 d-inline-block">
-          <input id="ShopFilter" placeholder="Global search" class="form-control" [(ngModel)]="searchQuery" (keyup)="FilterLocaldata()"
+          <input id="ShopFilter" placeholder="Global search" class="form-control" (keyup)="FilterLocaldata()"
             required="required" type="text">
         </div>
       </div>
       <div class="col-md-6 d-inline-block text-right no-padding">
         <button type="submit" (click)="ResetFilter()" class="btn btn-outline-info mr-1"><i
             class="fas fa-sync"></i>&ensp;Reset</button>
-        <button type="button" (click)="Open()" class="btn btn-success"><i
-            class="fa fa-plus"></i>&ensp;Create</button>
+        <button type="button" (click)="Open()" class="btn btn-success"><i class="fa fa-plus"></i>&ensp;Create</button>
       </div>
     </div>
     <div id="viewfeestimetable-dv" class="h-tbl">
@@ -119,8 +123,7 @@
                 <div class="last dyn-last">
                   <input type="hidden" name="currentObject" [attr.value]="item | json" />
                   <div name="editdelete">
-                    <a href="javascript:void(0)" (click)="Edit(item)" id="btnedit"
-                      class="tbl-action-icon-style a-icon">
+                    <a href="javascript:void(0)" (click)="Edit(item)" id="btnedit" class="tbl-action-icon-style a-icon">
                       <i class="far fa-edit"></i>&nbsp;
                     </a>
                     <a href="javascript:void(0)" id="btndelete" (click)="Remove(item)"
@@ -144,22 +147,15 @@
           <tfoot>
             <tr>
               <td colspan="50">
-                <nav aria-label="Page navigation example">
-                  <ul class="pagination">
-                    <li class="page-item">
-                      <a class="page-link" href="#" aria-label="Previous">
-                        <span aria-hidden="true">&laquo;</span>
-                        <span class="sr-only">Previous</span>
-                      </a>
-                    </li>
-                    <li class="page-item">
-                      <a class="page-link" href="#" aria-label="Next">
-                        <span aria-hidden="true">&raquo;</span>
-                        <span class="sr-only">Next</span>
-                      </a>
-                    </li>
-                  </ul>
-                </nav>
+                <div class="d-flex flex-row-reverse">
+                  <div class="d-inline-block font-weight-bold">
+                    <a class="round" (click)="PreviousPage()">&#8249;</a>
+                    <a class="round" (click)="NextPage()">&#8250;</a>
+                  </div>
+                  <div class="ml-2 d-inline-block p-text mr-4">
+                    Showing page: <b>{{this.pageIndex}} of {{TotalPageCount}}</b>
+                  </div>
+                </div>
               </td>
             </tr>
           </tfoot>

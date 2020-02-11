@@ -131,7 +131,26 @@ export class BeatPlanningComponent implements OnInit {
     let data = "";
     data = $(event.currentTarget).val();
     if (data.length >= 3) {
-      this.searchQuery = ` 1=1 and b.Code like '%${data}%'`;
+      let FilterColumns = [
+        "b.Code",
+        "b.Name",
+        "b.Description",
+        "j2.Code",
+        "c2.Name",
+        "j2.MobileAppRole",
+        "c1.Name"
+      ];
+      this.searchQuery = " 1=1 ";
+      let searchStmt = "";
+      let index = 0;
+      while (index < FilterColumns.length) {
+        if (searchStmt === "")
+          searchStmt += ` ${FilterColumns[index]} like '${data}%' `;
+        else searchStmt += ` or ${FilterColumns[index]} like '${data}%' `;
+        index++;
+      }
+
+      if (searchStmt !== "") this.searchQuery = ` 1=1 and (${searchStmt})`;
       this.FilterResult();
     } else if (data.length === 0) {
       this.searchQuery = ` 1=1 `;
@@ -197,6 +216,12 @@ export class BeatPlanningComponent implements OnInit {
       .catch(e => {
         this.commonService.ShowToast("Getting server error.");
       });
+  }
+
+  ResetFilter() {
+    this.searchQuery = " 1=1 ";
+    $("#ShopFilter").val("");
+    this.FilterResult();
   }
 
   BuildGrid(ResultData: any) {
