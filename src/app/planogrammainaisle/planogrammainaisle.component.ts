@@ -24,21 +24,20 @@ import { AjaxService } from "src/providers/ajax.service";
 export class PlanogrammainaisleComponent implements OnInit {
   entity: any = new PlanogrammainaisleModel();
   TableResultSet: Array<PlanogrammainaisleModel>;
+  ServerResult: Array<PlanogrammainaisleModel>;
   BindingHeader: Array<IGrid>;
   IsEmptyRow: boolean = true;
   HeaderName: string = "Page Name";
   EnableFilter: boolean = false;
   TotalHeaders: number = 5;
-  PlannogramImage: Array<File>;
-  PlannogramImagePath: Array<any>;
+  PlannogramImage: File;
+  PlannogramImagePath: Array<any> = [];
   PlannogramExistingImagePath: Array<any>;
   TypeEnum: string = "BO";
   SubChannelRecord: Array<any>;
   SubChainRecord: Array<any>;
   SubLocationRecord: Array<any>;
   AdvanceFilterObject: FormGroup;
-  OnEdit: boolean = false;
-  OnCreate: boolean = false;
   ServerBasePath: string;
   searchQuery: string = " 1=1 ";
   sortBy: string = "";
@@ -46,6 +45,8 @@ export class PlanogrammainaisleComponent implements OnInit {
   pageSize: number = 15;
   TotalCount: number = 0;
   TotalPageCount: number = 0;
+  ImagePopup: boolean = false;
+  CurrentGid: string = "";
   constructor(
     private fb: FormBuilder,
     private commonService: CommonService,
@@ -134,27 +135,33 @@ export class PlanogrammainaisleComponent implements OnInit {
                 (this.TotalPageCount + 1).toString()
               );
             }
+            this.ServerResult = Record;
             let index = 0;
             while (index < Record.length) {
-              this.TableResultSet.push({
-                Gid: Record[index].Gid,
-                Name: Record[index].Name,
-                Description: Record[index].Description,
-                SubChannel: Record[index].SubChannel,
-                Chain: Record[index].Chain,
-                Location: Record[index].Location,
-                RelativePathText: Record[index].RelativePathText,
-                FileExtension: Record[index].FileExtension,
-                Label: Record[index].Label,
-                ImageFilePath:
-                  this.ServerBasePath +
-                  Record[index].RelativePathText +
-                  "//" +
-                  Record[index].Label +
-                  "." +
-                  Record[index].FileExtension,
-                AFileGid: Record[index].AFileGid
-              });
+              if (
+                this.TableResultSet.filter(x => x.Gid === Record[index].Gid)
+                  .length === 0
+              ) {
+                this.TableResultSet.push({
+                  Gid: Record[index].Gid,
+                  Name: Record[index].Name,
+                  Description: Record[index].Description,
+                  SubChannel: Record[index].SubChannel,
+                  Chain: Record[index].Chain,
+                  Location: Record[index].Location,
+                  RelativePathText: Record[index].RelativePathText,
+                  FileExtension: Record[index].FileExtension,
+                  Label: Record[index].Label,
+                  ImageFilePath:
+                    this.ServerBasePath +
+                    Record[index].RelativePathText +
+                    "//" +
+                    Record[index].Label +
+                    "." +
+                    Record[index].FileExtension,
+                  AFileGid: Record[index].AFileGid
+                });
+              }
               index++;
             }
 
@@ -234,8 +241,8 @@ export class PlanogrammainaisleComponent implements OnInit {
 
   Close() {
     this.EnableFilter = false;
-    this.OnCreate = false;
-    this.OnEdit = false;
+    this.ImagePopup = false;
+    this.PlannogramImagePath = [];
   }
 
   ResetFilter() {
@@ -256,10 +263,62 @@ export class PlanogrammainaisleComponent implements OnInit {
     this.EnableFilter = true;
   }
 
+  RemoveImage(aFileGid: string) {
+    if (IsValidType(aFileGid)) {
+      let MSData = JSON.parse(PostParam);
+      MSData.content.aFileGid = aFileGid;
+
+      this.http.upload("Webportal/RemovePlanogrammainaislesAfile", MSData).then(
+        response => {
+          if (this.commonService.IsValidResponse(response)) {
+            if (response.content.data === "Removed successfully.") {
+              this.ServerResult = this.ServerResult.filter(
+                x => x.AFileGid !== aFileGid
+              );
+              this.BuildImagePaths();
+              this.commonService.ShowToast("Image remove successfully.");
+            } else {
+              this.commonService.ShowToast("Unable to remove image.");
+            }
+          } else {
+            this.commonService.ShowToast("Unable to remove image.");
+          }
+        },
+        error => {
+          this.commonService.ShowToast(
+            "Server error. Please contact to admin."
+          );
+        }
+      );
+    }
+  }
+
+  BuildImagePaths() {
+    let AfileResult = this.ServerResult.filter(x => x.Gid === this.CurrentGid);
+    if (AfileResult.length > 0) {
+      this.PlannogramExistingImagePath = [];
+      AfileResult.forEach(item => {
+        this.PlannogramExistingImagePath.push({
+          url: `${this.ServerBasePath}\\${item.RelativePathText}\\${item.Label}.${item.FileExtension}`,
+          gid: item.AFileGid
+        });
+      });
+    }
+  }
+
+  UploadImage(editEntity: any) {
+    this.entity = new PlanogrammainaisleModel();
+    this.entity.SubChannel = "";
+    this.entity.Location = "";
+    this.entity.Chain = "";
+    this.CurrentGid = editEntity.Gid;
+    this.BuildImagePaths();
+    this.ImagePopup = true;
+    this.entity = editEntity;
+  }
+
   Edit(editEntity: any) {
     this.Open();
-    this.OnEdit = true;
-    this.OnCreate = false;
     this.PlannogramExistingImagePath = [];
     this.PlannogramExistingImagePath.push(editEntity.ImageFilePath);
     this.entity = editEntity;
@@ -272,17 +331,14 @@ export class PlanogrammainaisleComponent implements OnInit {
   }
 
   GetFile(fileInput: any) {
-    this.OnCreate = true;
-    this.OnEdit = false;
-    this.PlannogramImage = [];
-    this.PlannogramImagePath = [];
     let Files = fileInput.target.files;
+    this.PlannogramImage = null;
     if (Files.length > 0) {
       let index = 0;
       while (index < Files.length) {
-        this.PlannogramImage.push(<File>Files[index]);
+        this.PlannogramImage = <File>Files[index];
         let reader = new FileReader();
-        reader.readAsDataURL(this.PlannogramImage[index]);
+        reader.readAsDataURL(this.PlannogramImage);
         reader.onload = fileEvent => {
           this.PlannogramImagePath.push(reader.result);
         };
@@ -293,22 +349,50 @@ export class PlanogrammainaisleComponent implements OnInit {
         // }
         index++;
       }
+
+      if (this.ImagePopup) {
+        this.UploadAndSaveImage();
+      }
     } else {
       this.commonService.ShowToast("No file selected");
+    }
+  }
+
+  UploadAndSaveImage() {
+    if (IsValidType(this.entity)) {
+      let formData = new FormData();
+      if (this.PlannogramImage !== null) {
+        formData.append("image", this.PlannogramImage);
+        formData.append("planogramNewData", JSON.stringify(this.entity));
+        this.http
+          .upload("Webportal/UpdatePlanogrammainaisleImages", formData)
+          .then(
+            response => {
+              if (this.commonService.IsValidResponse(response)) {
+                let Data = response.content.data;
+                if (IsValidType(Data)) {
+                  this.commonService.ShowToast("Data retrieve successfully.");
+                } else {
+                  this.TableResultSet = [];
+                  this.IsEmptyRow = true;
+                }
+              } else {
+                this.commonService.ShowToast("Unable to save data.");
+              }
+            },
+            error => {
+              this.commonService.ShowToast(
+                "Server error. Please contact to admin."
+              );
+            }
+          );
+      }
     }
   }
 
   Save() {
     if (IsValidType(this.entity)) {
       let formData = new FormData();
-      let index = 0;
-      if (IsValidType(this.PlannogramImage)) {
-        while (index < this.PlannogramImage.length) {
-          formData.append("image_" + index, this.PlannogramImage[index]);
-          index++;
-        }
-      }
-
       formData.append("planogramNewData", JSON.stringify(this.entity));
       this.Close();
       this.http.upload("Webportal/SavePlanogrammainaisle", formData).then(
