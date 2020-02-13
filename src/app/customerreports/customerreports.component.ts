@@ -8,7 +8,11 @@ import {
   IsValidType
 } from "./../../providers/common-service/common.service";
 import * as $ from "jquery";
-import { JourneyPlan, RetailerDetail } from "./../../providers/constants";
+import {
+  JourneyPlan,
+  RetailerDetail,
+  PostParam
+} from "./../../providers/constants";
 import { iNavigation } from "./../../providers/iNavigation";
 import { AjaxService } from "src/providers/ajax.service";
 
@@ -18,13 +22,18 @@ import { AjaxService } from "src/providers/ajax.service";
   styleUrls: ["./customerreports.component.scss"]
 })
 export class CustomerreportsComponent implements OnInit {
-  searchQuery: string = "";
   TableResultSet: Array<RetailerModal>;
   BindingHeader: Array<IGrid>;
   IsEmptyRow: boolean = true;
   HeaderName: string = "Page Name";
   EnableFilter: boolean = false;
   TotalHeaders: number = 5;
+  searchQuery: string = " 1=1 ";
+  sortBy: string = "";
+  pageIndex: number = 1;
+  pageSize: number = 15;
+  TotalCount: number = 0;
+  TotalPageCount: number = 0;
   AutodropdownCollection: any = {
     Region: { data: [], placeholder: "Region" },
     SubChannel: { data: [], placeholder: "SubChannel" },
@@ -62,30 +71,67 @@ export class CustomerreportsComponent implements OnInit {
     });
   }
 
-  LoadData() {
-    let input: any = {
-      meta: {
-        app: "MerchandiserApp",
-        action: "WebLogin",
-        requestId: "0",
-        deviceId: "web"
-      },
-      content: {
-        deviceId: "web",
-        deviceType: "web",
-        deviceOS: "Windows",
-        deviceVersion: "web",
-        deviceInfo: "web"
+  FilterLocaldata() {
+    let data = "";
+    data = $(event.currentTarget).val();
+    if (data.length >= 3) {
+      let FilteColumns = [
+        "j.Code",
+        "j.Name",
+        "j.KYCProgress",
+        "j.Channel",
+        "j.SubChannel",
+        "j.ChainName",
+        "p.LinkGid",
+        "p.HouseNo",
+        "p.City",
+        "p.Region",
+        "p.State",
+        "p.Country"
+      ];
+      this.searchQuery = " 1=1 ";
+      let searchStmt = "";
+      let index = 0;
+      while (index < FilteColumns.length) {
+        if (searchStmt === "")
+          searchStmt += ` ${FilteColumns[index]} like '${data}%' `;
+        else searchStmt += ` or ${FilteColumns[index]} like '${data}%' `;
+        index++;
       }
-    };
-    input.content.searchString = this.searchQuery;
-    this.http.post("Webportal/FetchRetailers", input).then(response => {
+
+      if (searchStmt !== "") this.searchQuery = ` 1=1 and (${searchStmt})`;
+      this.LoadData();
+    } else if (data.length === 0) {
+      this.searchQuery = ` 1=1 `;
+      this.LoadData();
+    }
+  }
+
+  LoadData() {
+    let MSData = JSON.parse(PostParam);
+    MSData.content.searchString = this.searchQuery;
+    MSData.content.sortBy = this.sortBy;
+    MSData.content.pageIndex = this.pageIndex;
+    MSData.content.pageSize = this.pageSize;
+
+    this.http.post("Webportal/FetchRetailers", MSData).then(response => {
       this.TableResultSet = [];
       if (this.commonService.IsValidResponse(response)) {
         let Data = response.content.data;
         if (Data != null && Data != "") {
-          this.IsEmptyRow = false;
-          this.TableResultSet = Data;
+          let Data = JSON.parse(response.content.data);
+          if (IsValidType(Data["Record"]) && IsValidType(Data["Count"])) {
+            let Record = Data["Record"];
+            this.TotalCount = Data["Count"][0].Total;
+            this.TotalPageCount = this.TotalCount / this.pageSize;
+            if (this.TotalCount % this.pageSize > 0) {
+              this.TotalPageCount = parseInt(
+                (this.TotalPageCount + 1).toString()
+              );
+            }
+            this.IsEmptyRow = false;
+            this.TableResultSet = Record;
+          }
           this.commonService.ShowToast("Data retrieve successfully.");
         } else {
           this.IsEmptyRow = true;
@@ -95,6 +141,20 @@ export class CustomerreportsComponent implements OnInit {
         this.commonService.ShowToast("Unable to get data.");
       }
     });
+  }
+
+  NextPage() {
+    if (this.pageIndex + 1 <= this.TotalPageCount) {
+      this.pageIndex = this.pageIndex + 1;
+      this.LoadData();
+    }
+  }
+
+  PreviousPage() {
+    if (this.pageIndex > 1) {
+      this.pageIndex = this.pageIndex - 1;
+      this.LoadData();
+    }
   }
 
   ngOnInit() {
@@ -130,7 +190,16 @@ export class CustomerreportsComponent implements OnInit {
     this.EnableFilter = !this.EnableFilter;
   }
 
-  ResetFilter() {}
+  ResetFilter() {
+    $("#ShopFilter").val("");
+    this.searchQuery = " 1=1 ";
+    this.sortBy = "";
+    this.pageIndex = 1;
+    this.pageSize = 15;
+    this.TotalCount = 0;
+    this.TotalPageCount = 0;
+    this.LoadData();
+  }
 
   LoadTableData() {
     this.IsEmptyRow = false;
@@ -181,8 +250,6 @@ export class CustomerreportsComponent implements OnInit {
 
     alert(searchQuery);
   }
-
-  FilterLocaldata(keyvalue: any) {}
 
   EditCurrent(CurrentItem: any) {
     if (IsValidType(CurrentItem))

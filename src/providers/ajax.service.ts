@@ -36,6 +36,15 @@ export class AjaxService {
     return ImageBaseUrl;
   }
 
+  public GetImageBaseUrl() {
+    let ServerBasePath = this.BaseUrl().replace("api/", "");
+    ServerBasePath = ServerBasePath.replace(
+      "MarsAuth",
+      "MarsMerchandiserMobile"
+    );
+    return ServerBasePath;
+  }
+
   LoadStaticJson(StaticUrl): Observable<any> {
     let JsonData = this.http.get(StaticUrl);
     this.commonService.HideLoader();

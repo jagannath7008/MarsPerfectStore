@@ -19,6 +19,7 @@ export const BeatPlan = "beatCalander";
 export const Sku = "sku";
 export const Planogrammainaisle = "planogrammainaisle";
 export const PlanogramSecondaryVisibility = "planogramsecondaryvisibility";
+export const PlanogramTransactionzone = "planogramtransactionzone";
 export const SKUPortfolio = "skuportfolio";
 export const ManageSKUPortfolio = "skuportfolio/manageskuportfolio";
 export const CustomerFootprint = "customerfootprint";

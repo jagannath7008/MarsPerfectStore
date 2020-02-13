@@ -14,61 +14,49 @@
           <tbody>
             <tr>
               <td>
-                <div class="d-md-flex pt-2">
-                  <div class="col-md-3">
-                    <div class="form-group">
+                <div class="pt-2">
+                  <div class="col-md-12 row">
+                    <div class="form-group col-md-4">
                       <label for="Region">Region</label>
                       <app-iautocomplete id="Region" [Data]="AutodropdownCollection.Region"></app-iautocomplete>
                     </div>
-                    <div class="form-group">
-                      <label for="SubChannel">Sub Channel</label>
-                      <app-iautocomplete id="SubChannel" [Data]="AutodropdownCollection.SubChannel"></app-iautocomplete>
-                    </div>
-                    <div class="form-group">
-                      <label for="CustomerCode">Customer Code</label>
-                      <input class="form-control plain-input" id="CustomerCode" formControlName="CustomerCode"
-                        placeholder="Customer code">
-                    </div>
-                  </div>
-                  <div class="col-md-3">
-                    <div class="form-group">
-                      <label for="Supervisor">Supervisor</label>
-                      <app-iautocomplete id="Supervisor" [Data]="AutodropdownCollection.Supervisor"></app-iautocomplete>
-                    </div>
-                    <div class="form-group">
+                    <div class="form-group col-md-4">
                       <label for="State">State</label>
                       <app-iautocomplete id="State" [Data]="AutodropdownCollection.State"></app-iautocomplete>
                     </div>
-                    <div class="form-group">
-                      <label for="ChainName">Chain Name</label>
-                      <app-iautocomplete id="ChainName" [Data]="AutodropdownCollection.ChainName"></app-iautocomplete>
-                    </div>
-                  </div>
-                  <div class="col-md-3">
-                    <div class="form-group">
-                      <label for="CustomerName">Customer Name</label>
-                      <input class="form-control" id="CustomerName" formControlName="CustomerName"
-                        placeholder="Customer name">
-                    </div>
-                    <div class="form-group">
-                      <label for="Marchandisor">Marchandisor</label>
-                      <app-iautocomplete id="Marchandisor" [Data]="AutodropdownCollection.Marchandisor">
-                      </app-iautocomplete>
-                    </div>
-                    <div class="form-group">
+                    <div class="form-group col-md-4">
                       <label for="City">City</label>
                       <app-iautocomplete id="City" [Data]="AutodropdownCollection.City"></app-iautocomplete>
                     </div>
                   </div>
-                  <div class="col-md-3">
-                    <div class="form-group">
-                      <label for="Address">Address</label>
-                      <input class="form-control plain-input" id="Address" formControlName="Address"
-                        placeholder="Address">
+                  <div class="col-md-12 row">
+                    <div class="form-group col-md-4">
+                      <label for="Supervisor">Supervisor</label>
+                      <app-iautocomplete id="Supervisor" [Data]="AutodropdownCollection.Supervisor"></app-iautocomplete>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group col-md-4">
+                      <label for="Marchandisor">Marchandisor</label>
+                      <app-iautocomplete id="Marchandisor" [Data]="AutodropdownCollection.Marchandisor">
+                      </app-iautocomplete>
+                    </div>
+                    <div class="form-group col-md-4">
                       <label for="Beat">Beat</label>
                       <input class="form-control plain-input" id="Beat" formControlName="Beat" placeholder="Beat">
+                    </div>
+                  </div>
+                  <div class="col-md-12 row">
+                    <div class="form-group col-md-4">
+                      <label for="ChainName">Chain Name</label>
+                      <app-iautocomplete id="ChainName" [Data]="AutodropdownCollection.ChainName"></app-iautocomplete>
+                    </div>
+                    <div class="form-group col-md-4">
+                      <label for="CustomerName">Customer Name</label>
+                      <input class="form-control" id="CustomerName" formControlName="CustomerName"
+                        placeholder="Customer name">
+                    </div>
+                    <div class="form-group col-md-4">
+                      <label for="Address">Customer Code</label>
+                      <input class="form-control plain-input" id="CustomerCode" placeholder="Customer Code">
                     </div>
                   </div>
                 </div>
@@ -91,7 +79,7 @@
     <div class="row">
       <div class="col-md-6">
         <div class="pl-0 pr-0 form-group col-md-12 col-sm-12 d-inline-block">
-          <input id="ShopFilter" placeholder="Global search" class="form-control" (keyup)="FilterLocaldata($event)"
+          <input id="ShopFilter" placeholder="Global search" class="form-control" (keyup)="FilterLocaldata()"
             required="required" type="text">
         </div>
       </div>
@@ -157,22 +145,16 @@
           <tfoot>
             <tr>
               <td colspan="50">
-                <nav aria-label="Page navigation example">
-                  <ul class="pagination">
-                    <li class="page-item">
-                      <a class="page-link" href="#" aria-label="Previous">
-                        <span aria-hidden="true">&laquo;</span>
-                        <span class="sr-only">Previous</span>
-                      </a>
-                    </li>
-                    <li class="page-item">
-                      <a class="page-link" href="#" aria-label="Next">
-                        <span aria-hidden="true">&raquo;</span>
-                        <span class="sr-only">Next</span>
-                      </a>
-                    </li>
-                  </ul>
-                </nav>
+                <div class="d-flex flex-row-reverse">
+                  <div class="d-inline-block font-weight-bold">
+                    <a class="round" (click)="PreviousPage()">&#8249;</a>
+                    <a class="round" (click)="NextPage()">&#8250;</a>
+                  </div>
+                  <div class="ml-2 d-inline-block p-text mr-4">
+                    Showing page:
+                    <b>{{ this.pageIndex }} of {{ TotalPageCount }}</b>
+                  </div>
+                </div>
               </td>
             </tr>
           </tfoot>

@@ -16,7 +16,7 @@
               <td>
                 <div class="d-md-flex mt-4 mb-4">
                   <div class="col-md-12 row p-0">
-                    <div class="col-md-8">
+                    <div class="col-md-12">
                       <div class="row">
                         <div class="col-md-6">
                           <label for="Name">Name</label>
@@ -58,24 +58,6 @@
                         </div>
                       </div>
                     </div>
-                    <div class="col-md-4 text-right">
-                      <div class="card d-inline-block text-center" style="width: 16rem;">
-                        <ng-container *ngIf="OnEdit">
-                          <img *ngFor="let img of PlannogramExistingImagePath" class="card-img-top" [src]="img"
-                            alt="Card image cap">
-                        </ng-container>
-
-                        <ng-container *ngIf="OnCreate">
-                          <img *ngFor="let img of PlannogramImagePath" class="card-img-top" [src]="img"
-                            alt="Card image cap">
-                        </ng-container>
-                        <div class="card-body">
-                          <button class="btn btn-outline-dark btn-block" (click)="ChooseFile()">Upload File</button>
-                          <input type="file" value="Browse File" id="BrowseFile" class="d-none btn"
-                            (change)="GetFile($event)" />
-                        </div>
-                      </div>
-                    </div>
                   </div>
                 </div>
               </td>
@@ -93,12 +75,54 @@
       </form>
     </div>
   </div>
+
+  <div *ngIf="ImagePopup" class="ipopup">
+    <div class="ipopup__content">
+      <div class="ipopup__header">
+        <header>Add/Edit Planogram Main Aisle</header>
+      </div>
+      <form method="POST" (ngSubmit)="Save()" enctype="multipart/form-data" class="pt-2"
+        (keydown.enter)="$event.preventDefault()">
+        <table class="mt-2">
+          <tbody>
+            <tr>
+              <td>
+                <div class="col-md-12 row mt-4 mb-4">
+                  <div class="col-md-12 card img-container d-inline-block">
+                    <ng-container *ngFor="let img of PlannogramExistingImagePath">
+                      <div class="img-showcase d-inline-block border p-2">
+                        <img [src]="img.url" class="card-img-top" alt="Card image cap">
+                        <div class="pt-2">
+                          <a href="javascript:void(0)" (click)="RemoveImage(img.gid)"
+                            class="tbl-action-icon-style a-icon">
+                            <i class="far fa-trash-alt" style="color:red;"></i>
+                          </a>
+                        </div>
+                      </div>
+                    </ng-container>
+                  </div>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+          <tfoot class="border-top">
+            <div class="mt-2">
+              <button class="btn btn-primary" (click)="ChooseFile()">Upload File</button>
+              <input type="file" value="Browse File" id="BrowseFile" class="d-none btn" (change)="GetFile($event)" />
+              <button class="btn btn-outline-dark ml-2" (click)="Close()">Close</button>
+            </div>
+          </tfoot>
+        </table>
+      </form>
+    </div>
+  </div>
+
   <div class="pl-0 pr-1 d-inline-block panel-body col-md-12 col-xs-12">
     <div class="row">
       <div class="col-md-6">
         <div class="pl-0 pr-0 form-group col-md-12 col-sm-12 d-inline-block">
-          <input id="ShopFilter" placeholder="Global search" class="form-control" [(ngModel)]="searchQuery"
-            (keyup)="FilterLocaldata()" required="required" type="text">
+          <input id="ShopFilter" placeholder="Global search" class="form-control" (keyup)="FilterLocaldata()"
+            required="required" type="text">
         </div>
       </div>
       <div class="col-md-6 d-inline-block text-right no-padding">
@@ -140,6 +164,10 @@
                     <a href="javascript:void(0)" (click)="Edit(item)" id="btnedit" class="tbl-action-icon-style a-icon">
                       <i class="far fa-edit"></i>&nbsp;
                     </a>
+                    <a href="javascript:void(0)" (click)="UploadImage(item)" id="btnupload"
+                      class="tbl-action-icon-style a-icon">
+                      <i class="fas fa-upload"></i>&nbsp;
+                    </a>
                     <a href="javascript:void(0)" id="btndelete" (click)="Remove(item)"
                       class="tbl-action-icon-style a-icon">
                       <i class="far fa-trash-alt" style="color:red;"></i>
@@ -161,22 +189,15 @@
           <tfoot>
             <tr>
               <td colspan="50">
-                <nav aria-label="Page navigation example">
-                  <ul class="pagination">
-                    <li class="page-item">
-                      <a class="page-link" href="#" aria-label="Previous">
-                        <span aria-hidden="true">&laquo;</span>
-                        <span class="sr-only">Previous</span>
-                      </a>
-                    </li>
-                    <li class="page-item">
-                      <a class="page-link" href="#" aria-label="Next">
-                        <span aria-hidden="true">&raquo;</span>
-                        <span class="sr-only">Next</span>
-                      </a>
-                    </li>
-                  </ul>
-                </nav>
+                <div class="d-flex flex-row-reverse">
+                  <div class="d-inline-block font-weight-bold">
+                    <a class="round" (click)="PreviousPage()">&#8249;</a>
+                    <a class="round" (click)="NextPage()">&#8250;</a>
+                  </div>
+                  <div class="ml-2 d-inline-block p-text mr-4">
+                    Showing page: <b>{{this.pageIndex}} of {{TotalPageCount}}</b>
+                  </div>
+                </div>
               </td>
             </tr>
           </tfoot>

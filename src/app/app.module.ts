@@ -36,6 +36,7 @@ import { ManageskuportfolioComponent } from "./manageskuportfolio/manageskuportf
 import { AgmCoreModule } from "@agm/core";
 import { WorkfffectivenessComponent } from "./workfffectiveness/workfffectiveness.component";
 import { CustomerfootprintComponent } from "./customerfootprint/customerfootprint.component";
+import { PlanogramtransactionzoneComponent } from './planogramtransactionzone/planogramtransactionzone.component';
 
 @NgModule({
   declarations: [
@@ -62,7 +63,8 @@ import { CustomerfootprintComponent } from "./customerfootprint/customerfootprin
     SkuporfolioComponent,
     ManageskuportfolioComponent,
     CustomerfootprintComponent,
-    WorkfffectivenessComponent
+    WorkfffectivenessComponent,
+    PlanogramtransactionzoneComponent
   ],
   imports: [
     NgMultiSelectDropDownModule.forRoot(),

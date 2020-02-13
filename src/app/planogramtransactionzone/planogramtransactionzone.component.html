@@ -6,62 +6,64 @@
   <div *ngIf="EnableFilter" class="ipopup">
     <div class="ipopup__content">
       <div class="ipopup__header">
-        <header>Add/Edit Office</header>
+        <header>Add/Edit Planogram Transaction Zone</header>
       </div>
-      <form (submit)="SubmitSearchCriateria()" class="pt-2" (keydown.enter)="$event.preventDefault()">
+      <form method="POST" (ngSubmit)="Save()" enctype="multipart/form-data" class="pt-2"
+        (keydown.enter)="$event.preventDefault()">
         <table class="mt-2">
           <tbody>
             <tr>
               <td>
-                <div class="d-md-flex pt-2">
-                  <div class="col-md-3">
-                    <label for="Code">Code</label>
-                    <input class="plain-input form-control" name="Code" required [(ngModel)]="entity.Code"
-                      placeholder="Code">
+                <div class="d-md-flex mb-4 pt-2">
+                  <div class="col-8">
+                    <div class="col-12 row">
+                      <div class="col-md-6">
+                        <label for="Name">Name</label>
+                        <input class="plain-input form-control" required [(ngModel)]="entity.Name" name="Name"
+                          placeholder="Name">
+                      </div>
+                      <div class="col-md-6">
+                        <label for="Name">Description</label>
+                        <input class="plain-input form-control" required [(ngModel)]="entity.Description"
+                          name="Description" placeholder="Description">
+                      </div>
+                    </div>
+
+                    <div class="col-12 row">
+                      <div class="col-md-6">
+                        <label for="Code">Sub Channel</label>
+                        <select class="plain-input form-control" [(ngModel)]="entity.SubChannel" name="SubChannel">
+                          <option value="">Select SubChannel</option>
+                          <option *ngFor="let subchannelItem of SubChannelRecord;" [attr.value]="subchannelItem.Value">
+                            {{subchannelItem.Value}}</option>
+                        </select>
+                      </div>
+                      <div class="col-md-6">
+                        <label for="Chain">Chain</label>
+                        <select class="plain-input form-control" [(ngModel)]="entity.Chain" name="Chain">
+                          <option value="">Select Chain</option>
+                          <option *ngFor="let chainItem of SubChainRecord;" [attr.value]="chainItem.Value">
+                            {{chainItem.Value}}</option>
+                        </select>
+                      </div>
+                      <div class="col-md-3 d-none">
+                        <label for="Name">Location</label>
+                        <select class="plain-input form-control" [(ngModel)]="entity.Location" name="Location">
+                          <option value="">Select Location</option>
+                          <option *ngFor="let locationItem of SubLocationRecord;" [attr.value]="locationItem.Value">
+                            {{locationItem.Value}}</option>
+                        </select>
+                      </div>
+                    </div>
                   </div>
-                  <div class="col-md-3">
-                    <label for="Name">Name</label>
-                    <input class="plain-input form-control" required [(ngModel)]="entity.Name" name="Name"
-                      placeholder="Name">
-                  </div>
-                  <div class="col-md-3">
-                    <label for="Name">Short Name</label>
-                    <input class="plain-input form-control" required [(ngModel)]="entity.ShortName" name="ShortName"
-                      placeholder="Short Name">
-                  </div>
-                </div>
-                <div class="d-md-flex pt-2">
-                  <div class="col-md-3">
-                    <label for="Code">MRP</label>
-                    <input class="plain-input form-control" name="MRP" type="number" required [(ngModel)]="entity.MRP"
-                      placeholder="MRP">
-                  </div>
-                  <div class="col-md-3">
-                    <label for="Name">UOM</label>
-                    <input class="plain-input form-control" required [(ngModel)]="entity.UoM" name="UoM"
-                      placeholder="UOM">
-                  </div>
-                  <div class="col-md-3">
-                    <label for="Name">Parent SKU</label>
-                    <input class="plain-input form-control" required [(ngModel)]="entity.ParentSKU" name="ParentSKU"
-                      placeholder="Parent SKU">
-                  </div>
-                </div>
-                <div class="d-md-flex pt-2">
-                  <div class="col-md-3">
-                    <label for="Code">Sub Brand</label>
-                    <input class="plain-input form-control" name="SubBrandName" required
-                      [(ngModel)]="entity.SubBrandName" placeholder="Sub Brand">
-                  </div>
-                  <div class="col-md-3">
-                    <label for="Name">Brand</label>
-                    <input class="plain-input form-control" required [(ngModel)]="entity.BrandName" name="BrandName"
-                      placeholder="Brand">
-                  </div>
-                  <div class="col-md-3">
-                    <label for="Name">Segment</label>
-                    <input class="plain-input form-control" required [(ngModel)]="entity.SegmentName" name="SegmentName"
-                      placeholder="Segment">
+                  <div class="col-4">
+                    <div class="card" style="width: 18rem;">
+                      <img class="card-img-top" [src]="PlannogramImagePath" alt="Card image cap">
+                      <div class="card-body">
+                        <input type="file" value="Browse File" class="btn" (change)="GetFile($event)" />
+                        <p class="card-text">Upload Img</p>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </td>
@@ -69,7 +71,7 @@
           </tbody>
           <tfoot class="border-top">
             <div class="form-group mt-2">
-              <button class="btn btn-primary form-control" (click)="Save()">Save</button>
+              <button class="btn btn-primary form-control">Save</button>
             </div>
             <div class="form-group mt-2">
               <button class="btn btn-outline-dark form-control" (click)="Close()">Close</button>

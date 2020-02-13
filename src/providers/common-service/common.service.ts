@@ -14,7 +14,7 @@ export class CommonService {
   LoaderEnableByPageNavigator: boolean = false;
   private CurrentPageName: string;
   private ApplicationMenu: any;
-  private DefaultUserImagePath: string = "assets/img/user.jpg";
+  private DefaultUserImagePath: string = "assets/user.jpg";
   private PageDetail: Array<MappedActionPage> = [];
   ErrorControlId: Array<string> = [];
   private BreadCrumbData: Array<string> = [];

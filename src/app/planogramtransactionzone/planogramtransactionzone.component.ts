@@ -11,13 +11,13 @@ import * as $ from "jquery";
 import { PostParam } from "src/providers/constants";
 
 @Component({
-  selector: "app-planogramsecondaryvisibility",
-  templateUrl: "./planogramsecondaryvisibility.component.html",
-  styleUrls: ["./planogramsecondaryvisibility.component.scss"]
+  selector: "app-planogramtransactionzone",
+  templateUrl: "./planogramtransactionzone.component.html",
+  styleUrls: ["./planogramtransactionzone.component.scss"]
 })
-export class PlanogramsecondaryvisibilityComponent implements OnInit {
-  entity: any = new PlanogrammainaisleModel();
-  TableResultSet: Array<PlanogrammainaisleModel>;
+export class PlanogramtransactionzoneComponent implements OnInit {
+  entity: any = new PlanogramtraxzoneModal();
+  TableResultSet: Array<PlanogramtraxzoneModal>;
   BindingHeader: Array<IGrid>;
   IsEmptyRow: boolean = true;
   HeaderName: string = "Page Name";
@@ -49,7 +49,7 @@ export class PlanogramsecondaryvisibilityComponent implements OnInit {
       "MarsAuth",
       "MarsMerchandiserMobile"
     );
-    this.HeaderName = "Planogram secondary visibility";
+    this.HeaderName = "Planogram Transaction Zone";
     this.AdvanceFilterObject = this.fb.group({
       Region: new FormControl(""),
       SubChannel: new FormControl(""),
@@ -110,7 +110,7 @@ export class PlanogramsecondaryvisibilityComponent implements OnInit {
     MSData.content.pageSize = this.pageSize;
 
     this.http
-      .post("Webportal/FetchPlanogramsecondaryvisibilitys", MSData)
+      .post("Webportal/FetchPlanogramtransactoinZone", MSData)
       .then(response => {
         this.TableResultSet = [];
         if (this.commonService.IsValidResponse(response)) {
@@ -133,6 +133,11 @@ export class PlanogramsecondaryvisibilityComponent implements OnInit {
                 Name: Record[index].Name,
                 Description: Record[index].Description,
                 SubChannel: Record[index].SubChannel,
+                Label: Record[index].Label,
+                RelativePathText: Record[index].RelativePathText,
+                FileExtension: Record[index].FileExtension,
+                RetailerGid: Record[index].RetailerGid,
+                AFileGid: Record[index].AFileGid,
                 Chain: Record[index].Chain,
                 Location: Record[index].Location,
                 FilePath:
@@ -145,17 +150,18 @@ export class PlanogramsecondaryvisibilityComponent implements OnInit {
               });
               index++;
             }
-            this.SubChannelRecord = [];
-            this.GetDropdownData("retailerSubChannel");
-            this.SubChainRecord = [];
-            this.GetDropdownData("retailerChainName");
-            this.SubLocationRecord = [];
-            this.GetDropdownData("locationTypeEnum");
-            this.commonService.ShowToast("Data retrieve successfully.");
           } else {
             this.IsEmptyRow = true;
             this.commonService.ShowToast("Got empty dataset.");
           }
+
+          this.SubChannelRecord = [];
+          this.GetDropdownData("retailerSubChannel");
+          this.SubChainRecord = [];
+          this.GetDropdownData("retailerChainName");
+          this.SubLocationRecord = [];
+          this.GetDropdownData("locationTypeEnum");
+          this.commonService.ShowToast("Data retrieve successfully.");
         } else {
           this.commonService.ShowToast("Unable to get data.");
         }
@@ -235,7 +241,8 @@ export class PlanogramsecondaryvisibilityComponent implements OnInit {
   }
 
   Open() {
-    this.entity = new PlanogrammainaisleModel();
+    this.entity = new PlanogramtraxzoneModal();
+    this.PlannogramImagePath = "";
     this.entity.SubChannel = "";
     this.entity.Location = "";
     this.entity.Chain = "";
@@ -244,6 +251,13 @@ export class PlanogramsecondaryvisibilityComponent implements OnInit {
   Edit(editEntity: any) {
     this.Open();
     this.entity = editEntity;
+    this.PlannogramImagePath =
+      this.ServerBasePath +
+      editEntity.RelativePathText +
+      "//" +
+      editEntity.Label +
+      "." +
+      editEntity.FileExtension;
   }
 
   GetFile(fileInput: any) {
@@ -269,33 +283,29 @@ export class PlanogramsecondaryvisibilityComponent implements OnInit {
   Save() {
     let formData = new FormData();
     formData.append("image", this.PlannogramImage);
-    formData.append("planogramNewData", JSON.stringify(this.entity));
+    formData.append("TzPlanogramNewData", JSON.stringify(this.entity));
 
     this.Close();
-    this.http
-      .upload("Webportal/SavePlanogramsecondaryvisibilitys", formData)
-      .then(
-        response => {
-          if (this.commonService.IsValidResponse(response)) {
-            let Data = response.content.data;
-            if (Data != null && Data != "") {
-              this.IsEmptyRow = false;
-              this.TableResultSet = Data;
-              this.commonService.ShowToast("Data saved successfully.");
-            } else {
-              this.TableResultSet = [];
-              this.IsEmptyRow = true;
-            }
+    this.http.upload("Webportal/SavePlanogramTramsactionZone", formData).then(
+      response => {
+        if (this.commonService.IsValidResponse(response)) {
+          let Data = response.content.data;
+          if (Data != null && Data != "") {
+            this.IsEmptyRow = false;
+            this.TableResultSet = Data;
+            this.commonService.ShowToast("Data saved successfully.");
           } else {
-            this.commonService.ShowToast("Unable to save data.");
+            this.TableResultSet = [];
+            this.IsEmptyRow = true;
           }
-        },
-        error => {
-          this.commonService.ShowToast(
-            "Server error. Please contact to admin."
-          );
+        } else {
+          this.commonService.ShowToast("Unable to save data.");
         }
-      );
+      },
+      error => {
+        this.commonService.ShowToast("Server error. Please contact to admin.");
+      }
+    );
   }
 
   Remove(editEntity: any) {
@@ -332,12 +342,34 @@ export class PlanogramsecondaryvisibilityComponent implements OnInit {
   }
 }
 
-export class PlanogrammainaisleModel {
+export class PlanogramtraxzoneModal {
   Gid: string;
   Name: string;
   Description: string;
   SubChannel: string;
   Chain: string;
+  Label: string;
   Location: string;
+  RetailerGid: string;
+  RelativePathText: string;
+  FileExtension: string;
+  AFileGid: string;
   FilePath: string;
+}
+
+interface RetailerPlanogramTZ {
+  Id: string;
+  Gid: string;
+  SS: string;
+  CT: string;
+  MT: string;
+  SCT: string;
+  SMT: string;
+  RetailerGid: string;
+  TypeEnum: string;
+  Size: string;
+  UniqueId: string;
+  Remarks: string;
+  Location: string;
+  PlanogramGid: string;
 }
