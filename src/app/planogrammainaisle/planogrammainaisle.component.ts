@@ -142,25 +142,7 @@ export class PlanogrammainaisleComponent implements OnInit {
                 this.TableResultSet.filter(x => x.Gid === Record[index].Gid)
                   .length === 0
               ) {
-                this.TableResultSet.push({
-                  Gid: Record[index].Gid,
-                  Name: Record[index].Name,
-                  Description: Record[index].Description,
-                  SubChannel: Record[index].SubChannel,
-                  Chain: Record[index].Chain,
-                  Location: Record[index].Location,
-                  RelativePathText: Record[index].RelativePathText,
-                  FileExtension: Record[index].FileExtension,
-                  Label: Record[index].Label,
-                  ImageFilePath:
-                    this.ServerBasePath +
-                    Record[index].RelativePathText +
-                    "//" +
-                    Record[index].Label +
-                    "." +
-                    Record[index].FileExtension,
-                  AFileGid: Record[index].AFileGid
-                });
+                this.TableResultSet.push(Record[index]);
               }
               index++;
             }
@@ -369,8 +351,14 @@ export class PlanogrammainaisleComponent implements OnInit {
           .then(
             response => {
               if (this.commonService.IsValidResponse(response)) {
-                let Data = response.content.data;
-                if (IsValidType(Data)) {
+                let Data = JSON.parse(response.content.data);
+                if (IsValidType(Data["Afile"])) {
+                  Data = Data["Afile"];
+                  let OtherFiles = this.ServerResult.filter(
+                    x => x.Gid !== this.entity.Gid
+                  );
+                  this.ServerResult = OtherFiles.concat(Data);
+                  this.BuildImagePaths();
                   this.commonService.ShowToast("Data retrieve successfully.");
                 } else {
                   this.TableResultSet = [];
@@ -399,11 +387,30 @@ export class PlanogrammainaisleComponent implements OnInit {
         response => {
           if (this.commonService.IsValidResponse(response)) {
             this.commonService.ShowToast("Office details saved successfully.");
-
-            let Data = response.content.data;
-            if (Data != null && Data != "") {
+            let Data = JSON.parse(response.content.data);
+            if (IsValidType(Data["Record"]) && IsValidType(Data["Count"])) {
+              this.TableResultSet = [];
               this.IsEmptyRow = false;
-              this.TableResultSet = Data;
+              let Record = Data["Record"];
+              this.pageIndex = 1;
+              this.TotalCount = Data["Count"][0].Total;
+              this.TotalPageCount = this.TotalCount / this.pageSize;
+              if (this.TotalCount % this.pageSize > 0) {
+                this.TotalPageCount = parseInt(
+                  (this.TotalPageCount + 1).toString()
+                );
+              }
+              this.ServerResult = Record;
+              let index = 0;
+              while (index < Record.length) {
+                if (
+                  this.TableResultSet.filter(x => x.Gid === Record[index].Gid)
+                    .length === 0
+                ) {
+                  this.TableResultSet.push(Record[index]);
+                }
+                index++;
+              }
               this.commonService.ShowToast("Data retrieve successfully.");
             } else {
               this.TableResultSet = [];

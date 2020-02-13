@@ -421,37 +421,56 @@
                 </div>
               </div>
 
-              <div [attr.id]="'id_' + ActiveSection" *ngSwitchCase="'Mainaisle'" class="hide-section col-md-12 border">
-                <div class="container p-4">
-                  <div *ngFor="let item of RetailerMainasles">
-                    <div name="planogrammainaisle" class="row">
-                      <div class="col-8">
-                        <div class="form-group col-12">
-                          <select class="form-control" (change)="GetCurrentPlanogram($event)"
-                            [(ngModel)]="item.PlanogramGid">
-                            <option value="">Select Planogram</option>
-                            <option *ngFor="let p of PlanogrammainaisleModal" [value]="p.Gid">
-                              {{p.Name}}
-                            </option>
-                          </select>
-                        </div>
-
-                        <div class="form-group col-6">
-                          <button class="btn btn-dark" (click)="AddtoRetailerMainAisle(item)">Update Planogram</button>
+              <div [attr.id]="'id_' + ActiveSection" *ngSwitchCase="'Mainaisle'"
+                class="hide-section d-flex p-2 col-md-12 border">
+                <div class="col-md-6 border p-2">
+                  <p>
+                    planogram main aisle
+                  </p>
+                  <div class="row">
+                    <ng-container *ngFor="let item of RetailerDetail.afileViewModels">
+                      <div class="col-md-6 border-bottom">
+                        <div class="r-imgs">
+                          <img
+                            [src]="ServerUrl + '\\' +item.RelativePathText + '\\' + item.Label + '.' + item.FileExtension "
+                            alt="">
                         </div>
                       </div>
-                      <div class="col-md-4 mb-4">
-                        <img [src]="OptionsPlanogramImpagePath" class="mainaisle-img-thumbanail" alt="User">
-                        <p class="mt-2">Thumbnail</p>
+                      <div class="col-md-6 border-bottom">
+                        <button class="btn btn-danger disabled" disabled>Change Image</button>
+                      </div>
+                    </ng-container>
+                  </div>
+
+                </div>
+                <div class="col-md-6 border p-2">
+                  <div name="planogrammainaisle" class="row">
+                    <div class="col-8">
+                      <div class="form-group col-12">
+                        <select class="form-control" id="plnogramdd" (change)="GetCurrentPlanogram($event)"
+                          [(ngModel)]="CurrentPlanogramGid">
+                          <option value="">Select Planogram</option>
+                          <option *ngFor="let p of PlanogrammainaisleModal" [value]="p.Gid">
+                            {{p.Name}}
+                          </option>
+                        </select>
+                      </div>
+
+                      <div class="form-group">
+                        <button class="btn btn-dark" (click)="AddtoRetailerMainAisle()">Update Planogram</button>
                       </div>
                     </div>
-                    <div class="form-group">
-                      <div class="card text-center mb-2">
-                        <img [src]="ServerUrl + item.RelativePathText + '\\' + item.Label + '.' + item.FileExtension"
-                          class="mainaisle-img" alt="User">
-                        <div class="card-body">
-                          <h5 class="card-title">{{item.TypeEnum}}</h5>
-                        </div>
+                    <div class="col-md-4 mb-4">
+                      <img [src]="OptionsPlanogramImpagePath" class="mainaisle-img-thumbanail" alt="User">
+                      <p class="mt-2">Thumbnail</p>
+                    </div>
+                  </div>
+                  <div *ngFor="let item of RetailerMainasles" class="form-group">
+                    <div class="card text-center mb-2">
+                      <img [src]="ServerUrl + item.RelativePathText + '\\' + item.Label + '.' + item.FileExtension"
+                        class="mainaisle-img" alt="User">
+                      <div class="card-body">
+                        <h5 class="card-title">{{item.TypeEnum}}</h5>
                       </div>
                     </div>
                   </div>
