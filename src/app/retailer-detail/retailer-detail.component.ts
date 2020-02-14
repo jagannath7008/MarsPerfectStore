@@ -45,6 +45,7 @@ export class RetailerDetailComponent implements OnInit {
   OptionsPlanogramImpagePath: string = "";
   OptionsTransactionZonePlanogramImpagePath: string = "";
   TransactionZonePlanogram: Array<TransactionZonePlanogramModal>;
+  CurrentPlanogramGid: string = "";
   constructor(
     private fb: FormBuilder,
     private commonService: CommonService,
@@ -229,10 +230,11 @@ export class RetailerDetailComponent implements OnInit {
     }
   }
 
-  AddtoRetailerMainAisle(CurrentRetailerMainAisle: RetailerMainasleModal) {
+  AddtoRetailerMainAisle() {
     let planogrammodal = $(event.currentTarget)
       .closest('div[name="planogrammainaisle"]')
       .find("select");
+    let CurrentRetailerMainAisle = $("#plnogramdd").val();
     if (planogrammodal !== null && IsValidType(CurrentRetailerMainAisle)) {
       let planogrammainaisleGid = planogrammodal.val();
       if (IsValidType(planogrammainaisleGid)) {
@@ -253,8 +255,7 @@ export class RetailerDetailComponent implements OnInit {
         };
 
         input.content.planogramGid = planogrammainaisleGid;
-        input.content.retailermainaisleGid = CurrentRetailerMainAisle.Gid;
-        input.content.aFileGid = CurrentRetailerMainAisle.AFileGid;
+        input.content.retailermainaisleGid = this.RetailerMainasles[0].Gid;
         this.http
           .post("Webportal/UpdatePlanogrammainaisle", input)
           .then(response => {
