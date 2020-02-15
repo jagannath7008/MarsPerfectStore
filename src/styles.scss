@@ -43,14 +43,10 @@
   area {
     line-height: 1 !important;
   }
+ 
 
-  .table td {
-    padding: 2px 8px !important;
-  }
-
-  .table th {
-    padding: 6px 8px !important;
-  }
+.table thead th{background-color: #0000a0; color: #fff;}
+.table-hover tbody tr:hover {color: #ffffff !important;background-color: #00d6b8 !important;}
 
   .x_panel {
     position: relative;
@@ -443,9 +439,7 @@
     color: #444 !important;
   }
 
-  .a-icon:hover {
-    font-size: 18px !important;
-  }
+  
 
   .d-inherit {
     display: inherit;
@@ -718,3 +712,15 @@
   .p-text {
     padding-top: 11px !important;
   }
+
+  .btn-success {
+    color: #fff;
+    background-color: #00d6b8 !important;
+    border-color: #00d6b8 !important;
+}
+
+.btn-success:hover {
+  color: #fff;
+  background-color: #01af97 !important;
+  border-color: #01af97 !important;
+}
