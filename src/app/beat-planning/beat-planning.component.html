@@ -57,7 +57,7 @@
             <div class="col-md-9">
               <select class="form-control" formControlName="SupervisorJobGid">
                 <option value="">Select Merchandiser</option>
-                <<ng-container *ngFor="let item of BeatMerchandiserData">
+                <ng-container *ngFor="let item of BeatMerchandiserData">
                   <option [attr.value]="item.JobGid">{{item.Role}} - {{item.JobName}} {{item.Name}}</option>
                   </ng-container>
               </select>
@@ -98,8 +98,8 @@
               </div>
 
               <div class="mt-4 col-md-12 p-0">
-                <div id="dynamic-grid-table" class="table-responsive border">
-                  <table class="table table-striped">
+                <div id="dynamic-grid-table" class="table-responsive">
+                  <table class="table table-striped table-bordered table-hover">
                     <thead>
                       <tr class="headings">
                         <ng-container *ngFor="let col of BeatPlanningHeader">
