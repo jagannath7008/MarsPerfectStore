@@ -4,6 +4,38 @@
     <b>RETAILER DETAILS</b>
   </h4>
 
+  <div *ngIf="ImagePopup" class="ipopup">
+    <div class="ipopup__content">
+      <div class="ipopup__header">
+        <header>Add/Edit Planogram Main Aisle</header>
+      </div>
+      <form method="POST" enctype="multipart/form-data" class="pt-2" (keydown.enter)="$event.preventDefault()">
+        <table class="mt-2">
+          <tbody>
+            <tr>
+              <td>
+                <div class="col-md-12 row mt-4 mb-4">
+                  <div class="col-md-12 card img-container d-inline-block">
+                    <div class="img-showcase d-inline-block border p-2">
+                      <img [src]="MainaisleImageBuffer" class="card-img-top" alt="Card image cap">
+                    </div>
+                  </div>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+          <tfoot class="border-top">
+            <div class="mt-2">
+              <button class="btn btn-primary" (click)="ChooseFile()">Upload File</button>
+              <input type="file" value="Browse File" id="BrowseFile" class="d-none btn" (change)="GetFile($event)" />
+              <button class="btn btn-outline-dark ml-2" (click)="CloseMainaisleImage()">Close</button>
+            </div>
+          </tfoot>
+        </table>
+      </form>
+    </div>
+  </div>
+
   <!-- Modal -->
   <div class="modal fade bd-example-modal-xl" id="newcontact" tabindex="-1" role="dialog"
     aria-labelledby="newcontactLabel" aria-hidden="true">
@@ -425,21 +457,19 @@
                 class="hide-section d-flex p-2 col-md-12 border">
                 <div class="col-md-6 border p-2">
                   <p>
-                    planogram main aisle
+                    Main aisle
                   </p>
                   <div class="row">
-                    <ng-container *ngFor="let item of RetailerDetail.afileViewModels">
+                    <ng-container *ngFor="let item of RetailerAfiles">
                       <div class="col-md-6 border-bottom">
                         <div class="r-imgs">
-                          <img
-                            [src]="ServerUrl + '\\' +item.RelativePathText + '\\' + item.Label + '.' + item.FileExtension "
-                            alt="">
+                          <img [src]="item" alt="">
                         </div>
                       </div>
-                      <div class="col-md-6 border-bottom">
-                        <button class="btn btn-danger disabled" disabled>Change Image</button>
-                      </div>
                     </ng-container>
+                    <div class="col-md-6 border-bottom">
+                      <button class="btn btn-danger" (click)="ChangeMainaisleImage()">Change Image</button>
+                    </div>
                   </div>
 
                 </div>
@@ -447,10 +477,10 @@
                   <div name="planogrammainaisle" class="row">
                     <div class="col-8">
                       <div class="form-group col-12">
-                        <select class="form-control" id="plnogramdd" (change)="GetCurrentPlanogram($event)"
+                        <select class="form-control" id="plnogramdd" (change)="GetCurrentPlanogram()"
                           [(ngModel)]="CurrentPlanogramGid">
                           <option value="">Select Planogram</option>
-                          <option *ngFor="let p of PlanogrammainaisleModal" [value]="p.Gid">
+                          <option *ngFor="let p of PlanogrammainaisleDropdownValues" [value]="p.Gid">
                             {{p.Name}}
                           </option>
                         </select>
@@ -461,17 +491,10 @@
                       </div>
                     </div>
                     <div class="col-md-4 mb-4">
-                      <img [src]="OptionsPlanogramImpagePath" class="mainaisle-img-thumbanail" alt="User">
-                      <p class="mt-2">Thumbnail</p>
-                    </div>
-                  </div>
-                  <div *ngFor="let item of RetailerMainasles" class="form-group">
-                    <div class="card text-center mb-2">
-                      <img [src]="ServerUrl + item.RelativePathText + '\\' + item.Label + '.' + item.FileExtension"
-                        class="mainaisle-img" alt="User">
-                      <div class="card-body">
-                        <h5 class="card-title">{{item.TypeEnum}}</h5>
-                      </div>
+                      <ng-container *ngFor="let img of OptionsPlanogramImpagePath">
+                        <img [src]="img" class="mainaisle-img-thumbanail" alt="User">
+                        <p class="mt-2">Thumbnail</p>
+                      </ng-container>
                     </div>
                   </div>
                 </div>

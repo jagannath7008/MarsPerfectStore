@@ -31,6 +31,7 @@ export class RetailerDetailComponent implements OnInit {
   MerchandiserPlan: Array<IMerchandiserPlan>;
   CurrentPageData: any = null;
   PlanogrammainaisleModal: Array<PlanogrammainaisleViewModal>;
+  PlanogrammainaisleDropdownValues: Array<PlanogrammainaisleViewModal>;
   RetailerCompetition: Array<RetailerCompetitionModal>;
   SkuPortfolio: Array<SkuportfolioViewModel>;
   PlanogramdVisibilityModal: Array<PlanogramSecondryVisibilityModal>;
@@ -42,10 +43,15 @@ export class RetailerDetailComponent implements OnInit {
   visibilitymodal: boolean = false;
   NewCompetition: string = "";
   SelectedPlanogramImageUrl: string = "";
-  OptionsPlanogramImpagePath: string = "";
+  OptionsPlanogramImpagePath: Array<string> = [];
   OptionsTransactionZonePlanogramImpagePath: string = "";
   TransactionZonePlanogram: Array<TransactionZonePlanogramModal>;
   CurrentPlanogramGid: string = "";
+  MainaisleImage: any = null;
+  MainaisleImageBuffer: any = null;
+  RetailerAfiles: Array<string> = [];
+  ImagePopup: boolean = false;
+  entity: any;
   constructor(
     private fb: FormBuilder,
     private commonService: CommonService,
@@ -124,27 +130,61 @@ export class RetailerDetailComponent implements OnInit {
             this.RetailerSecoundryVisibility = Data["secoundryVisibility"];
           }
 
+          this.PlanogrammainaisleModal = [];
+          if (IsValidType(Data["planogrammainaisleViewModels"])) {
+            this.PlanogrammainaisleModal = Data["planogrammainaisleViewModels"];
+            if (IsValidType(this.PlanogrammainaisleModal)) {
+              this.PlanogrammainaisleDropdownValues = [];
+              let index = 0;
+              let SingleItem = null;
+              while (index < this.PlanogrammainaisleModal.length) {
+                if (
+                  this.PlanogrammainaisleDropdownValues.filter(
+                    x => x.Gid === this.PlanogrammainaisleModal[index].Gid
+                  ).length === 0
+                ) {
+                  this.PlanogrammainaisleDropdownValues.push(
+                    this.PlanogrammainaisleModal[index]
+                  );
+                }
+                index++;
+              }
+            }
+          }
+
           if (IsValidType(Data["retailerMainasles"])) {
             this.RetailerMainasles = Data["retailerMainasles"];
             if (this.RetailerMainasles.length > 0) {
               let CurrentPlanogramItem: any = this.RetailerMainasles[0];
-              this.OptionsPlanogramImpagePath =
-                this.ServerUrl +
-                CurrentPlanogramItem.RelativePathText +
-                "\\" +
-                CurrentPlanogramItem.Label +
-                "." +
-                CurrentPlanogramItem.FileExtension;
+              this.OptionsPlanogramImpagePath = [];
+              this.CurrentPlanogramGid = CurrentPlanogramItem.PlanogramGid;
+              this.OptionsPlanogramImpagePath = this.BingPlanogramImages(
+                CurrentPlanogramItem.PlanogramGid
+              );
+
+              if (
+                IsValidType(
+                  this.RetailerMainasles[ZerothIndex]["afileViewModels"]
+                )
+              ) {
+                let FilePath = "";
+                let afiles = this.RetailerMainasles[ZerothIndex][
+                  "afileViewModels"
+                ];
+                this.RetailerAfiles = [];
+                afiles.forEach((item, index) => {
+                  FilePath = `${this.ServerUrl}\\${item.RelativePathText}\\${item.Label}.${item.FileExtension}`;
+                  if (
+                    this.RetailerAfiles.filter(x => x === FilePath).length === 0
+                  )
+                    this.RetailerAfiles.push(FilePath);
+                });
+              }
             }
           }
 
           if (IsValidType(Data["retailerMerchandisingPlan"])) {
             this.RetailerMerchandisingPlan = Data["retailerMerchandisingPlan"];
-          }
-
-          this.PlanogrammainaisleModal = [];
-          if (IsValidType(Data["planogrammainaisleViewModels"])) {
-            this.PlanogrammainaisleModal = Data["planogrammainaisleViewModels"];
           }
 
           this.RetailerCompetition = [];
@@ -645,23 +685,37 @@ export class RetailerDetailComponent implements OnInit {
     }
   }
 
-  GetCurrentPlanogram(value: any) {
+  GetCurrentPlanogram() {
     let CurrentPlanogramGid = $(event.currentTarget).val();
+    if (IsValidType(CurrentPlanogramGid)) {
+      this.OptionsPlanogramImpagePath = [];
+      this.OptionsPlanogramImpagePath = this.BingPlanogramImages(
+        CurrentPlanogramGid
+      );
+    }
+  }
+
+  BingPlanogramImages(CurrentPlanogramGid: string): Array<string> {
+    let Items = [];
     if (IsValidType(CurrentPlanogramGid)) {
       let PlanogramRecord = this.PlanogrammainaisleModal.filter(
         x => x.Gid === CurrentPlanogramGid
       );
       if (PlanogramRecord.length > 0) {
-        let CurrentPlanogramItem: any = PlanogramRecord[0];
-        this.OptionsPlanogramImpagePath =
-          this.ServerUrl +
-          CurrentPlanogramItem.RelativePathText +
-          "\\" +
-          CurrentPlanogramItem.Label +
-          "." +
-          CurrentPlanogramItem.FileExtension;
+        Items = [];
+        PlanogramRecord.forEach((item: any, index) => {
+          Items.push(
+            this.ServerUrl +
+              item.RelativePathText +
+              "\\" +
+              item.Label +
+              "." +
+              item.FileExtension
+          );
+        });
       }
     }
+    return Items;
   }
 
   ShowImage() {
@@ -738,56 +792,92 @@ export class RetailerDetailComponent implements OnInit {
       }
     }
   }
+
+  ChangeMainaisleImage() {
+    if (IsValidType(this.RetailerDetail)) {
+      this.entity = this.RetailerMainasles[ZerothIndex];
+      this.MainaisleImageBuffer = `${this.ServerUrl}\\${this.entity.RelativePathText}\\
+      ${this.entity.Label}.${this.entity.FileExtension}`;
+      this.ImagePopup = true;
+    }
+  }
+
+  CloseMainaisleImage() {
+    this.ImagePopup = false;
+  }
+
+  ChooseFile() {
+    $("#BrowseFile").click();
+  }
+
+  GetFile(fileInput: any) {
+    let Files = fileInput.target.files;
+    this.MainaisleImage = null;
+    if (Files.length > 0) {
+      let index = 0;
+      while (index < Files.length) {
+        this.MainaisleImage = <File>Files[index];
+        let reader = new FileReader();
+        reader.readAsDataURL(this.MainaisleImage);
+        reader.onload = fileEvent => {
+          this.MainaisleImageBuffer = reader.result;
+        };
+        // let mimeType: any = <File>Files[index].type;
+        // if (mimeType.match(/image\/*/) == null) {
+        //   this.commonService.ShowToast("Only images are supported.");
+        //   return;
+        // }
+        index++;
+      }
+
+      if (this.ImagePopup) {
+        this.UploadAndSaveImage();
+      }
+    } else {
+      this.commonService.ShowToast("No file selected");
+    }
+  }
+
+  UploadAndSaveImage() {
+    if (IsValidType(this.entity)) {
+      let formData = new FormData();
+      if (this.MainaisleImage !== null) {
+        formData.append("image", this.MainaisleImage);
+        formData.append("retailerDetail", JSON.stringify(this.entity));
+        this.http
+          .upload("Webportal/ReplacePlanogrammainaisleImages", formData)
+          .then(response => {
+            if (this.commonService.IsValidResponse(response)) {
+              let Data = JSON.parse(response.content.data);
+              if (IsValidType(Data["Afile"])) {
+                this.RetailerMainasles[0]["afileViewModels"] = Data["Afile"];
+                if (IsValidType(this.RetailerMainasles[0]["afileViewModels"])) {
+                  let FilePath = "";
+                  let afiles = this.RetailerMainasles[0]["afileViewModels"];
+                  this.RetailerAfiles = [];
+                  afiles.forEach((item, index) => {
+                    FilePath = `${this.ServerUrl}\\${item.RelativePathText}\\${item.Label}.${item.FileExtension}`;
+                    if (
+                      this.RetailerAfiles.filter(x => x === FilePath).length ===
+                      0
+                    )
+                      this.RetailerAfiles.push(FilePath);
+                  });
+                }
+              } else {
+                this.commonService.ShowToast("Unable to save data.");
+              }
+            }
+          })
+          .catch(error => {
+            this.commonService.ShowToast(
+              "Server error. Please contact to admin."
+            );
+          });
+      }
+    }
+  }
 }
-
-// interface IRetailerInfo {
-//   Code: string;
-//   Status: string;
-//   Name: string;
-//   RetailerClass: string;
-//   Type: string;
-//   GSTNo: string;
-//   PAN: string;
-//   AdharNo: string;
-// }
-
-// interface IRowDetail {
-//   Name: string;
-//   Designation: string;
-//   Mobile: string;
-//   WhatsAppMobile: string;
-//   BirthDate: string;
-//   AnniversaryDate: string;
-// }
-
-// interface IRetailerAddressDetail {
-//   AddressLine1: string;
-//   AddressLine2: string;
-//   AddressLine3: string;
-//   Landmark: string;
-//   City: string;
-//   PinCode: string;
-//   State: string;
-//   Region: string;
-//   Country: string;
-//   Phone: string;
-//   Email: string;
-//   Fax: string;
-//   Longitude: string;
-//   Latitude: string;
-// }
-
-// interface IRetailerContact {
-//   Name: string;
-//   Designation: string;
-//   Gender: boolean;
-//   Mobile: string;
-//   SecondaryPhone: string;
-//   WhatsAppPhone: string;
-//   Email: string;
-//   BirthDate: string;
-//   AnniversaryDate: string;
-// }
 
 interface ISecoundryVisibility {
   Type: string;
