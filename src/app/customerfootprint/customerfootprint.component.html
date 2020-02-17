@@ -76,7 +76,7 @@
       <div class="card">
         <div class="row">
           <div class="col-md-12">
-            <div class="g-map low-dv">
+            <div class="g-map map-ht">
               <agm-map [latitude]="latitude" [longitude]="longitude" [zoom]="2"
                 (mapClick)="addMarker($event.coords.lat, $event.coords.lng)">
                 <agm-marker *ngFor="let marker of markers" [latitude]="marker.lat" [longitude]="marker.lng"
