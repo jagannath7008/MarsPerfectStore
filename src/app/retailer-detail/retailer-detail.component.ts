@@ -158,7 +158,7 @@ export class RetailerDetailComponent implements OnInit {
               let CurrentPlanogramItem: any = this.RetailerMainasles[0];
               this.OptionsPlanogramImpagePath = [];
               this.CurrentPlanogramGid = CurrentPlanogramItem.PlanogramGid;
-              this.OptionsPlanogramImpagePath = this.BingPlanogramImages(
+              this.OptionsPlanogramImpagePath = this.FindPlanogramImages(
                 CurrentPlanogramItem.PlanogramGid
               );
 
@@ -204,8 +204,21 @@ export class RetailerDetailComponent implements OnInit {
 
           this.PlanogramdVisibilityModal = [];
           if (IsValidType(Data["planogramsecondaryvisibilityViewModel"])) {
-            this.PlanogramdVisibilityModal =
+            let planogramvisibilityModal =
               Data["planogramsecondaryvisibilityViewModel"];
+            let index = 0;
+            while (index < planogramvisibilityModal.length) {
+              if (
+                this.PlanogramdVisibilityModal.filter(
+                  x => x.Gid === planogramvisibilityModal[index].Gid
+                ).length === 0
+              ) {
+                this.PlanogramdVisibilityModal.push(
+                  planogramvisibilityModal[index]
+                );
+              }
+              index++;
+            }
           }
 
           this.TransactionZonePlanogram = [];
@@ -576,20 +589,47 @@ export class RetailerDetailComponent implements OnInit {
     }
   }
 
+  ShowImage() {
+    let ImageGid = $(event.currentTarget).val();
+    let CurrentObject = this.PlanogramdVisibilityModal.filter(
+      x => x.Gid === ImageGid
+    );
+    if (CurrentObject.length) {
+      let Current: any = CurrentObject[0];
+      this.OptionsPlanogramImpagePath = [];
+      this.OptionsPlanogramImpagePath = this.FindSecondryvisibilityPlanogramImages(
+        Current.Gid
+      );
+      // this.DdsecondaryvisibilityImage =
+      //   this.ServerUrl +
+      //   Current.RelativePathText +
+      //   "\\" +
+      //   Current.Label +
+      //   "." +
+      //   Current.FileExtension;
+    }
+  }
+
   EditSecondryVisibility(entity: any) {
-    this.visibilitymodal = !this.visibilitymodal;
+    this.visibilitymodal = true;
     this.visibilityEntity = entity;
-    this.DdsecondaryvisibilityImage =
-      this.ServerUrl +
-      entity.RelativePathText +
-      "\\" +
-      entity.Label +
-      "." +
-      entity.FileExtension;
+    if (IsValidType(this.visibilityEntity.PlanogramGid)) {
+      this.OptionsPlanogramImpagePath = [];
+      this.OptionsPlanogramImpagePath = this.FindSecondryvisibilityPlanogramImages(
+        this.visibilityEntity.PlanogramGid
+      );
+      // this.DdsecondaryvisibilityImage =
+      //   this.ServerUrl +
+      //   entity.RelativePathText +
+      //   "\\" +
+      //   entity.Label +
+      //   "." +
+      //   entity.FileExtension;
+    }
   }
 
   CloseVisibilityModal() {
-    this.visibilitymodal = !this.visibilitymodal;
+    this.visibilitymodal = false;
   }
 
   AddNewContact() {
@@ -689,13 +729,38 @@ export class RetailerDetailComponent implements OnInit {
     let CurrentPlanogramGid = $(event.currentTarget).val();
     if (IsValidType(CurrentPlanogramGid)) {
       this.OptionsPlanogramImpagePath = [];
-      this.OptionsPlanogramImpagePath = this.BingPlanogramImages(
+      this.OptionsPlanogramImpagePath = this.FindPlanogramImages(
         CurrentPlanogramGid
       );
     }
   }
 
-  BingPlanogramImages(CurrentPlanogramGid: string): Array<string> {
+  FindSecondryvisibilityPlanogramImages(
+    CurrentPlanogramGid: string
+  ): Array<string> {
+    let Items = [];
+    if (IsValidType(CurrentPlanogramGid)) {
+      let PlanogramRecord = this.PlanogramdVisibilityModal.filter(
+        x => x.Gid === CurrentPlanogramGid
+      );
+      if (PlanogramRecord.length > 0) {
+        Items = [];
+        PlanogramRecord.forEach((item: any, index) => {
+          Items.push(
+            this.ServerUrl +
+              item.RelativePathText +
+              "\\" +
+              item.Label +
+              "." +
+              item.FileExtension
+          );
+        });
+      }
+    }
+    return Items;
+  }
+
+  FindPlanogramImages(CurrentPlanogramGid: string): Array<string> {
     let Items = [];
     if (IsValidType(CurrentPlanogramGid)) {
       let PlanogramRecord = this.PlanogrammainaisleModal.filter(
@@ -716,23 +781,6 @@ export class RetailerDetailComponent implements OnInit {
       }
     }
     return Items;
-  }
-
-  ShowImage() {
-    let ImageGid = $(event.currentTarget).val();
-    let CurrentObject = this.PlanogramdVisibilityModal.filter(
-      x => x.Gid === ImageGid
-    );
-    if (CurrentObject.length) {
-      let Current: any = CurrentObject[0];
-      this.DdsecondaryvisibilityImage =
-        this.ServerUrl +
-        Current.RelativePathText +
-        "\\" +
-        Current.Label +
-        "." +
-        Current.FileExtension;
-    }
   }
 
   UpdateTransactionZonePlanogram() {

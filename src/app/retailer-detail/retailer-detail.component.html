@@ -164,7 +164,10 @@
                     </div>
                   </div>
                   <div class="col-2 card">
-                    <img class="card-img-top cust-img" [src]="DdsecondaryvisibilityImage" alt="">
+                    <ng-container *ngFor="let img of OptionsPlanogramImpagePath">
+                      <img [src]="img" class="mainaisle-img-thumbanail" alt="User">
+                      <p class="mt-2">Thumbnail</p>
+                    </ng-container>
                   </div>
                 </div>
               </td>
