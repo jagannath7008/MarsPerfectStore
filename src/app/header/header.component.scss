@@ -4,7 +4,6 @@ nav.navbar {
 
 ul.navbar-nav.mr-auto li {
   border-right: 1px solid #d9d9d9;
-  padding-top: 5px;
 }
 
 ul.navbar-nav.mr-auto li:last-child {
@@ -83,6 +82,7 @@ text-decoration: none;
 .header-left {
   float: left;
   width: 50%;
+  padding: 8px 0;
 }
 
 .header-right {
@@ -93,7 +93,7 @@ text-decoration: none;
 .bottom-header {
   float: left;
   width: 100%;
-  padding: 10px 2%;
+  padding: 0px 2%;
   background: #fafafa;
   border-bottom: 1px solid #eaeaea;
 }
@@ -107,18 +107,41 @@ text-decoration: none;
   background: #fafafa;
   border: 1px solid #eaeaea;
   border-radius: 0px;
-  width: 200px;
-  left: -100px;
+  width: auto;
+  left: 0px;
   right: 0;
   padding: 0;
+  margin: 0;
 }
 
 .dropdown-item{
-  font-size: 12px;
-  padding: 6px;
+  font-size: 14px;
+  padding: 10px 5px !important;
+  border-bottom: 1px solid #eaeaea;
 }
 
 .dropdown-item:hover{
-background-color: #0000a0;
-color: #ffffff;
+background-color: #00d6b8;
+color: #000000;
+}
+
+.nav-link{
+  padding: 1.5rem 0 !important;
+  margin: 0 !important;
+}
+.nav-link a{
+  color: #000000 !important;
+  padding: 1.5rem;
+}
+.nav-link:hover{
+  background-color: #00d6b8;
+}
+
+.ddm-last{
+  left: -90%;
+  width: 210px;
+}
+
+.nav-pad15{
+  padding-left: 1.5rem !important; padding-right: 1.5rem !important;
 }

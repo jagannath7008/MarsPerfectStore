@@ -4,12 +4,12 @@
       <li>
         <span>Welcome</span><a href="javascript:void(0)">Admin</a><span>|</span>
       </li>
-      <li><a href="javascript:void(0)">Logout</a></li>
+      <li><a (click)="SignOut()" style="cursor: pointer;">Signout</a></li>
     </ul>
   </div>
   <div class="bottom-header">
   <div class="header-left">
-    <a [routerLink]="['/dashboard']" href="javascript:void(0)"><img src="../../assets/images/logo.png" alt="logo" /></a>
+    <a [routerLink]="['/dashboard']" href="javascript:void(0)"><img src="assets/images/logo.png" alt="logo" /></a>
   </div>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
     aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -20,7 +20,7 @@
     <ul class="navbar-nav mr-auto">
       <li class="nav-item text-center active">
         <i class="fas fa-tachometer-alt"></i>
-        <a class="nav-link pt-0 mt-2" [routerLink]="['/dashboard']">Dashboard <span class="sr-only">(current)</span></a>
+        <a class="nav-link mt-2 nav-pad15" [routerLink]="['/dashboard']">Dashboard <span class="sr-only">(current)</span></a>
       </li>
       <li class="nav-item text-center">
         <i class="far fa-file-alt"></i>
@@ -65,7 +65,7 @@
             aria-haspopup="true" aria-expanded="false">
             Master
           </a>
-          <div class="dropdown-menu m-with-50" aria-labelledby="dropdownMenuLink">
+          <div class="dropdown-menu ddm-last m-with-50" aria-labelledby="dropdownMenuLink">
             <a class="dropdown-item" [routerLink]="['/office']" href="javascript:void(0)">Office</a>
 
             <a class="dropdown-item" [routerLink]="['/region']" href="javascript:void(0)">Region</a>
