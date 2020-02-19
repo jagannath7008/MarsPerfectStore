@@ -34,6 +34,7 @@ export class CustomerreportsComponent implements OnInit {
   pageSize: number = 15;
   TotalCount: number = 0;
   TotalPageCount: number = 0;
+  AdvanceSearch: AdvanceFilter;
   AutodropdownCollection: any = {
     Region: { data: [], placeholder: "Region" },
     SubChannel: { data: [], placeholder: "SubChannel" },
@@ -43,7 +44,6 @@ export class CustomerreportsComponent implements OnInit {
     Marchandisor: { data: [], placeholder: "Marchandisor" },
     City: { data: [], placeholder: "City" }
   };
-  AdvanceFilterObject: FormGroup;
   constructor(
     private fb: FormBuilder,
     private commonService: CommonService,
@@ -56,19 +56,79 @@ export class CustomerreportsComponent implements OnInit {
     } else {
       this.HeaderName = "Customer List";
     }
-    this.AdvanceFilterObject = this.fb.group({
-      Region: new FormControl(""),
-      SubChannel: new FormControl(""),
-      CustomerCode: new FormControl(""),
-      CustomerName: new FormControl(""),
-      State: new FormControl(""),
-      ChainName: new FormControl(""),
-      City: new FormControl(""),
-      Address: new FormControl(""),
-      Beat: new FormControl(""),
-      Supervisor: new FormControl(""),
-      Marchandisor: new FormControl("")
-    });
+
+    this.ResetAdvanceFilter();
+  }
+
+  ResetAdvanceFilter() {
+    this.AdvanceSearch = {
+      Region: "",
+      SubChannel: "",
+      CustomerCode: "",
+      CustomerName: "",
+      State: "",
+      ChainName: "",
+      City: "",
+      Address: "",
+      Beat: "",
+      Supervisor: "",
+      Marchandisor: ""
+    };
+  }
+
+  SubmitSearchCriateria() {
+    let searchQuery = "1=1 ";
+
+    if (IsValidType(this.AdvanceSearch.Marchandisor)) {
+      searchQuery +=
+        " And Marchandisor = '" + this.AdvanceSearch.Marchandisor + "'";
+    }
+
+    if (IsValidType(this.AdvanceSearch.Supervisor)) {
+      searchQuery +=
+        " And Supervisor = '" + this.AdvanceSearch.Supervisor + "'";
+    }
+
+    if (IsValidType(this.AdvanceSearch.Region)) {
+      searchQuery += " And Region = '" + this.AdvanceSearch.Region + "'";
+    }
+
+    if (this.AdvanceSearch.CustomerName) {
+      searchQuery +=
+        " And CustomerName = '" + this.AdvanceSearch.CustomerName + "'";
+    }
+
+    if (this.AdvanceSearch.CustomerCode) {
+      searchQuery +=
+        " And CustomerCode = '" + this.AdvanceSearch.CustomerCode + "'";
+    }
+
+    if (this.AdvanceSearch.State) {
+      searchQuery += " And State = '" + this.AdvanceSearch.State + "'";
+    }
+
+    if (this.AdvanceSearch.City) {
+      searchQuery += " And City = '" + this.AdvanceSearch.City + "'";
+    }
+
+    if (this.AdvanceSearch.ChainName) {
+      searchQuery += " And ChainName = '" + this.AdvanceSearch.ChainName + "'";
+    }
+
+    if (this.AutodropdownCollection !== null) {
+      let keys = Object.keys(this.AutodropdownCollection);
+      let Value = null;
+      let index = 0;
+      while (index < keys.length) {
+        Value = this.commonService.ReadAutoCompleteObject($("#" + keys[index]));
+        if (Value !== null && Value["data"] !== "") {
+          searchQuery += ` And ${keys[index]} like '${Value.data}'`;
+        }
+        index++;
+      }
+    }
+
+    alert(searchQuery);
   }
 
   FilterLocaldata() {
@@ -205,52 +265,6 @@ export class CustomerreportsComponent implements OnInit {
     this.IsEmptyRow = false;
   }
 
-  SubmitSearchCriateria() {
-    let searchQuery = "1=1 ";
-    if (this.AdvanceFilterObject.valid) {
-      if (this.AdvanceFilterObject.get("CustomerCode").touched) {
-        searchQuery +=
-          " And CustomerCode like '" +
-          this.AdvanceFilterObject.get("CustomerCode").value +
-          "'";
-      }
-
-      if (this.AdvanceFilterObject.get("CustomerName").touched) {
-        searchQuery +=
-          " And Customer Name like '" +
-          this.AdvanceFilterObject.get("CustomerName").value +
-          "'";
-      }
-
-      if (this.AdvanceFilterObject.get("Address").touched) {
-        searchQuery +=
-          " And Address like '" +
-          this.AdvanceFilterObject.get("Address").value +
-          "'";
-      }
-
-      if (this.AdvanceFilterObject.get("Beat").touched) {
-        searchQuery +=
-          " And Beat like '" + this.AdvanceFilterObject.get("Beat").value + "'";
-      }
-    }
-
-    if (this.AutodropdownCollection !== null) {
-      let keys = Object.keys(this.AutodropdownCollection);
-      let Value = null;
-      let index = 0;
-      while (index < keys.length) {
-        Value = this.commonService.ReadAutoCompleteObject($("#" + keys[index]));
-        if (Value !== null && Value["data"] !== "") {
-          searchQuery += ` And ${keys[index]} like '${Value.data}'`;
-        }
-        index++;
-      }
-    }
-
-    alert(searchQuery);
-  }
-
   EditCurrent(CurrentItem: any) {
     if (IsValidType(CurrentItem))
       this.nav.navigate(RetailerDetail, CurrentItem);
@@ -284,4 +298,18 @@ export class RetailerModal {
   Phone: String;
   HouseNo: String;
   Street: String;
+}
+
+interface AdvanceFilter {
+  Region: string;
+  SubChannel: string;
+  CustomerCode: string;
+  CustomerName: string;
+  State: string;
+  ChainName: string;
+  City: string;
+  Address: string;
+  Beat: string;
+  Supervisor: string;
+  Marchandisor: string;
 }

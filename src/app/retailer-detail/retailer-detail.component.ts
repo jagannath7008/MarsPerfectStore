@@ -7,7 +7,7 @@ import {
 import * as $ from "jquery";
 import { AjaxService } from "src/providers/ajax.service";
 import { iNavigation } from "src/providers/iNavigation";
-import { ZerothIndex } from "./../../providers/constants";
+import { ZerothIndex, PostParam } from "./../../providers/constants";
 
 @Component({
   selector: "app-retailer-detail",
@@ -43,13 +43,14 @@ export class RetailerDetailComponent implements OnInit {
   visibilitymodal: boolean = false;
   NewCompetition: string = "";
   SelectedPlanogramImageUrl: string = "";
-  OptionsPlanogramImpagePath: Array<string> = [];
+  OptionsPlanogramImpagePath: Array<any> = [];
   OptionsTransactionZonePlanogramImpagePath: string = "";
   TransactionZonePlanogram: Array<TransactionZonePlanogramModal>;
   CurrentPlanogramGid: string = "";
   MainaisleImage: any = null;
   MainaisleImageBuffer: any = null;
   RetailerAfiles: Array<string> = [];
+  AfilesDetail: Array<Afile> = [];
   ImagePopup: boolean = false;
   entity: any;
   constructor(
@@ -207,12 +208,23 @@ export class RetailerDetailComponent implements OnInit {
             let planogramvisibilityModal =
               Data["planogramsecondaryvisibilityViewModel"];
             let index = 0;
+            let Items = [];
+            let Afiles = [];
             while (index < planogramvisibilityModal.length) {
-              if (
-                this.PlanogramdVisibilityModal.filter(
+              Items = this.PlanogramdVisibilityModal.filter(
+                x => x.Gid === planogramvisibilityModal[index].Gid
+              );
+              if (Items.length === 0) {
+                Items = planogramvisibilityModal.filter(
                   x => x.Gid === planogramvisibilityModal[index].Gid
-                ).length === 0
-              ) {
+                );
+                Afiles = [];
+                Items.forEach(element => {
+                  if (IsValidType(element["afileViewModels"])) {
+                    Afiles = Afiles.concat(element["afileViewModels"]);
+                  }
+                });
+                planogramvisibilityModal[index]["afileViewModels"] = Afiles;
                 this.PlanogramdVisibilityModal.push(
                   planogramvisibilityModal[index]
                 );
@@ -287,80 +299,57 @@ export class RetailerDetailComponent implements OnInit {
     let planogrammodal = $(event.currentTarget)
       .closest('div[name="planogrammainaisle"]')
       .find("select");
-    let CurrentRetailerMainAisle = $("#plnogramdd").val();
-    if (planogrammodal !== null && IsValidType(CurrentRetailerMainAisle)) {
-      let planogrammainaisleGid = planogrammodal.val();
-      if (IsValidType(planogrammainaisleGid)) {
-        let input: any = {
-          meta: {
-            app: "MerchandiserApp",
-            action: "UpdatePlanogrammainaisle",
-            requestId: "0",
-            deviceId: "web"
-          },
-          content: {
-            deviceId: "web",
-            deviceType: "web",
-            deviceOS: "Windows",
-            deviceVersion: "web",
-            deviceInfo: "web"
-          }
-        };
 
-        input.content.planogramGid = planogrammainaisleGid;
-        input.content.retailermainaisleGid = this.RetailerMainasles[0].Gid;
-        this.http
-          .post("Webportal/UpdatePlanogrammainaisle", input)
-          .then(response => {
-            if (this.commonService.IsValidResponse(response)) {
-              let Data = response.content.data;
-              if (IsValidType(Data)) {
-                this.RetailerMainasles = Data;
-                this.commonService.ShowToast("Data loaded successfully.");
-              } else {
-                this.commonService.ShowToast("Got empty dataset.");
-              }
-            } else {
-              this.commonService.ShowToast("Unable to get data.");
+    if (IsValidType(this.RetailerMainasles)) {
+      let CurrentRetailerMainAisle = $("#plnogramdd").val();
+      if (planogrammodal !== null && IsValidType(CurrentRetailerMainAisle)) {
+        let planogrammainaisleGid = planogrammodal.val();
+        if (IsValidType(planogrammainaisleGid)) {
+          let input: any = {
+            meta: {
+              app: "MerchandiserApp",
+              action: "UpdatePlanogrammainaisle",
+              requestId: "0",
+              deviceId: "web"
+            },
+            content: {
+              deviceId: "web",
+              deviceType: "web",
+              deviceOS: "Windows",
+              deviceVersion: "web",
+              deviceInfo: "web"
             }
-          });
+          };
+
+          input.content.planogramGid = planogrammainaisleGid;
+          input.content.retailermainaisleGid = this.RetailerMainasles[0].Gid;
+          this.http
+            .post("Webportal/UpdatePlanogrammainaisle", input)
+            .then(response => {
+              if (this.commonService.IsValidResponse(response)) {
+                let Data = response.content.data;
+                if (IsValidType(Data)) {
+                  this.RetailerMainasles = Data;
+                  this.commonService.ShowToast("Updated successfully.");
+                } else {
+                  this.commonService.ShowToast("Updated but got empty set.");
+                }
+              } else {
+                this.commonService.ShowToast("Unable to get data.");
+              }
+            });
+        }
       }
+    } else {
+      this.commonService.ShowToast(
+        "There is no retailer mainaisle found. Please add one first."
+      );
     }
   }
 
   InitCompletition() {
     this.CompetitionGrid = ["AAAA", "BBBB", "CCCC", "DDDD", "EEEE"];
   }
-
-  // GetBindingData() {
-  //   this.RetailerDetail = {
-  //     Code: "23752032",
-  //     Status: "Approved",
-  //     Name: "Phanny",
-  //     RetailerClass: "A",
-  //     Type: "RTCode3",
-  //     GSTNo: "34",
-  //     PAN: "",
-  //     AdharNo: ""
-  //   };
-
-  //   this.RetailerDetailAddress = {
-  //     AddressLine1: "Addr 1",
-  //     AddressLine2: "Addr 2",
-  //     AddressLine3: "Addr 3",
-  //     Landmark: "Hitech city",
-  //     City: "Hyderabad",
-  //     PinCode: "500004",
-  //     State: "Telangana",
-  //     Region: "Hyderabad",
-  //     Country: "India",
-  //     Phone: "9998987876",
-  //     Email: "adsa@gm.com",
-  //     Fax: "8994759347",
-  //     Longitude: "47.98723542",
-  //     Latitude: "78.893748923"
-  //   };
-  // }
 
   InitGridForm() {
     this.NewContactDetail = this.fb.group({
@@ -375,27 +364,6 @@ export class RetailerDetailComponent implements OnInit {
       Anniversorydate: new FormControl("")
     });
   }
-
-  // GetGridData(): Array<ContactViewModel> {
-  //   return [
-  //     {
-  //       Name: "Phanny",
-  //       Designation: "Manager",
-  //       Mobile: "9989876765",
-  //       WhatsAppMobile: "9898787676",
-  //       BirthDate: "10/10/2019",
-  //       AnniversaryDate: "11/11/2000"
-  //     },
-  //     {
-  //       Name: "Phanny",
-  //       Designation: "Manager",
-  //       Mobile: "9989876765",
-  //       WhatsAppMobile: "9898787676",
-  //       BirthDate: "10/10/2019",
-  //       AnniversaryDate: "11/11/2000"
-  //     }
-  //   ];
-  // }
 
   AddRow(RowData: ContactViewModel): FormGroup {
     return this.fb.group({
@@ -597,16 +565,12 @@ export class RetailerDetailComponent implements OnInit {
     if (CurrentObject.length) {
       let Current: any = CurrentObject[0];
       this.OptionsPlanogramImpagePath = [];
-      this.OptionsPlanogramImpagePath = this.FindSecondryvisibilityPlanogramImages(
-        Current.Gid
-      );
-      // this.DdsecondaryvisibilityImage =
-      //   this.ServerUrl +
-      //   Current.RelativePathText +
-      //   "\\" +
-      //   Current.Label +
-      //   "." +
-      //   Current.FileExtension;
+      Current["afileViewModels"].forEach((element: Afile) => {
+        this.OptionsPlanogramImpagePath.push({
+          path: `${this.ServerUrl}\\${element.RelativePathText}\\${element.Label}.${element.FileExtension}`,
+          Gid: element.Gid
+        });
+      });
     }
   }
 
@@ -615,16 +579,17 @@ export class RetailerDetailComponent implements OnInit {
     this.visibilityEntity = entity;
     if (IsValidType(this.visibilityEntity.PlanogramGid)) {
       this.OptionsPlanogramImpagePath = [];
-      this.OptionsPlanogramImpagePath = this.FindSecondryvisibilityPlanogramImages(
-        this.visibilityEntity.PlanogramGid
+      let Items = this.PlanogramdVisibilityModal.filter(
+        x => x.Gid === this.visibilityEntity.PlanogramGid
       );
-      // this.DdsecondaryvisibilityImage =
-      //   this.ServerUrl +
-      //   entity.RelativePathText +
-      //   "\\" +
-      //   entity.Label +
-      //   "." +
-      //   entity.FileExtension;
+      if (IsValidType(Items)) {
+        Items[ZerothIndex]["afileViewModels"].forEach((element: Afile) => {
+          this.OptionsPlanogramImpagePath.push({
+            path: `${this.ServerUrl}\\${element.RelativePathText}\\${element.Label}.${element.FileExtension}`,
+            Gid: element.Gid
+          });
+        });
+      }
     }
   }
 
@@ -735,31 +700,6 @@ export class RetailerDetailComponent implements OnInit {
     }
   }
 
-  FindSecondryvisibilityPlanogramImages(
-    CurrentPlanogramGid: string
-  ): Array<string> {
-    let Items = [];
-    if (IsValidType(CurrentPlanogramGid)) {
-      let PlanogramRecord = this.PlanogramdVisibilityModal.filter(
-        x => x.Gid === CurrentPlanogramGid
-      );
-      if (PlanogramRecord.length > 0) {
-        Items = [];
-        PlanogramRecord.forEach((item: any, index) => {
-          Items.push(
-            this.ServerUrl +
-              item.RelativePathText +
-              "\\" +
-              item.Label +
-              "." +
-              item.FileExtension
-          );
-        });
-      }
-    }
-    return Items;
-  }
-
   FindPlanogramImages(CurrentPlanogramGid: string): Array<string> {
     let Items = [];
     if (IsValidType(CurrentPlanogramGid)) {
@@ -788,7 +728,7 @@ export class RetailerDetailComponent implements OnInit {
       let input: any = {
         meta: {
           app: "MerchandiserApp",
-          action: "UpdatePlanogrammainaisle",
+          action: "UpdateRetailerTransactionZonePlanogram",
           requestId: "0",
           deviceId: "web"
         },
@@ -804,15 +744,15 @@ export class RetailerDetailComponent implements OnInit {
       input.content.planogramGid = this.TzGid;
       input.content.retailerGid = this.RetailerDetail.Gid;
       this.http
-        .post("Webportal/UpdatePlanogrammainaisle", input)
+        .post("Webportal/UpdateRetailerTransactionZonePlanogram", input)
         .then(response => {
           if (this.commonService.IsValidResponse(response)) {
             let Data = response.content.data;
-            if (IsValidType(Data)) {
+            if (IsValidType(Data) && Data !== "Invalid Gid") {
               this.RetailerMainasles = Data;
               this.commonService.ShowToast("Data loaded successfully.");
             } else {
-              this.commonService.ShowToast("Got empty dataset.");
+              this.commonService.ShowToast(Data);
             }
           } else {
             this.commonService.ShowToast("Unable to get data.");
@@ -843,10 +783,16 @@ export class RetailerDetailComponent implements OnInit {
 
   ChangeMainaisleImage() {
     if (IsValidType(this.RetailerDetail)) {
-      this.entity = this.RetailerMainasles[ZerothIndex];
-      this.MainaisleImageBuffer = `${this.ServerUrl}\\${this.entity.RelativePathText}\\
-      ${this.entity.Label}.${this.entity.FileExtension}`;
-      this.ImagePopup = true;
+      if (IsValidType(this.RetailerMainasles)) {
+        this.entity = this.RetailerMainasles[ZerothIndex];
+        this.MainaisleImageBuffer = `${this.ServerUrl}\\${this.entity.RelativePathText}\\
+        ${this.entity.Label}.${this.entity.FileExtension}`;
+        this.ImagePopup = true;
+      } else {
+        this.commonService.ShowToast(
+          "No RetailerMainaisle found for current customer."
+        );
+      }
     }
   }
 
@@ -911,6 +857,7 @@ export class RetailerDetailComponent implements OnInit {
                     )
                       this.RetailerAfiles.push(FilePath);
                   });
+                  this.commonService.ShowToast("Image uploaded successfully.");
                 }
               } else {
                 this.commonService.ShowToast("Unable to save data.");
@@ -923,6 +870,31 @@ export class RetailerDetailComponent implements OnInit {
             );
           });
       }
+    }
+  }
+
+  UpdatePortfolio() {
+    let MSData = JSON.parse(PostParam);
+    alert(this.RetailerDetail.PortfolioGid);
+    if (IsValidType(this.RetailerDetail.PortfolioGid)) {
+      MSData.content.retailerGid = this.RetailerDetail.Gid;
+      MSData.content.portfolioGid = this.RetailerDetail.PortfolioGid;
+      this.http
+        .upload("Webportal/UpdateRetailerPortfolio", MSData)
+        .then(response => {
+          if (this.commonService.IsValidResponse(response)) {
+            this.commonService.ShowToast("Updated successfully.");
+          } else {
+            this.commonService.ShowToast("Fail to update.");
+          }
+        })
+        .catch(error => {
+          this.commonService.ShowToast(
+            "Server error. Please contact to admin."
+          );
+        });
+    } else {
+      this.commonService.ShowToast("Please select portfolio first.");
     }
   }
 }
@@ -969,6 +941,7 @@ interface RetailerViewModel {
   Street: string;
   TZCheckOutCount: number;
   TZFoodCheckOutCount: number;
+  PortfolioGid: string;
 }
 
 interface ContactViewModel {
@@ -1147,4 +1120,12 @@ interface TransactionZonePlanogramModal {
   RelativePathText: string;
   FileExtension: string;
   AFileGid: string;
+}
+
+interface Afile {
+  Gid: string;
+  LinkGid: string;
+  RelativePathText: string;
+  Label: string;
+  FileExtension: string;
 }

@@ -1,47 +1,46 @@
 <div class="main">
   <div class="login-page">
-<div class="header-bg">
-  <div class="login-logo">
-    <img src="../../assets/images/logo.png" alt="MARS" />  </div>
-</div>
-<div class="container">
-  <div class="perfect-bg">
-    <div class="perfect-logo">
-      <img src="../../assets/images/perfect-store-logo.png" alt="Perfect Store" />  </div>
-  </div>
-  <div class="float-left w-100">
-    <div class="col-md-12 d-flex text-center justify-content-center">
-      <div id="signin" class="col-md-5">
-        <div class="card p-4">
-          <div class="w-100">
-            <h2>Member Login</h2>
-          </div>
-          <form [formGroup]="UserData" (ngSubmit)="VerifiyUser()" class="mt-4">
-            <div class="form-group w-100">
-              <span class="logname">User Name</span>
-              <input class="form-control" placeholder="User Name" name="Username" required formControlName="Username" />
-            </div>
+    <div class="header-bg">
+      <div class="login-logo">
+        <img src="assets/images/logo.png" alt="MARS" /> </div>
+    </div>
+    <div class="container">
+      <div class="perfect-bg">
+        <div class="perfect-logo">
+          <img src="assets/images/perfect-store-logo.png" alt="Perfect Store" /> </div>
+      </div>
+      <div class="float-left w-100">
+        <div class="col-md-12 d-flex text-center justify-content-center">
+          <div id="signin" class="col-md-5">
+            <div class="card p-4">
+              <div class="w-100">
+                <h2>Member Login</h2>
+              </div>
+              <form [formGroup]="UserData" (ngSubmit)="VerifiyUser()" class="mt-4">
+                <div class="form-group w-100">
+                  <span class="logname">User Name</span>
+                  <input class="form-control" placeholder="User Name" name="Username" required
+                    formControlName="Username" />
+                </div>
 
-            <div class="form-group w-100">
-              <span class="logname">Password</span>
-              <input class="form-control" type="password" placeholder="Password" name="Password" required
-                formControlName="Password" />
+                <div class="form-group w-100">
+                  <span class="logname">Password</span>
+                  <input class="form-control" type="password" placeholder="Password" name="Password" required
+                    formControlName="Password" />
+                </div>
+                <button [disabled]="!UserData.valid" class="btn btn-blue w-100 mb-2" type="submit">
+                  Sign In
+                </button>
+              </form>
             </div>
-            <button [disabled]="!UserData.valid" class="btn btn-blue w-100 mb-2" type="submit">
-              Sign In
-            </button>
-          </form>
+          </div>
         </div>
+      </div>
+    </div>
+    <div class="login-footer">
+      <div class="login-footer-logo">
+        <img src="assets/images/footer-logo.png" alt="Footer Logo" />
       </div>
     </div>
   </div>
 </div>
-<div class="login-footer">
-  <div class="login-footer-logo">
-  <img src="../../assets/images/footer-logo.png" alt="Footer Logo" />
-</div>
-</div>
-</div>
-</div>
-
-

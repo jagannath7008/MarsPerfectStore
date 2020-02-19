@@ -8,8 +8,7 @@
       <div class="ipopup__header">
         <header>Advance filter</header>
       </div>
-      <form (submit)="SubmitSearchCriateria()" class="pt-2" (keydown.enter)="$event.preventDefault()"
-        [formGroup]="AdvanceFilterObject">
+      <form (submit)="SubmitSearchCriateria()" class="pt-2" (keydown.enter)="$event.preventDefault()">
         <table class="mt-2">
           <tbody>
             <tr>
@@ -18,45 +17,53 @@
                   <div class="col-md-12 row">
                     <div class="form-group col-md-4">
                       <label for="Region">Region</label>
-                      <app-iautocomplete id="Region" [Data]="AutodropdownCollection.Region"></app-iautocomplete>
+                      <select name="Region" class="form-control" [(ngModel)]="AdvanceSearch.Region">
+                        <option value="">Select Region</option>
+                      </select>
                     </div>
                     <div class="form-group col-md-4">
                       <label for="State">State</label>
-                      <app-iautocomplete id="State" [Data]="AutodropdownCollection.State"></app-iautocomplete>
+                      <select name="State" class="form-control" [(ngModel)]="AdvanceSearch.State">
+                        <option value="">Select State</option>
+                      </select>
                     </div>
                     <div class="form-group col-md-4">
                       <label for="City">City</label>
-                      <app-iautocomplete id="City" [Data]="AutodropdownCollection.City"></app-iautocomplete>
+                      <select name="City" class="form-control" [(ngModel)]="AdvanceSearch.City">
+                        <option value="">Select City</option>
+                      </select>
                     </div>
                   </div>
                   <div class="col-md-12 row">
                     <div class="form-group col-md-4">
                       <label for="Supervisor">Supervisor</label>
-                      <app-iautocomplete id="Supervisor" [Data]="AutodropdownCollection.Supervisor"></app-iautocomplete>
+                      <select name="Supervisor" class="form-control" [(ngModel)]="AdvanceSearch.Supervisor">
+                        <option value="">Select Supervisor</option>
+                      </select>
                     </div>
                     <div class="form-group col-md-4">
                       <label for="Marchandisor">Marchandisor</label>
-                      <app-iautocomplete id="Marchandisor" [Data]="AutodropdownCollection.Marchandisor">
-                      </app-iautocomplete>
-                    </div>
-                    <div class="form-group col-md-4">
-                      <label for="Beat">Beat</label>
-                      <input class="form-control plain-input" id="Beat" formControlName="Beat" placeholder="Beat">
+                      <select name="Marchandisor" class="form-control" [(ngModel)]="AdvanceSearch.Marchandisor">
+                        <option value="">Select Marchandisor</option>
+                      </select>
                     </div>
                   </div>
                   <div class="col-md-12 row">
                     <div class="form-group col-md-4">
                       <label for="ChainName">Chain Name</label>
-                      <app-iautocomplete id="ChainName" [Data]="AutodropdownCollection.ChainName"></app-iautocomplete>
+                      <select name="ChainName" class="form-control" [(ngModel)]="AdvanceSearch.ChainName">
+                        <option value="">Select Chain Name</option>
+                      </select>
                     </div>
                     <div class="form-group col-md-4">
                       <label for="CustomerName">Customer Name</label>
-                      <input class="form-control" id="CustomerName" formControlName="CustomerName"
+                      <input class="form-control" name="CustomerName" [(ngModel)]="AdvanceSearch.CustomerName"
                         placeholder="Customer name">
                     </div>
                     <div class="form-group col-md-4">
                       <label for="Address">Customer Code</label>
-                      <input class="form-control plain-input" id="CustomerCode" placeholder="Customer Code">
+                      <input class="form-control plain-input" [(ngModel)]="AdvanceSearch.CustomerCode"
+                        name="CustomerCode" placeholder="Customer Code">
                     </div>
                   </div>
                 </div>
