@@ -86,6 +86,19 @@ export class ApplicationStorage {
     return ResultingData;
   }
 
+  getMaster() {
+    let ResultingData = null;
+    let Data = localStorage.getItem(this.MasterCacheName);
+    if (this.commonService.IsValid(Data)) {
+      try {
+        ResultingData = JSON.parse(Data);
+      } catch (e) {
+        ResultingData = Data;
+      }
+    }
+    return ResultingData;
+  }
+
   setByKey(Key: string, ModifiedData: any): boolean {
     let flag = false;
     let ResultingData = null;

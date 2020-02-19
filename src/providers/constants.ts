@@ -24,6 +24,8 @@ export const SKUPortfolio = "skuportfolio";
 export const ManageSKUPortfolio = "skuportfolio/manageskuportfolio";
 export const CustomerFootprint = "customerfootprint";
 export const WorkEffectiveness = "workeffectiveness";
+export const AvailabilityReport = "availabilityreport";
+export const PlanogramDetailReport = "planogramdetailreport";
 
 export const PageName: Array<RouteDescription> = [
   { title: Login, display: "Login" },

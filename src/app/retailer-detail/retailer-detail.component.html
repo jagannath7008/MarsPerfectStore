@@ -553,9 +553,10 @@
                   <div name="tzplanogram" class="row">
                     <div class="col-8">
                       <div class="form-group col-12">
-                        <select class="form-control" (change)="GetTZImage()">
+                        <select class="form-control" (change)="GetTZImage()" name="TransactionZonePlanogramGid"
+                          [(ngModel)]="RetailerDetail.TransactionZonePlanogramGid">
                           <option value="">Select Planogram Transaction Zone</option>
-                          <option *ngFor="let p of TransactionZonePlanogram" [value]="p.Gid">
+                          <option *ngFor="let p of TransactionZonePlanogram" [attr.value]="p.Gid">
                             {{p.Name}}
                           </option>
                         </select>

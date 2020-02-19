@@ -236,6 +236,18 @@ export class RetailerDetailComponent implements OnInit {
           this.TransactionZonePlanogram = [];
           if (IsValidType(Data["transactionzoneplanogram"])) {
             this.TransactionZonePlanogram = Data["transactionzoneplanogram"];
+            let SeletedItem = this.TransactionZonePlanogram.filter(
+              x => x.Gid === this.RetailerDetail.TransactionZonePlanogramGid
+            );
+            if (SeletedItem.length > 0) {
+              this.OptionsTransactionZonePlanogramImpagePath =
+                this.ServerUrl +
+                SeletedItem[ZerothIndex].RelativePathText +
+                "//" +
+                SeletedItem[ZerothIndex].Label +
+                "." +
+                SeletedItem[ZerothIndex].FileExtension;
+            }
           }
 
           this.IsPageReady = true;
@@ -283,7 +295,6 @@ export class RetailerDetailComponent implements OnInit {
           if (this.commonService.IsValidResponse(response)) {
             let Data = response.content.data;
             if (IsValidType(Data)) {
-              this.RetailerSecoundryVisibility = Data;
               this.commonService.ShowToast("Data loaded successfully.");
             } else {
               this.commonService.ShowToast("Got empty dataset.");
@@ -748,7 +759,7 @@ export class RetailerDetailComponent implements OnInit {
         .then(response => {
           if (this.commonService.IsValidResponse(response)) {
             let Data = response.content.data;
-            if (IsValidType(Data) && Data !== "Invalid Gid") {
+            if (IsValidType(Data) && Data !== "Fail to update") {
               this.RetailerMainasles = Data;
               this.commonService.ShowToast("Data loaded successfully.");
             } else {
@@ -942,6 +953,7 @@ interface RetailerViewModel {
   TZCheckOutCount: number;
   TZFoodCheckOutCount: number;
   PortfolioGid: string;
+  TransactionZonePlanogramGid: string;
 }
 
 interface ContactViewModel {

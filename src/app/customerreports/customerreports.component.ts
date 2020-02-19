@@ -15,6 +15,7 @@ import {
 } from "./../../providers/constants";
 import { iNavigation } from "./../../providers/iNavigation";
 import { AjaxService } from "src/providers/ajax.service";
+import { ApplicationStorage } from "src/providers/ApplicationStorage";
 
 @Component({
   selector: "app-customerreports",
@@ -35,6 +36,7 @@ export class CustomerreportsComponent implements OnInit {
   TotalCount: number = 0;
   TotalPageCount: number = 0;
   AdvanceSearch: AdvanceFilter;
+  MasterData: any = {};
   AutodropdownCollection: any = {
     Region: { data: [], placeholder: "Region" },
     SubChannel: { data: [], placeholder: "SubChannel" },
@@ -48,7 +50,8 @@ export class CustomerreportsComponent implements OnInit {
     private fb: FormBuilder,
     private commonService: CommonService,
     private nav: iNavigation,
-    private http: AjaxService
+    private http: AjaxService,
+    private local: ApplicationStorage
   ) {
     let PageName = this.commonService.GetCurrentPageName();
     if (PageName === JourneyPlan) {
@@ -90,25 +93,25 @@ export class CustomerreportsComponent implements OnInit {
     }
 
     if (IsValidType(this.AdvanceSearch.Region)) {
-      searchQuery += " And Region = '" + this.AdvanceSearch.Region + "'";
+      searchQuery += " And p.Region = '" + this.AdvanceSearch.Region + "'";
     }
 
     if (this.AdvanceSearch.CustomerName) {
       searchQuery +=
-        " And CustomerName = '" + this.AdvanceSearch.CustomerName + "'";
+        " And j.Name like '" + this.AdvanceSearch.CustomerName + "%'";
     }
 
     if (this.AdvanceSearch.CustomerCode) {
       searchQuery +=
-        " And CustomerCode = '" + this.AdvanceSearch.CustomerCode + "'";
+        " And CustomerCode like '" + this.AdvanceSearch.CustomerCode + "%'";
     }
 
     if (this.AdvanceSearch.State) {
-      searchQuery += " And State = '" + this.AdvanceSearch.State + "'";
+      searchQuery += " And p.State = '" + this.AdvanceSearch.State + "'";
     }
 
     if (this.AdvanceSearch.City) {
-      searchQuery += " And City = '" + this.AdvanceSearch.City + "'";
+      searchQuery += " And p.City = '" + this.AdvanceSearch.City + "'";
     }
 
     if (this.AdvanceSearch.ChainName) {
@@ -129,6 +132,8 @@ export class CustomerreportsComponent implements OnInit {
     }
 
     alert(searchQuery);
+    this.searchQuery = searchQuery;
+    this.LoadData();
   }
 
   FilterLocaldata() {
@@ -174,6 +179,7 @@ export class CustomerreportsComponent implements OnInit {
     MSData.content.pageIndex = this.pageIndex;
     MSData.content.pageSize = this.pageSize;
 
+    this.EnableFilter = false;
     this.http.post("Webportal/FetchRetailers", MSData).then(response => {
       this.TableResultSet = [];
       if (this.commonService.IsValidResponse(response)) {
@@ -231,23 +237,19 @@ export class CustomerreportsComponent implements OnInit {
       { column: "Gid", type: "hidden" }
     ];
     this.LoadData();
-    // this.AutodropdownCollection.Region = {
-    //   data: [
-    //     { value: "First", data: "1" },
-    //     { value: "Second", data: "2" },
-    //     { value: "Third", data: "3" },
-    //     { value: "Forth", data: "4" },
-    //     { value: "Fifth", data: "5" },
-    //     { value: "Sixth", data: "6" },
-    //     { value: "Seventh", data: "7" }
-    //   ],
-    //   placeholder: "Region"
-    // };
     this.LoadTableData();
+    let LocalMasterData = this.local.getMaster();
+    if (IsValidType(LocalMasterData)) {
+      this.MasterData = LocalMasterData;
+    }
   }
 
   GetAdvanceFilter() {
-    this.EnableFilter = !this.EnableFilter;
+    this.EnableFilter = true;
+  }
+
+  CloseFilter() {
+    this.EnableFilter = false;
   }
 
   ResetFilter() {
