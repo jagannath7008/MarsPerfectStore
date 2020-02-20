@@ -1,8 +1,7 @@
 import { Component, OnInit } from "@angular/core";
-import { PageName, RouteDescription } from "src/providers/constants";
 import { iNavigation } from "src/providers/iNavigation";
 import { CommonService } from "src/providers/common-service/common.service";
-import { ApplicationStorage } from "src/providers/ApplicationStorage";
+import { ApplicationStorage } from 'src/providers/ApplicationStorage';
 
 @Component({
   selector: "app-header",
@@ -10,19 +9,14 @@ import { ApplicationStorage } from "src/providers/ApplicationStorage";
   styleUrls: ["./header.component.scss"]
 })
 export class HeaderComponent implements OnInit {
-  Pages: Array<RouteDescription> = [];
-  constructor(
-    private nav: iNavigation,
-    private commonService: CommonService,
-    private storage: ApplicationStorage
-  ) {}
+  constructor(private nav: iNavigation, private common: CommonService, 
+    private local: ApplicationStorage) {}
 
-  ngOnInit() {
-    this.Pages = PageName;
-  }
+  ngOnInit() {}
 
-  SignOut() {
-    this.storage.clear();
+  doLogout() {
+    this.local.clear();
+    this.common.ShowToast("Logout successfully.");
     this.nav.navigate("/", null);
   }
 }

@@ -4,92 +4,99 @@
       <li>
         <span>Welcome</span><a href="javascript:void(0)">Admin</a><span>|</span>
       </li>
-      <li><a (click)="SignOut()" style="cursor: pointer;">Signout</a></li>
+      <li><a href="javascript:void(0)" (click)="doLogout()">Logout</a></li>
     </ul>
   </div>
   <div class="bottom-header">
-  <div class="header-left">
-    <a [routerLink]="['/dashboard']" href="javascript:void(0)"><img src="assets/images/logo.png" alt="logo" /></a>
-  </div>
-  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
-    aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-    <span class="navbar-toggler-icon"></span>
-  </button>
-  <div class="header-right">
-  <div class="collapse navbar-collapse" id="navbarSupportedContent">
-    <ul class="navbar-nav mr-auto">
-      <li class="nav-item text-center active">
-        <i class="fas fa-tachometer-alt"></i>
-        <a class="nav-link mt-2 nav-pad15" [routerLink]="['/dashboard']">Dashboard <span class="sr-only">(current)</span></a>
-      </li>
-      <li class="nav-item text-center">
-        <i class="far fa-file-alt"></i>
-        <a class="dropdown show nav-link pt-0 mt-2">
-          <a class="dropdown-toggle text-muted" href="#" role="button" id="dropdownAdminLink" data-toggle="dropdown"
-            aria-haspopup="true" aria-expanded="false">
-            Reports
-          </a>
-          <div class="dropdown-menu m-with" aria-labelledby="dropdownAdminLink">
-            <a class="dropdown-item" [routerLink]="['/customerfootprint']" href="javascript:void(0)">Customer
-              Footprint</a>
-            <a class="dropdown-item" [routerLink]="['/workeffectiveness']" href="javascript:void(0)">Work
-              Effectiveness</a>
-          </div>
-        </a>
-      </li>
-      <!-- <li class="nav-item text-center">
+    <div class="header-left">
+      <a [routerLink]="['/dashboard']" href="javascript:void(0)"><img src="assets/images/logo.png" alt="logo" /></a>
+    </div>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+      aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="header-right">
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item text-center active">
+            <i class="fas fa-tachometer-alt"></i>
+            <a class="nav-link pt-0 mt-2" [routerLink]="['/dashboard']">Dashboard <span
+                class="sr-only">(current)</span></a>
+          </li>
+          <li class="nav-item text-center">
+            <i class="far fa-file-alt"></i>
+            <a class="dropdown show nav-link pt-0 mt-2">
+              <a class="dropdown-toggle text-muted" href="#" role="button" id="dropdownAdminLink" data-toggle="dropdown"
+                aria-haspopup="true" aria-expanded="false">
+                Reports
+              </a>
+              <div class="dropdown-menu m-with" aria-labelledby="dropdownAdminLink">
+                <a class="dropdown-item" [routerLink]="['/customerfootprint']" href="javascript:void(0)">Customer
+                  Footprint</a>
+                <a class="dropdown-item" [routerLink]="['/workeffectiveness']" href="javascript:void(0)">Work
+                  Effectiveness</a>
+
+                <a class="dropdown-item" [routerLink]="['/availabilityreport']" href="javascript:void(0)">
+                  Availability Report</a>
+                <a class="dropdown-item" [routerLink]="['/planogramdetailreport']" href="javascript:void(0)">
+                  Planogramdetail Report</a>
+              </div>
+            </a>
+          </li>
+          <!-- <li class="nav-item text-center">
         <i class="fas fa-hdd"></i>
         <a class="nav-link pt-0 mt-2" href="javascript:void(0)">Transaction</a>
       </li> -->
 
-      <li class="nav-item text-center">
-        <i class="far fa-user-circle"></i>
-        <a class="dropdown show nav-link pt-0 mt-2">
-          <a class="dropdown-toggle text-muted" href="#" role="button" id="dropdownAdminLink" data-toggle="dropdown"
-            aria-haspopup="true" aria-expanded="false">
-            Administration
-          </a>
-          <div class="dropdown-menu m-with" aria-labelledby="dropdownAdminLink">
-            <a class="dropdown-item" [routerLink]="['/supervisorCustomer']" href="javascript:void(0)">Supervisor
-              Customer</a>
-            <a class="dropdown-item" [routerLink]="['/beatPlanning']" href="javascript:void(0)">Beat
-              Planning</a>
-          </div>
-        </a>
-      </li>
+          <li class="nav-item text-center">
+            <i class="far fa-user-circle"></i>
+            <a class="dropdown show nav-link pt-0 mt-2">
+              <a class="dropdown-toggle text-muted" href="#" role="button" id="dropdownAdminLink" data-toggle="dropdown"
+                aria-haspopup="true" aria-expanded="false">
+                Administration
+              </a>
+              <div class="dropdown-menu m-with" aria-labelledby="dropdownAdminLink">
+                <a class="dropdown-item" [routerLink]="['/supervisorCustomer']" href="javascript:void(0)">Supervisor
+                  Customer</a>
+                <a class="dropdown-item" [routerLink]="['/beatPlanning']" href="javascript:void(0)">Beat
+                  Planning</a>
+              </div>
+            </a>
+          </li>
 
-      <li class="nav-item text-center">
-        <i class="fas fa-table"></i>
-        <a class="dropdown show nav-link pt-0 mt-2">
-          <a class="dropdown-toggle text-muted" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown"
-            aria-haspopup="true" aria-expanded="false">
-            Master
-          </a>
-          <div class="dropdown-menu ddm-last m-with-50" aria-labelledby="dropdownMenuLink">
-            <a class="dropdown-item" [routerLink]="['/office']" href="javascript:void(0)">Office</a>
+          <li class="nav-item text-center">
+            <i class="fas fa-table"></i>
+            <a class="dropdown show nav-link pt-0 mt-2">
+              <a class="dropdown-toggle text-muted" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown"
+                aria-haspopup="true" aria-expanded="false">
+                Master
+              </a>
+              <div class="dropdown-menu m-with-50" aria-labelledby="dropdownMenuLink">
+                <a class="dropdown-item" [routerLink]="['/office']" href="javascript:void(0)">Office</a>
 
-            <a class="dropdown-item" [routerLink]="['/region']" href="javascript:void(0)">Region</a>
+                <a class="dropdown-item" [routerLink]="['/region']" href="javascript:void(0)">Region</a>
 
-            <a class="dropdown-item" [routerLink]="['/state']" href="javascript:void(0)">State</a>
+                <a class="dropdown-item" [routerLink]="['/state']" href="javascript:void(0)">State</a>
 
-            <a class="dropdown-item" [routerLink]="['/city']" href="javascript:void(0)">City</a>
+                <a class="dropdown-item" [routerLink]="['/city']" href="javascript:void(0)">City</a>
 
-            <a class="dropdown-item" [routerLink]="['/employee']" href="javascript:void(0)">Employee</a>
-            <a class="dropdown-item" [routerLink]="['/dashboard/customerreport']"
-              href="javascript:void(0)">Customers</a>
-            <a class="dropdown-item" [routerLink]="['/sku']" href="javascript:void(0)">Sku</a>
-            <a class="dropdown-item" [routerLink]="['/planogrammainaisle']" href="javascript:void(0)">Planogram Main
-              Aisle</a>
-            <a class="dropdown-item" [routerLink]="['/planogramsecondaryvisibility']"
-              href="javascript:void(0)">Planogram Secondary Visibility</a>
-            <a class="dropdown-item" [routerLink]="['/planogramtransactionzone']" href="javascript:void(0)">Planogram
-              Transaction Zone</a>
-            <a class="dropdown-item" [routerLink]="['/skuportfolio']" href="javascript:void(0)">SKU Portfolio</a>
-          </div>
-        </a>
-      </li>
-    </ul>
-  </div>
-  </div>
+                <a class="dropdown-item" [routerLink]="['/employee']" href="javascript:void(0)">Employee</a>
+                <a class="dropdown-item" [routerLink]="['/dashboard/customerreport']"
+                  href="javascript:void(0)">Customers</a>
+                <a class="dropdown-item" [routerLink]="['/sku']" href="javascript:void(0)">Sku</a>
+                <a class="dropdown-item" [routerLink]="['/planogrammainaisle']" href="javascript:void(0)">Planogram Main
+                  Aisle</a>
+                <a class="dropdown-item" [routerLink]="['/planogramsecondaryvisibility']"
+                  href="javascript:void(0)">Planogram Secondary Visibility</a>
+                <a class="dropdown-item" [routerLink]="['/planogramtransactionzone']"
+                  href="javascript:void(0)">Planogram
+                  Transaction Zone</a>
+                <a class="dropdown-item" [routerLink]="['/skuportfolio']" href="javascript:void(0)">SKU Portfolio</a>
+              </div>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
   </div>
 </nav>

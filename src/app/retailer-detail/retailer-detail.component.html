@@ -165,7 +165,7 @@
                   </div>
                   <div class="col-2 card">
                     <ng-container *ngFor="let img of OptionsPlanogramImpagePath">
-                      <img [src]="img" class="mainaisle-img-thumbanail" alt="User">
+                      <img [src]="img.path" class="mainaisle-img-thumbanail" alt="User">
                       <p class="mt-2">Thumbnail</p>
                     </ng-container>
                   </div>
@@ -553,9 +553,10 @@
                   <div name="tzplanogram" class="row">
                     <div class="col-8">
                       <div class="form-group col-12">
-                        <select class="form-control" (change)="GetTZImage()">
+                        <select class="form-control" (change)="GetTZImage()" name="TransactionZonePlanogramGid"
+                          [(ngModel)]="RetailerDetail.TransactionZonePlanogramGid">
                           <option value="">Select Planogram Transaction Zone</option>
-                          <option *ngFor="let p of TransactionZonePlanogram" [value]="p.Gid">
+                          <option *ngFor="let p of TransactionZonePlanogram" [attr.value]="p.Gid">
                             {{p.Name}}
                           </option>
                         </select>
@@ -645,22 +646,20 @@
               <div [attr.id]="'id_' + ActiveSection" *ngSwitchCase="'SKUPorfolio'"
                 class="hide-section col-md-12 border">
                 <div class="pt-4 pb-4 pl-0 pr-0">
-                  <form>
-                    <div class="form-group">
-                      <h5 class="font-weight-bold">SKU Porfolio</h5>
-                      <div class="col-md-12 d-flex p-0">
-                        <div class="col-md-2 pl-0">
-                          <button class="btn btn-outline-danger">Save</button>
-                        </div>
-                        <div class="col-md-6 pr-0">
-                          <select class="form-control" id="competition">
-                            <option value="" [selected]="selected">Select SKUPorfolio</option>
-                            <option *ngFor="let sku of SkuPortfolio" [value]="sku.Gid">{{sku.Name}}</option>
-                          </select>
-                        </div>
+                  <div class="form-group">
+                    <h5 class="font-weight-bold">SKU Porfolio</h5>
+                    <div class="col-md-12 d-flex p-0">
+                      <div class="col-md-2 pl-0">
+                        <button class="btn btn-outline-danger" (click)="UpdatePortfolio()">Save</button>
+                      </div>
+                      <div class="col-md-6 pr-0">
+                        <select class="form-control" [(ngModel)]="RetailerDetail.PortfolioGid" name="PortfolioGid">
+                          <option value="" [selected]="selected">Select SKUPorfolio</option>
+                          <option *ngFor="let sku of SkuPortfolio" [value]="sku.Gid">{{sku.Name}}</option>
+                        </select>
                       </div>
                     </div>
-                  </form>
+                  </div>
                 </div>
               </div>
 

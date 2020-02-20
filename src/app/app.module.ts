@@ -36,8 +36,10 @@ import { ManageskuportfolioComponent } from "./manageskuportfolio/manageskuportf
 import { AgmCoreModule } from "@agm/core";
 import { WorkfffectivenessComponent } from "./workfffectiveness/workfffectiveness.component";
 import { CustomerfootprintComponent } from "./customerfootprint/customerfootprint.component";
-import { PlanogramtransactionzoneComponent } from './planogramtransactionzone/planogramtransactionzone.component';
-import { FooterComponent } from './footer/footer.component';
+import { PlanogramtransactionzoneComponent } from "./planogramtransactionzone/planogramtransactionzone.component";
+import { FooterComponent } from "./footer/footer.component";
+import { AvailabilityreportComponent } from "./availabilityreport/availabilityreport.component";
+import { PlanogramDetailReportComponent } from "./PlanogramDetailReport/planogram-detail-report/planogram-detail-report.component";
 
 @NgModule({
   declarations: [
@@ -66,6 +68,8 @@ import { FooterComponent } from './footer/footer.component';
     CustomerfootprintComponent,
     WorkfffectivenessComponent,
     PlanogramtransactionzoneComponent,
+    AvailabilityreportComponent,
+    PlanogramDetailReportComponent,
     FooterComponent
   ],
   imports: [

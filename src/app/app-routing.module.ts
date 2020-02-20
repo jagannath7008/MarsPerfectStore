@@ -21,7 +21,9 @@ import {
   ManageSKUPortfolio,
   CustomerFootprint,
   WorkEffectiveness,
-  PlanogramTransactionzone
+  PlanogramTransactionzone,
+  AvailabilityReport,
+  PlanogramDetailReport
 } from "src/providers/constants";
 import { LoginComponent } from "./login/login.component";
 import { DashboardComponent } from "./dashboard/dashboard.component";
@@ -45,6 +47,8 @@ import { ManageskuportfolioComponent } from "./manageskuportfolio/manageskuportf
 import { WorkfffectivenessComponent } from "./workfffectiveness/workfffectiveness.component";
 import { CustomerfootprintComponent } from "./customerfootprint/customerfootprint.component";
 import { PlanogramtransactionzoneComponent } from "./planogramtransactionzone/planogramtransactionzone.component";
+import { AvailabilityreportComponent } from "./availabilityreport/availabilityreport.component";
+import { PlanogramDetailReportComponent } from "./PlanogramDetailReport/planogram-detail-report/planogram-detail-report.component";
 
 const routes: Routes = [
   { path: "", component: LoginComponent },
@@ -75,6 +79,8 @@ const routes: Routes = [
   { path: ManageSKUPortfolio, component: ManageskuportfolioComponent },
   { path: CustomerFootprint, component: CustomerfootprintComponent },
   { path: WorkEffectiveness, component: WorkfffectivenessComponent },
+  { path: AvailabilityReport, component: AvailabilityreportComponent },
+  { path: PlanogramDetailReport, component: PlanogramDetailReportComponent },
   {
     path: PlanogramTransactionzone,
     component: PlanogramtransactionzoneComponent

@@ -20,9 +20,14 @@ import {
   ManageSKUPortfolio,
   WorkEffectiveness,
   CustomerFootprint,
-  PlanogramTransactionzone
+  PlanogramTransactionzone,
+  PlanogramDetailReport,
+  AvailabilityReport
 } from "src/providers/constants";
-import { CommonService } from "src/providers/common-service/common.service";
+import {
+  CommonService,
+  IsValidType
+} from "src/providers/common-service/common.service";
 import { AjaxService } from "src/providers/ajax.service";
 import { ApplicationStorage } from "src/providers/ApplicationStorage";
 import { PageCache } from "src/providers/PageCache";
@@ -110,6 +115,10 @@ export class AppComponent {
                 break;
               case "/" + PlanogramTransactionzone:
                 break;
+              case "/" + AvailabilityReport:
+                break;
+              case "/" + PlanogramDetailReport:
+                break;
               default:
                 this.commonService.EnableAuthBase();
                 this.IsLogin = true;
@@ -131,6 +140,49 @@ export class AppComponent {
         this.commonService.HideLoader();
       }
     });
+  }
+
+  ParseMasterData(MasterData: any) {
+    let FinalData = {
+      Countries: [],
+      State: [],
+      Region: [],
+      City: []
+    };
+    if (IsValidType(MasterData["LocationTable"])) {
+      let Data = MasterData["LocationTable"];
+      let index = 0;
+      while (index < Data.length) {
+        if (Data[index]["TypeEnum"] === "COU") {
+          if (
+            FinalData.Countries.filter(x => x.Gid === Data[index].Gid)
+              .length === 0
+          ) {
+            FinalData.Countries.push(Data[index]);
+          }
+        } else if (Data[index]["TypeEnum"] === "STA") {
+          if (
+            FinalData.State.filter(x => x.Gid === Data[index].Gid).length === 0
+          ) {
+            FinalData.State.push(Data[index]);
+          }
+        } else if (Data[index]["TypeEnum"] === "REG") {
+          if (
+            FinalData.Region.filter(x => x.Gid === Data[index].Gid).length === 0
+          ) {
+            FinalData.Region.push(Data[index]);
+          }
+        } else if (Data[index]["TypeEnum"] === "CIT") {
+          if (
+            FinalData.City.filter(x => x.Gid === Data[index].Gid).length === 0
+          ) {
+            FinalData.City.push(Data[index]);
+          }
+        }
+        index++;
+      }
+    }
+    return FinalData;
   }
 
   AuthenticateCredential(Credential: any) {
@@ -162,10 +214,17 @@ export class AppComponent {
           .then(
             response => {
               if (this.commonService.IsValidResponse(response)) {
-                this.IsLogin = false;
-                this.local.set({ UserDetail: response });
-                this.nav.navigate(Dashboard, null);
-                this.commonService.ShowToast("Login successfull.");
+                let StringifiedMasterData = response.content.data;
+                if (IsValidType(StringifiedMasterData)) {
+                  this.IsLogin = false;
+                  let MasterData = JSON.parse(response.content.data);
+                  response.content.data = this.ParseMasterData(MasterData);
+                  this.local.set(response.content.data, true);
+                  this.nav.navigate(Dashboard, null);
+                  this.commonService.ShowToast("Login successfull.");
+                } else {
+                  this.commonService.ShowToast("Fail to load master data.");
+                }
               } else {
                 this.commonService.ShowToast(
                   "Invalid response. Please contact to admin."
