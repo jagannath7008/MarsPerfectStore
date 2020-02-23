@@ -12,6 +12,8 @@ import { JourneyPlan, Employee, PostParam } from "../../providers/constants";
 import { iNavigation } from "../../providers/iNavigation";
 import { AjaxService } from "src/providers/ajax.service";
 import { BusinessunitModel } from "../businessunit/businessunit.component";
+import { AdvanceFilter } from "../customerreports/customerreports.component";
+import { ApplicationStorage } from "src/providers/ApplicationStorage";
 
 @Component({
   selector: "app-employee",
@@ -27,6 +29,7 @@ export class EmployeeComponent implements OnInit {
   IsEmptyRow: boolean = true;
   HeaderName: string = "Page Name";
   EnableFilter: boolean = false;
+  AddEmployeeModal: boolean = false;
   TotalHeaders: number = 5;
   searchQuery: string = " 1=1 ";
   sortBy: string = "";
@@ -36,14 +39,27 @@ export class EmployeeComponent implements OnInit {
   TotalPageCount: number = 0;
   TypeEnum: string = "CIT";
   AdvanceFilterObject: FormGroup;
+  AdvanceSearch: EmployeeAdvanceSearch;
+  MasterData: any = {};
+  AutodropdownCollection: any = {
+    Region: { data: [], placeholder: "Region" },
+    SubChannel: { data: [], placeholder: "SubChannel" },
+    Supervisor: { data: [], placeholder: "Supervisor" },
+    State: { data: [], placeholder: "State" },
+    ChainName: { data: [], placeholder: "ChainName" },
+    Marchandisor: { data: [], placeholder: "Marchandisor" },
+    City: { data: [], placeholder: "City" }
+  };
   constructor(
     private fb: FormBuilder,
     private commonService: CommonService,
     private nav: iNavigation,
+    private local: ApplicationStorage,
     private http: AjaxService
   ) {
     let PageName = this.commonService.GetCurrentPageName();
     this.HeaderName = "Employee";
+    this.ResetAdvanceFilter();
   }
 
   NextPage() {
@@ -51,6 +67,90 @@ export class EmployeeComponent implements OnInit {
       this.pageIndex = this.pageIndex + 1;
       this.LoadData();
     }
+  }
+
+  SubmitSearchCriateria() {
+    let searchQuery = "1=1 ";
+
+    if (IsValidType(this.AdvanceSearch.Marchandisor)) {
+      searchQuery +=
+        " And j.Name = '" +
+        this.AdvanceSearch.Marchandisor +
+        "' and j.LinkType = 'businessunit'";
+    }
+
+    // if (IsValidType(this.AdvanceSearch.Supervisor)) {
+    //   searchQuery +=
+    //     " And Supervisor = '" + this.AdvanceSearch.Supervisor + "'";
+    // }
+
+    if (IsValidType(this.AdvanceSearch.Name)) {
+      searchQuery += " And j.Name like '" + this.AdvanceSearch.Name + "%'";
+    }
+
+    if (this.AdvanceSearch.Mobile) {
+      searchQuery += " And j.Mobile like '" + this.AdvanceSearch.Mobile + "%'";
+    }
+
+    if (this.AdvanceSearch.LoginId) {
+      searchQuery += " And LoginId like '" + this.AdvanceSearch.LoginId + "%'";
+    }
+
+    if (this.AdvanceSearch.EmpNo) {
+      searchQuery += " And j.EmpNo like '" + this.AdvanceSearch.EmpNo + "%'";
+    }
+
+    if (this.AdvanceSearch.PrimaryPhone) {
+      searchQuery +=
+        " And p.PrimaryPhone like '" + this.AdvanceSearch.PrimaryPhone + "%'";
+    }
+
+    if (this.AdvanceSearch.Designation) {
+      searchQuery +=
+        " And j.Designation like '" + this.AdvanceSearch.Designation + "%'";
+    }
+
+    if (this.AdvanceSearch.Department) {
+      searchQuery +=
+        " And j.Department like '" + this.AdvanceSearch.Department + "%'";
+    }
+
+    if (this.AutodropdownCollection !== null) {
+      let keys = Object.keys(this.AutodropdownCollection);
+      let Value = null;
+      let index = 0;
+      while (index < keys.length) {
+        Value = this.commonService.ReadAutoCompleteObject($("#" + keys[index]));
+        if (Value !== null && Value["data"] !== "") {
+          searchQuery += ` And ${keys[index]} like '${Value.data}'`;
+        }
+        index++;
+      }
+    }
+
+    this.searchQuery = searchQuery;
+    this.LoadData();
+  }
+
+  ResetAdvanceFilter() {
+    this.AdvanceSearch = {
+      LinkType: "",
+      Name: "",
+      Mobile: "",
+      LoginId: "",
+      EmpNo: "",
+      JoinDate: "",
+      ExitDate: "",
+      BirthDate: "",
+      PrimaryPhone: "",
+      SecondaryPhone: "",
+      WhatsAppPhone: "",
+      Email: "",
+      Designation: "",
+      Department: "",
+      Code: "",
+      Marchandisor: ""
+    };
   }
 
   PreviousPage() {
@@ -89,6 +189,7 @@ export class EmployeeComponent implements OnInit {
     MSData.content.pageIndex = this.pageIndex;
     MSData.content.pageSize = this.pageSize;
 
+    this.Close();
     this.http.post("Webportal/FetchContacts", MSData).then(response => {
       this.TableResultSet = [];
       if (this.commonService.IsValidResponse(response)) {
@@ -160,6 +261,10 @@ export class EmployeeComponent implements OnInit {
     });
   }
 
+  GetAdvanceFilter() {
+    this.EnableFilter = true;
+  }
+
   ngOnInit() {
     this.BindingHeader = [
       { column: "Name", displayheader: "Employee Name", width: 10 },
@@ -178,14 +283,19 @@ export class EmployeeComponent implements OnInit {
     //this.BindReportsto();
     this.LoadData();
     this.LoadTableData();
+    let LocalMasterData = this.local.getMaster();
+    if (IsValidType(LocalMasterData)) {
+      this.MasterData = LocalMasterData;
+    }
   }
 
   Close() {
     this.EnableFilter = false;
+    this.AddEmployeeModal = false;
   }
 
   ResetFilter() {
-    this.searchQuery = "";
+    this.searchQuery = " 1=1 ";
     this.LoadData();
   }
 
@@ -202,7 +312,7 @@ export class EmployeeComponent implements OnInit {
     this.entity.WebPortalRole = "";
     this.entity.MobileAppRole = "";
 
-    this.EnableFilter = true;
+    this.AddEmployeeModal = true;
   }
   Edit(editEntity: any) {
     this.Open();
@@ -282,4 +392,23 @@ export class EmployeeModel {
   WebPortalRole: String;
   MobileAppRole: String;
   ReportingToJobId: String;
+}
+
+interface EmployeeAdvanceSearch {
+  LinkType: string;
+  Name: string;
+  Mobile: string;
+  LoginId: string;
+  EmpNo: string;
+  JoinDate: string;
+  ExitDate: string;
+  BirthDate: string;
+  PrimaryPhone: string;
+  SecondaryPhone: string;
+  WhatsAppPhone: string;
+  Email: string;
+  Designation: string;
+  Department: string;
+  Code: string;
+  Marchandisor: string;
 }

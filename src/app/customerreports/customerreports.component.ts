@@ -131,7 +131,7 @@ export class CustomerreportsComponent implements OnInit {
       }
     }
 
-    alert(searchQuery);
+    //alert(searchQuery);
     this.searchQuery = searchQuery;
     this.LoadData();
   }
@@ -302,7 +302,7 @@ export class RetailerModal {
   Street: String;
 }
 
-interface AdvanceFilter {
+export interface AdvanceFilter {
   Region: string;
   SubChannel: string;
   CustomerCode: string;

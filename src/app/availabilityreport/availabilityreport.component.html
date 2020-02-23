@@ -1,173 +1,274 @@
 <div class="page-card pb-4">
-    <app-pagebreadcrumb></app-pagebreadcrumb>
-    <div class="container p-0 m-0">
-      <h4>{{HeaderName | uppercase}}</h4>
-    </div>
-    <div class="pl-0 pr-1 d-inline-block panel-body col-md-12 col-xs-12">
-  <div class="row">
-    <div class="col-md-6">
-      <div class="pl-0 pr-0 form-group col-md-12 col-sm-12 d-inline-block">
-        <input id="ShopFilter" placeholder="Global search" class="form-control" [(ngModel)]="searchQuery" (keyup)="FilterLocaldata()"
-          required="required" type="text">
+  <app-pagebreadcrumb></app-pagebreadcrumb>
+  <div class="container p-0 m-0">
+    <h4>{{HeaderName | uppercase}}</h4>
+  </div>
+
+  <div *ngIf="EnableFilter" class="ipopup">
+    <div class="ipopup__content">
+      <div class="ipopup__header">
+        <header>Advance filter</header>
       </div>
-    </div>
-    <div class="col-md-6 d-inline-block text-right no-padding">
-      <button type="submit" (click)="ResetFilter()" class="btn btn-outline-info mr-1">
-        <i class="fas fa-sync"></i>&ensp;Reset</button>
-        <!-- <button type="button" (click)="ExportToExcel()" class="btn btn-success"><i
-          class="fa fa-plus"></i>&ensp;Export</button> -->
+      <form (submit)="SubmitSearchCriateria()" class="pt-2" (keydown.enter)="$event.preventDefault()">
+        <table class="mt-2">
+          <tbody>
+            <tr>
+              <td>
+                <div class="pt-2">
+                  <div class="col-md-12 row">
+                    <div class="form-group col-md-4">
+                      <label for="Region">Region</label>
+                      <select name="Region" class="form-control" [(ngModel)]="AdvanceSearch.Region">
+                        <option value="">Select Region</option>
+                      </select>
+                    </div>
+                    <div class="form-group col-md-4">
+                      <label for="State">State</label>
+                      <select name="State" class="form-control" [(ngModel)]="AdvanceSearch.State">
+                        <option value="">Select State</option>
+                      </select>
+                    </div>
+                    <div class="form-group col-md-4">
+                      <label for="City">City</label>
+                      <select name="City" class="form-control" [(ngModel)]="AdvanceSearch.City">
+                        <option value="">Select City</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="col-md-12 row">
+                    <div class="form-group col-md-4">
+                      <label for="Supervisor">Supervisor</label>
+                      <select name="Supervisor" class="form-control" [(ngModel)]="AdvanceSearch.Supervisor">
+                        <option value="">Select Supervisor</option>
+                      </select>
+                    </div>
+                    <div class="form-group col-md-4">
+                      <label for="Marchandisor">Marchandisor</label>
+                      <select name="Marchandisor" class="form-control" [(ngModel)]="AdvanceSearch.Marchandisor">
+                        <option value="">Select Marchandisor</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="col-md-12 row">
+                    <div class="form-group col-md-4">
+                      <label for="ChainName">Chain Name</label>
+                      <select name="ChainName" class="form-control" [(ngModel)]="AdvanceSearch.ChainName">
+                        <option value="">Select Chain Name</option>
+                      </select>
+                    </div>
+                    <div class="form-group col-md-4">
+                      <label for="CustomerName">Customer Name</label>
+                      <input class="form-control" name="CustomerName" [(ngModel)]="AdvanceSearch.CustomerName"
+                        placeholder="Customer name">
+                    </div>
+                    <div class="form-group col-md-4">
+                      <label for="Address">Customer Code</label>
+                      <input class="form-control plain-input" [(ngModel)]="AdvanceSearch.CustomerCode"
+                        name="CustomerCode" placeholder="Customer Code">
+                    </div>
+                  </div>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+          <tfoot class="border-top">
+            <div class="form-group mt-3">
+              <button class="btn btn-primary form-control">Search</button>
+            </div>
+            <div class="form-group mt-2">
+              <button class="btn btn-outline-dark form-control" (click)="GetAdvanceFilter()">Close</button>
+            </div>
+          </tfoot>
+        </table>
+      </form>
     </div>
   </div>
-  <div id="viewfeestimetable-dv" class="h-tbl">
-    <div id="dynamic-grid-table" class="table-responsive border">
-            <table class="table table-striped">
-              <thead>
-                <tr>
-                  <th>
-                    Category
-                  </th>
-                  <th>
-                    TotalNoStore
-                  </th>
-                  <th>
-                    AvailableIn
-                  </th>
-                  <th>
-                    % Availability
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                <ng-container *ngIf="TodayJourneyPlanViewModel == null || TodayJourneyPlanViewModel.length == 0">
-                  <tr class="cls_norecord">No record found</tr>
-                </ng-container>
-                <ng-container *ngFor="let row of TodayJourneyPlanViewModel;let i=index">
-                  <tr>
-                    <td>
-                      <span>{{row.CategoryCode}}</span>
-                    </td>
-                    <td>
-                      <span>{{row.TotalNoOfStores}}</span>
-                    </td>
-                    <td>
-                      <span>{{row.AvailabileIn}}</span>
-                    </td>
-                    <td>
-                      <span>{{row.AvailabilityPercentage}}</span>
-                    </td>
-                    <td>                    
-                      <span>
-                        <a (click)="ActiveRow[i]=!ActiveRow[i]">
-                          <img src={{icon}} (click)="toggleIcon($event)" />
-                        </a>
-                      </span>
-  
-                    </td>
-                  </tr>
-                  <tr *ngIf="ActiveRow[i]">
-                    <td colspan="8" cellpadding="5">
-                      <table style="width:100%;margin-left:0%;" class="table">
-                        <thead>
-                          <tr style="background-color:#6f6f6f">                            
-                            <th>
-                              Brand
-                            </th>
-                            <th>
-                              TotalNoStore
-                            </th>
-                            <th>
-                              AvailableIn
-                            </th>
-                            <th>
-                              % Availability
-                            </th>
-                           
-                          </tr>
-                        </thead>
-                        <tbody class="cls_new_grid_style">
-                          <ng-container *ngIf="row.lstAvailabilityReportBrandViewModel == null || row.lstAvailabilityReportBrandViewModel.length == 0">
-                            <tr class="cls_norecord">No record found</tr>
-                          </ng-container>
-                          <ng-container *ngFor="let ChildRow of row.lstAvailabilityReportBrandViewModel;let j=index">
-                            <tr> 
-                              <td>
-                                <span>{{ChildRow.BrandCode}}</span>
-                              </td>
-                              <td>
-                                <span>{{ChildRow.TotalNoOfStores}}</span>
-                              </td>
-                              <td>
-                                <span>{{ChildRow.AvailabileIn}}</span>
-                              </td>
-                              <td>
-                                <span>{{ChildRow.AvailabilityPercentage}}</span>
-                              </td>
-                              <td>
-                                <span>
-                                  <a (click)="ActiveRowGC[j]=!ActiveRowGC[j]">
-                                    <img src={{icon}} (click)="toggleIcon($event)" />
-                                  </a>
-                                </span>
-                              </td>
-                             
-                            </tr>
-                            <tr *ngIf="ActiveRowGC[j]">
-                              <td colspan="8" cellpadding="5">
-                                <table style="width:100%;margin-left:0%;" class="table">
-                                  <thead>
-                                    <tr style="background-color:#6f6f6f">                            
-                                      <th>
-                                        ParentSKU
-                                      </th>
-                                      <th>
-                                        TotalNoStore
-                                      </th>
-                                      <th>
-                                        AvailableIn
-                                      </th>
-                                      <th>
-                                        % Availability
-                                      </th>
-                                     
-                                    </tr>
-                                    </thead>
-                                    <tbody class="cls_new_grid_style">
-                                      <ng-container *ngIf="ChildRow.lstAvailabilityReportSKUViewModel == null || ChildRow.lstAvailabilityReportSKUViewModel.length == 0">
-                                        <tr class="cls_norecord">No record found</tr>
-                                      </ng-container>
-                                      <ng-container *ngFor="let GCRow of ChildRow.lstAvailabilityReportSKUViewModel">
-                                        <tr> 
-                                          <td>
-                                            <span>{{GCRow.ItemCode}}</span>
-                                            </td>
-                                            <td>
-                                              <span>{{GCRow.TotalNoOfStores}}</span>
-                                              </td>
-                                              <td>
-                                                <span>{{GCRow.AvailabileIn}}</span>
-                                                </td>
-                                                <td>
-                                                  <span>{{GCRow.AvailabilityPercentage}}</span>
-                                                  </td>
-                                            </tr>
-                                            </ng-container>
-                                            </tbody>
-                                    </table>
-                                </td>
-                                </tr> 
-                          </ng-container>
-                        </tbody>
-                        </table>
-                    </td>
-                  </tr>
-                </ng-container>
-              </tbody>
-            </table>
-          </div>
+
+  <div class="pl-0 pr-1 d-inline-block panel-body col-md-12 col-xs-12">
+    <div class="row">
+      <div class="col-md-6">
+        <div class="pl-0 pr-0 form-group col-md-12 col-sm-12 d-inline-block">
+          <input id="ShopFilter" placeholder="Global search" class="form-control" (keyup)="FilterLocaldata()"
+            required="required" type="text">
         </div>
       </div>
+      <div class="col-md-6 d-inline-block text-right no-padding">
+        <button type="submit" (click)="ResetFilter()" class="btn btn-outline-info mr-1">
+          <i class="fas fa-sync"></i>&ensp;Reset</button>
+        <button type="button" (click)="GetAdvanceFilter()" class="btn btn-success"><i
+            class="fa fa-filter"></i>&ensp;Advance Search</button>
+        <!-- <button type="button" (click)="ExportToExcel()" class="btn btn-success"><i
+          class="fa fa-plus"></i>&ensp;Export</button> -->
+      </div>
     </div>
-  
-            
-        
-             
+    <div id="viewfeestimetable-dv" class="h-tbl">
+      <div id="dynamic-grid-table" class="table-responsive border">
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th>
+                Category
+              </th>
+              <th>
+                TotalNoStore
+              </th>
+              <th>
+                AvailableIn
+              </th>
+              <th>
+                % Availability
+              </th>
+              <th>
+                Action
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <ng-container *ngIf="TodayJourneyPlanViewModel == null || TodayJourneyPlanViewModel.length == 0">
+              <tr class="cls_norecord">No record found</tr>
+            </ng-container>
+            <ng-container *ngFor="let row of TodayJourneyPlanViewModel;let i=index">
+              <tr>
+                <td>
+                  <span>{{row.CategoryCode}}</span>
+                </td>
+                <td>
+                  <span>{{row.TotalNoOfStores}}</span>
+                </td>
+                <td>
+                  <span>{{row.AvailabileIn}}</span>
+                </td>
+                <td>
+                  <span>{{row.AvailabilityPercentage}}</span>
+                </td>
+                <td>
+                  <span>
+                    <a (click)="ActiveRow[i]=!ActiveRow[i]">
+                      <img src={{icon}} (click)="toggleIcon($event)" />
+                    </a>
+                  </span>
+
+                </td>
+              </tr>
+              <tr *ngIf="ActiveRow[i]">
+                <td colspan="8" cellpadding="5">
+                  <table style="width:100%;margin-left:0%;" class="table">
+                    <thead>
+                      <tr style="background-color:#6f6f6f">
+                        <th>
+                          Brand
+                        </th>
+                        <th>
+                          TotalNoStore
+                        </th>
+                        <th>
+                          AvailableIn
+                        </th>
+                        <th>
+                          % Availability
+                        </th>
+
+                      </tr>
+                    </thead>
+                    <tbody class="cls_new_grid_style">
+                      <ng-container
+                        *ngIf="row.lstAvailabilityReportBrandViewModel == null || row.lstAvailabilityReportBrandViewModel.length == 0">
+                        <tr class="cls_norecord">No record found</tr>
+                      </ng-container>
+                      <ng-container *ngFor="let ChildRow of row.lstAvailabilityReportBrandViewModel;let j=index">
+                        <tr>
+                          <td>
+                            <span>{{ChildRow.BrandCode}}</span>
+                          </td>
+                          <td>
+                            <span>{{ChildRow.TotalNoOfStores}}</span>
+                          </td>
+                          <td>
+                            <span>{{ChildRow.AvailabileIn}}</span>
+                          </td>
+                          <td>
+                            <span>{{ChildRow.AvailabilityPercentage}}</span>
+                          </td>
+                          <td>
+                            <span>
+                              <a (click)="ActiveRowGC[j]=!ActiveRowGC[j]">
+                                <img src={{icon}} (click)="toggleIcon($event)" />
+                              </a>
+                            </span>
+                          </td>
+
+                        </tr>
+                        <tr *ngIf="ActiveRowGC[j]">
+                          <td colspan="8" cellpadding="5">
+                            <table style="width:100%;margin-left:0%;" class="table">
+                              <thead>
+                                <tr style="background-color:#6f6f6f">
+                                  <th>
+                                    ParentSKU
+                                  </th>
+                                  <th>
+                                    TotalNoStore
+                                  </th>
+                                  <th>
+                                    AvailableIn
+                                  </th>
+                                  <th>
+                                    % Availability
+                                  </th>
+
+                                </tr>
+                              </thead>
+                              <tbody class="cls_new_grid_style">
+                                <ng-container
+                                  *ngIf="ChildRow.lstAvailabilityReportSKUViewModel == null || ChildRow.lstAvailabilityReportSKUViewModel.length == 0">
+                                  <tr class="cls_norecord">No record found</tr>
+                                </ng-container>
+                                <ng-container *ngFor="let GCRow of ChildRow.lstAvailabilityReportSKUViewModel">
+                                  <tr>
+                                    <td>
+                                      <span>{{GCRow.ItemCode}}</span>
+                                    </td>
+                                    <td>
+                                      <span>{{GCRow.TotalNoOfStores}}</span>
+                                    </td>
+                                    <td>
+                                      <span>{{GCRow.AvailabileIn}}</span>
+                                    </td>
+                                    <td>
+                                      <span>{{GCRow.AvailabilityPercentage}}</span>
+                                    </td>
+                                  </tr>
+                                </ng-container>
+                              </tbody>
+                            </table>
+                          </td>
+                        </tr>
+                      </ng-container>
+                    </tbody>
+                  </table>
+                </td>
+              </tr>
+            </ng-container>
+          </tbody>
+
+          <tfoot>
+            <tr>
+              <td colspan="50">
+                <div class="d-flex flex-row-reverse">
+                  <div class="d-inline-block font-weight-bold">
+                    <a class="round" (click)="PreviousPage()">&#8249;</a>
+                    <a class="round" (click)="NextPage()">&#8250;</a>
+                  </div>
+                  <div class="ml-2 d-inline-block p-text mr-4">
+                    Showing page:
+                    <b>{{ this.pageIndex }} of {{ TotalPageCount }}</b>
+                  </div>
+                </div>
+              </td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

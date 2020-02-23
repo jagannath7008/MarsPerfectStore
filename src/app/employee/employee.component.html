@@ -3,7 +3,7 @@
   <div class="container p-0 m-0">
     <h4>{{HeaderName | uppercase}}</h4>
   </div>
-  <div *ngIf="EnableFilter" class="ipopup">
+  <div *ngIf="AddEmployeeModal" class="ipopup">
     <div class="ipopup__content">
       <div class="ipopup__header">
         <header>Add/Edit Employee</header>
@@ -152,6 +152,82 @@
       </form>
     </div>
   </div>
+  <div *ngIf="EnableFilter" class="ipopup">
+    <div class="ipopup__content">
+      <div class="ipopup__header">
+        <header>Advance filter</header>
+      </div>
+      <div class="pt-2">
+        <table class="mt-2">
+          <tbody>
+            <tr>
+              <td>
+                <div class="pt-2">
+                  <div class="col-md-12 row">
+                    <div class="form-group col-md-4">
+                      <label for="Region">Name</label>
+                      <input class="form-control" name="Name" [(ngModel)]="AdvanceSearch.Name"
+                        placeholder="Customer name">
+                    </div>
+                    <div class="form-group col-md-4">
+                      <label for="State">Mobile</label>
+                      <input class="form-control" name="Mobile" [(ngModel)]="AdvanceSearch.Mobile"
+                        placeholder="Mobile No.#">
+                    </div>
+                    <div class="form-group col-md-4">
+                      <label for="City">Login Id</label>
+                      <input class="form-control" name="LoginId" [(ngModel)]="AdvanceSearch.LoginId"
+                        placeholder="Login Id">
+                    </div>
+                  </div>
+                  <div class="col-md-12 row">
+                    <div class="form-group col-md-4">
+                      <label for="Supervisor">Employee No.#</label>
+                      <input class="form-control" name="EmpNo" [(ngModel)]="AdvanceSearch.EmpNo"
+                        placeholder="Employee No.#">
+                    </div>
+                    <div class="form-group col-md-4">
+                      <label for="Marchandisor">Primary Phone</label>
+                      <input class="form-control" name="PrimaryPhone" [(ngModel)]="AdvanceSearch.PrimaryPhone"
+                        placeholder="Primary phone number">
+                    </div>
+                    <div class="form-group col-md-4">
+                      <label for="ChainName">Designation</label>
+                      <input class="form-control" name="Designation" [(ngModel)]="AdvanceSearch.Designation"
+                        placeholder="Designation">
+                    </div>
+                  </div>
+                  <div class="col-md-12 row">
+                    <div class="form-group col-md-4">
+                      <label for="CustomerName">Department</label>
+                      <input class="form-control" name="Department" [(ngModel)]="AdvanceSearch.Department"
+                        placeholder="Department">
+                    </div>
+                    <div class="form-group col-md-4">
+                      <label for="Address">Marchandisor</label>
+                      <select name="Marchandisor" class="form-control" [(ngModel)]="AdvanceSearch.Marchandisor">
+                        <option value="">Select Marchandisor</option>
+                        <option *ngFor="let c of MasterData.Merchandiser" [attr.value]="c.Name">{{c.Name}}</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+          <tfoot class="border-top">
+            <div class="form-group mt-3">
+              <button class="btn btn-primary form-control" (click)="SubmitSearchCriateria()">Search</button>
+            </div>
+            <div class="form-group mt-2">
+              <button class="btn btn-outline-dark form-control" (click)="Close()">Close</button>
+            </div>
+          </tfoot>
+        </table>
+      </div>
+    </div>
+  </div>
+
   <div class="pl-0 pr-1 d-inline-block panel-body col-md-12 col-xs-12">
     <div class="row">
       <div class="col-md-6">
@@ -161,9 +237,12 @@
         </div>
       </div>
       <div class="col-md-6 d-inline-block text-right no-padding">
-        <button type="submit" (click)="ResetFilter()" class="btn btn-outline-info mr-1"><i
+        <button type="submit" (click)="ResetFilter()" class="btn btn-outline-info"><i
             class="fas fa-sync"></i>&ensp;Reset</button>
-        <button type="button" (click)="Open()" class="btn btn-success"><i class="fa fa-plus"></i>&ensp;Create</button>
+        <button type="button" (click)="GetAdvanceFilter()" class="btn btn-success ml-1"><i
+            class="fa fa-filter"></i>&ensp;Advance Search</button>
+        <button type="button" (click)="Open()" class="btn btn-success ml-1"><i
+            class="fa fa-plus"></i>&ensp;Create</button>
       </div>
     </div>
     <div id="viewfeestimetable-dv" class="h-tbl">

@@ -3,7 +3,7 @@
   <div class="container p-0 m-0">
     <h4>{{HeaderName | uppercase}}</h4>
   </div>
-  <div *ngIf="EnableFilter" class="ipopup">
+  <div *ngIf="AddCityModal" class="ipopup">
     <div class="ipopup__content">
       <div class="ipopup__header">
         <header>Add/Edit State</header>
@@ -14,11 +14,6 @@
             <tr>
               <td>
                 <div class="d-md-flex pt-2">
-                  <!-- <div class="col-md-3">
-                    <label for="Code">Code</label>
-                    <input class="plain-input form-control" name="Code" required [(ngModel)]="entity.Code"
-                      placeholder="Code">
-                  </div> -->
                   <div class="col-md-3">
                     <label for="Name">Name</label>
                     <input class="plain-input form-control" required [(ngModel)]="entity.Name" name="Name"
@@ -50,6 +45,90 @@
       </form>
     </div>
   </div>
+  <div *ngIf="EnableFilter" class="ipopup">
+    <div class="ipopup__content">
+      <div class="ipopup__header">
+        <header>Advance filter</header>
+      </div>
+      <div class="pt-2">
+        <table class="mt-2">
+          <tbody>
+            <tr>
+              <td>
+                <div class="pt-2">
+                  <div class="col-md-12 row">
+                    <div class="form-group col-md-4">
+                      <label for="Region">Region</label>
+                      <select name="Region" class="form-control" [(ngModel)]="AdvanceSearch.Region">
+                        <option value="">Select Region</option>
+                        <option *ngFor="let c of MasterData.Region" [attr.value]="c.Name">{{c.Name}}</option>
+                      </select>
+                    </div>
+                    <div class="form-group col-md-4">
+                      <label for="State">State</label>
+                      <select name="State" class="form-control" [(ngModel)]="AdvanceSearch.State">
+                        <option value="">Select State</option>
+                        <option *ngFor="let c of MasterData.State" [attr.value]="c.Name">{{c.Name}}</option>
+                      </select>
+                    </div>
+                    <div class="form-group col-md-4">
+                      <label for="City">City</label>
+                      <select name="City" class="form-control" [(ngModel)]="AdvanceSearch.City">
+                        <option value="">Select City</option>
+                        <option *ngFor="let c of MasterData.City" [attr.value]="c.Name">{{c.Name}}</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="col-md-12 row">
+                    <div class="form-group col-md-4">
+                      <label for="Supervisor">Supervisor</label>
+                      <select name="Supervisor" class="form-control" [(ngModel)]="AdvanceSearch.Supervisor">
+                        <option value="">Select Supervisor</option>
+                        <option *ngFor="let c of MasterData.Retailer" [attr.value]="c.Name">{{c.Name}}</option>
+                      </select>
+                    </div>
+                    <div class="form-group col-md-4">
+                      <label for="Marchandisor">Marchandisor</label>
+                      <select name="Marchandisor" class="form-control" [(ngModel)]="AdvanceSearch.Marchandisor">
+                        <option value="">Select Marchandisor</option>
+                        <option *ngFor="let c of MasterData.Merchandiser" [attr.value]="c.Name">{{c.Name}}</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="col-md-12 row">
+                    <div class="form-group col-md-4">
+                      <label for="ChainName">Chain Name</label>
+                      <select name="ChainName" class="form-control" [(ngModel)]="AdvanceSearch.ChainName">
+                        <option value="">Select Chain Name</option>
+                      </select>
+                    </div>
+                    <div class="form-group col-md-4">
+                      <label for="CustomerName">Customer Name</label>
+                      <input class="form-control" name="CustomerName" [(ngModel)]="AdvanceSearch.CustomerName"
+                        placeholder="Customer name">
+                    </div>
+                    <div class="form-group col-md-4">
+                      <label for="Address">Customer Code</label>
+                      <input class="form-control plain-input" [(ngModel)]="AdvanceSearch.CustomerCode"
+                        name="CustomerCode" placeholder="Customer Code">
+                    </div>
+                  </div>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+          <tfoot class="border-top">
+            <div class="form-group mt-3">
+              <button class="btn btn-primary form-control" (click)="SubmitSearchCriateria()">Search</button>
+            </div>
+            <div class="form-group mt-2">
+              <button class="btn btn-outline-dark form-control" (click)="Close()">Close</button>
+            </div>
+          </tfoot>
+        </table>
+      </div>
+    </div>
+  </div>
   <div class="pl-0 pr-1 d-inline-block panel-body col-md-12 col-xs-12">
     <div class="row">
       <div class="col-md-6">
@@ -59,9 +138,12 @@
         </div>
       </div>
       <div class="col-md-6 d-inline-block text-right no-padding">
-        <button type="submit" (click)="ResetFilter()" class="btn btn-outline-info mr-1"><i
+        <button type="submit" (click)="ResetFilter()" class="btn btn-outline-info"><i
             class="fas fa-sync"></i>&ensp;Reset</button>
-        <button type="button" (click)="Open()" class="btn btn-success"><i class="fa fa-plus"></i>&ensp;Create</button>
+        <button type="button" (click)="OpenFilter()" class="btn btn-success ml-1"><i
+            class="fa fa-plus"></i>&ensp;AdvanceSearch</button>
+        <button type="button" (click)="Open()" class="btn btn-success ml-1"><i
+            class="fa fa-plus"></i>&ensp;Create</button>
       </div>
     </div>
     <div id="viewfeestimetable-dv" class="h-tbl">

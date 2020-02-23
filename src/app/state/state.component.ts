@@ -11,6 +11,8 @@ import * as $ from "jquery";
 import { JourneyPlan, State, PostParam } from "../../providers/constants";
 import { iNavigation } from "../../providers/iNavigation";
 import { AjaxService } from "src/providers/ajax.service";
+import { AdvanceFilter } from "../customerreports/customerreports.component";
+import { ApplicationStorage } from "src/providers/ApplicationStorage";
 
 @Component({
   selector: "app-state",
@@ -34,11 +36,15 @@ export class StateComponent implements OnInit {
   TotalCount: number = 0;
   TotalPageCount: number = 0;
   AdvanceFilterObject: FormGroup;
+  AddStateModal: boolean = false;
+  MasterData: any = {};
+  AdvanceSearch: AdvanceFilter;
   constructor(
     private fb: FormBuilder,
     private commonService: CommonService,
     private nav: iNavigation,
-    private http: AjaxService
+    private http: AjaxService,
+    private local: ApplicationStorage
   ) {
     let PageName = this.commonService.GetCurrentPageName();
     this.HeaderName = "State";
@@ -86,6 +92,8 @@ export class StateComponent implements OnInit {
       this.LoadData();
     }
   }
+
+  SubmitSearchCriateria() {}
 
   LoadData() {
     let MSData = JSON.parse(PostParam);
@@ -164,10 +172,15 @@ export class StateComponent implements OnInit {
     this.BindParent();
     this.LoadData();
     this.LoadTableData();
+    let LocalMasterData = this.local.getMaster();
+    if (IsValidType(LocalMasterData)) {
+      this.MasterData = LocalMasterData;
+    }
   }
 
   Close() {
     this.EnableFilter = false;
+    this.AddStateModal = false;
   }
 
   ResetFilter() {
@@ -183,8 +196,13 @@ export class StateComponent implements OnInit {
     this.entity = new StateModel();
     this.entity.TypeEnum = this.TypeEnum;
     this.entity.ParentGid = "";
+    this.AddStateModal = true;
+  }
+
+  OpenFilter() {
     this.EnableFilter = true;
   }
+
   Edit(editEntity: any) {
     this.Open();
     this.entity = editEntity;

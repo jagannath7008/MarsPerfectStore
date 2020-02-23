@@ -11,6 +11,8 @@ import * as $ from "jquery";
 import { JourneyPlan, City, PostParam } from "../../providers/constants";
 import { iNavigation } from "../../providers/iNavigation";
 import { AjaxService } from "src/providers/ajax.service";
+import { AdvanceFilter } from "../customerreports/customerreports.component";
+import { ApplicationStorage } from "src/providers/ApplicationStorage";
 
 @Component({
   selector: "app-city",
@@ -33,12 +35,16 @@ export class CityComponent implements OnInit {
   pageSize: number = 15;
   TotalCount: number = 0;
   TotalPageCount: number = 0;
+  MasterData: any = {};
+  AdvanceSearch: AdvanceFilter;
   AdvanceFilterObject: FormGroup;
+  AddCityModal: boolean = false;
   constructor(
     private fb: FormBuilder,
     private commonService: CommonService,
     private nav: iNavigation,
-    private http: AjaxService
+    private http: AjaxService,
+    private local: ApplicationStorage
   ) {
     let PageName = this.commonService.GetCurrentPageName();
     this.HeaderName = "City";
@@ -162,9 +168,14 @@ export class CityComponent implements OnInit {
     this.BindParent();
     this.LoadData();
     this.LoadTableData();
+    let LocalMasterData = this.local.getMaster();
+    if (IsValidType(LocalMasterData)) {
+      this.MasterData = LocalMasterData;
+    }
   }
 
   Close() {
+    this.AddCityModal = false;
     this.EnableFilter = false;
   }
 
@@ -181,8 +192,15 @@ export class CityComponent implements OnInit {
     this.entity = new CityModel();
     this.entity.TypeEnum = this.TypeEnum;
     this.entity.ParentGid = "";
+    this.AddCityModal = true;
+  }
+
+  OpenFilter() {
     this.EnableFilter = true;
   }
+
+  SubmitSearchCriateria() {}
+
   Edit(editEntity: any) {
     this.Open();
     this.entity = editEntity;

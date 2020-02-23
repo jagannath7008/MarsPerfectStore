@@ -886,7 +886,6 @@ export class RetailerDetailComponent implements OnInit {
 
   UpdatePortfolio() {
     let MSData = JSON.parse(PostParam);
-    alert(this.RetailerDetail.PortfolioGid);
     if (IsValidType(this.RetailerDetail.PortfolioGid)) {
       MSData.content.retailerGid = this.RetailerDetail.Gid;
       MSData.content.portfolioGid = this.RetailerDetail.PortfolioGid;

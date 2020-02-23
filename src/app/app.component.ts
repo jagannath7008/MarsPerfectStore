@@ -147,7 +147,9 @@ export class AppComponent {
       Countries: [],
       State: [],
       Region: [],
-      City: []
+      City: [],
+      Merchandiser: [],
+      Retailer: []
     };
     if (IsValidType(MasterData["LocationTable"])) {
       let Data = MasterData["LocationTable"];
@@ -177,6 +179,20 @@ export class AppComponent {
             FinalData.City.filter(x => x.Gid === Data[index].Gid).length === 0
           ) {
             FinalData.City.push(Data[index]);
+          }
+        } else if (Data[index]["TypeEnum"] === "Merchandiser") {
+          if (
+            FinalData.Merchandiser.filter(x => x.Gid === Data[index].Gid)
+              .length === 0
+          ) {
+            FinalData.Merchandiser.push(Data[index]);
+          }
+        } else if (Data[index]["TypeEnum"] === "Retailer") {
+          if (
+            FinalData.Retailer.filter(x => x.Gid === Data[index].Gid).length ===
+            0
+          ) {
+            FinalData.Retailer.push(Data[index]);
           }
         }
         index++;
