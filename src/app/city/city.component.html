@@ -146,6 +146,13 @@
             class="fa fa-plus"></i>&ensp;Create</button>
       </div>
     </div>
+
+    <div class="col-12 text-right">
+      <a (click)="ExportMe()" class="export-btn">
+        <i class="far fa-file-excel"></i>
+      </a>
+    </div>
+
     <div id="viewfeestimetable-dv" class="h-tbl">
       <div id="dynamic-grid-table" class="table-responsive border">
         <table class="table table-striped">
@@ -161,7 +168,7 @@
               </th>
             </tr>
           </thead>
-          <tbody *ngIf="!IsEmptyRow">
+          <tbody *ngIf="!IsEmptyRow" id="city-table">
             <tr *ngFor="let item of TableResultSet;let odd = odd; let even = even;"
               [ngClass]="{odd: odd%2 !== 0 && IsStriped, even: even }">
               <ng-container *ngFor="let col of BindingHeader">

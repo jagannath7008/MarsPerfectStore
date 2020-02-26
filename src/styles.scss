@@ -745,3 +745,12 @@
   width: 100%;
   min-height: 350px;
 }
+
+a.export-btn:hover {
+  font-size: 24px;
+  cursor: pointer;
+}
+
+a.export-btn {
+  font-size: 20px;
+}

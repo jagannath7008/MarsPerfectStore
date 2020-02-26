@@ -5,7 +5,8 @@ import { FormGroup } from "@angular/forms";
 import { FormControl } from "@angular/forms";
 import {
   CommonService,
-  IsValidType
+  IsValidType,
+  ExportToExcel
 } from "../../providers/common-service/common.service";
 import * as $ from "jquery";
 import { JourneyPlan, Employee, PostParam } from "../../providers/constants";
@@ -361,6 +362,12 @@ export class EmployeeComponent implements OnInit {
           this.commonService.ShowToast("Unable to save data.");
         }
       });
+  }
+
+  ExportMe() {
+    if(!ExportToExcel('emp-table', 'employee')){
+      this.commonService.ShowToast("Incorrect value passed to export to excel.");
+    }
   }
 }
 
