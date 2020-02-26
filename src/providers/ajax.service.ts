@@ -119,7 +119,12 @@ export class AjaxService {
         .subscribe(
           (res: any) => {
             if (res.body !== null && res.body !== "") {
-              let Data = JSON.parse(res.body);
+              let Data = null;
+              if (typeof res.body === "string") {
+                Data = JSON.parse(res.body);
+              } else {
+                Data = res.body;
+              }
               this.commonService.HideLoaderByAjax();
               resolve(Data);
             } else {
