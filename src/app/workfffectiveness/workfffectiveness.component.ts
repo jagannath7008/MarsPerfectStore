@@ -1,7 +1,8 @@
 import { Component, OnInit } from "@angular/core";
 import {
   IsValidType,
-  CommonService
+  CommonService,
+  ExportToExcel
 } from "src/providers/common-service/common.service";
 import { ApplicationStorage } from "src/providers/ApplicationStorage";
 import { AjaxService } from "src/providers/ajax.service";
@@ -401,6 +402,12 @@ export class WorkfffectivenessComponent implements OnInit {
   }
 
   InitData() {}
+
+  ExportMe() {
+    if(!ExportToExcel('work-table', 'work')){
+      this.commonService.ShowToast("Incorrect value passed to export to excel.");
+    }
+  }
 }
 
 interface AttendenceReportByDate {

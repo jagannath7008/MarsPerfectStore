@@ -9,6 +9,7 @@
       <div class="ipopup__header">
         <header>Advance filter</header>
       </div>
+
       <form (submit)="SubmitSearchCriateria()" class="pt-2" (keydown.enter)="$event.preventDefault()">
         <table class="mt-2">
           <tbody>
@@ -101,9 +102,16 @@
           class="fa fa-plus"></i>&ensp;Export</button> -->
       </div>
     </div>
+
+    <div class="col-12 text-right">
+      <a (click)="ExportMe()" class="export-btn">
+        <i class="far fa-file-excel"></i>
+      </a>
+    </div>
+
     <div id="viewfeestimetable-dv" class="h-tbl">
       <div id="dynamic-grid-table" class="table-responsive border">
-        <table class="table table-striped">
+        <table class="table table-striped" id="avability-table">
           <thead>
             <tr>
               <th>

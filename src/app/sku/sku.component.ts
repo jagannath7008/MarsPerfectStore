@@ -5,7 +5,8 @@ import { FormGroup } from "@angular/forms";
 import { FormControl } from "@angular/forms";
 import {
   CommonService,
-  IsValidType
+  IsValidType,
+  ExportToExcel
 } from "../../providers/common-service/common.service";
 import * as $ from "jquery";
 import { JourneyPlan, Sku, PostParam } from "../../providers/constants";
@@ -206,6 +207,12 @@ export class SkuComponent implements OnInit {
           this.commonService.ShowToast("Unable to save data.");
         }
       });
+  }
+
+  ExportMe() {
+    if(!ExportToExcel('sku-table', 'sku')){
+      this.commonService.ShowToast("Incorrect value passed to export to excel.");
+    }
   }
 }
 

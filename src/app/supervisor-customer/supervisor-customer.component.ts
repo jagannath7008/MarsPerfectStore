@@ -6,7 +6,8 @@ import { iNavigation } from "src/providers/iNavigation";
 import { AjaxService } from "src/providers/ajax.service";
 import {
   CommonService,
-  IsValidType
+  IsValidType,
+  ExportToExcel
 } from "src/providers/common-service/common.service";
 import { ManageSupervisorCustomer, PostParam } from "src/providers/constants";
 import * as $ from "jquery";
@@ -273,6 +274,12 @@ export class SupervisorCustomerComponent implements OnInit {
           this.commonService.ShowToast("Unable to save data.");
         }
       });
+  }
+
+  ExportMe() {
+    if(!ExportToExcel('supervisorcustomer-table', 'supervisorcustomer')){
+      this.commonService.ShowToast("Incorrect value passed to export to excel.");
+    }
   }
 }
 

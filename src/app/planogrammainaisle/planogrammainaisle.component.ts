@@ -5,7 +5,8 @@ import { FormGroup } from "@angular/forms";
 import { FormControl } from "@angular/forms";
 import {
   CommonService,
-  IsValidType
+  IsValidType,
+  ExportToExcel
 } from "../../providers/common-service/common.service";
 import * as $ from "jquery";
 import {
@@ -455,6 +456,12 @@ export class PlanogrammainaisleComponent implements OnInit {
           this.commonService.ShowToast("Unable to save data.");
         }
       });
+  }
+
+  ExportMe() {
+    if(!ExportToExcel('planogrammainaisle-table', 'planogrammainaisle')){
+      this.commonService.ShowToast("Incorrect value passed to export to excel.");
+    }
   }
 }
 

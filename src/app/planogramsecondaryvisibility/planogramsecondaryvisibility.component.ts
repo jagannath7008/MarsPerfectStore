@@ -3,7 +3,8 @@ import { FormBuilder, FormGroup, FormControl } from "@angular/forms";
 import { IGrid } from "src/providers/Generic/Interface/IGrid";
 import {
   CommonService,
-  IsValidType
+  IsValidType,
+  ExportToExcel
 } from "src/providers/common-service/common.service";
 import { iNavigation } from "src/providers/iNavigation";
 import { AjaxService } from "src/providers/ajax.service";
@@ -329,6 +330,13 @@ export class PlanogramsecondaryvisibilityComponent implements OnInit {
       .catch(err => {
         this.commonService.ShowToast("Unable to remove. Getting server error.");
       });
+  }
+
+
+  ExportMe() {
+    if(!ExportToExcel('planogramsecondryvisibility-table', 'planogramsecondryvisibility')){
+      this.commonService.ShowToast("Incorrect value passed to export to excel.");
+    }
   }
 }
 

@@ -4,7 +4,8 @@ import { PostParam, BeatPlan } from "src/providers/constants";
 import { AjaxService } from "src/providers/ajax.service";
 import {
   CommonService,
-  IsValidType
+  IsValidType,
+  ExportToExcel
 } from "src/providers/common-service/common.service";
 import { FormBuilder } from "@angular/forms";
 import { FormGroup } from "@angular/forms";
@@ -247,6 +248,12 @@ export class BeatPlanningComponent implements OnInit {
           index++;
         }
       }
+    }
+  }
+
+  ExportMe() {
+    if(!ExportToExcel('beatplanning-table', 'beatplanning')){
+      this.commonService.ShowToast("Incorrect value passed to export to excel.");
     }
   }
 }

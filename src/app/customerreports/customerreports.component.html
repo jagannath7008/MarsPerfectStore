@@ -102,9 +102,16 @@
             class="fa fa-filter"></i>&ensp;Advance Search</button>
       </div>
     </div>
+
+    <div class="col-12 text-right">
+      <a (click)="ExportMe()" class="export-btn">
+        <i class="far fa-file-excel"></i>
+      </a>
+    </div>
+
     <div id="viewfeestimetable-dv" class="h-tbl">
       <div id="dynamic-grid-table" class="table-responsive border">
-        <table class="table table-striped">
+        <table class="table table-striped" id="customerreport-table">
           <thead>
             <tr class="headings">
               <ng-container *ngFor="let col of BindingHeader">

@@ -6,7 +6,7 @@ import { IGrid } from "src/providers/Generic/Interface/IGrid";
 import { FormBuilder } from "@angular/forms";
 import { FormGroup } from "@angular/forms";
 import { FormControl } from "@angular/forms";
-import { CommonService ,IsValidType} from "src/providers/common-service/common.service";
+import { CommonService ,IsValidType, ExportToExcel} from "src/providers/common-service/common.service";
 import * as $ from "jquery";
 import { JourneyPlan, Employee, PostParam } from "src/providers/constants";
 import { iNavigation } from "src/providers/iNavigation";
@@ -288,11 +288,11 @@ this.http.post("Webportal/FetchAvailabilityReport", MSData).then(response => {
        
      }
     
-
-  
-
-
-
+    ExportMe() {
+      if(!ExportToExcel('avability-table', 'avability')){
+        this.commonService.ShowToast("Incorrect value passed to export to excel.");
+      }
+    }
 }
 
 export class AvailabilityReportCategoryViewModel {

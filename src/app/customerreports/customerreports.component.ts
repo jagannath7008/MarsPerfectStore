@@ -5,7 +5,8 @@ import { FormGroup } from "@angular/forms";
 import { FormControl } from "@angular/forms";
 import {
   CommonService,
-  IsValidType
+  IsValidType,
+  ExportToExcel
 } from "./../../providers/common-service/common.service";
 import * as $ from "jquery";
 import {
@@ -274,6 +275,12 @@ export class CustomerreportsComponent implements OnInit {
   }
 
   DeleteRecord() {}
+
+  ExportMe() {
+    if(!ExportToExcel('customerreport-table', 'customerreport')){
+      this.commonService.ShowToast("Incorrect value passed to export to excel.");
+    }
+  }
 }
 
 export class RetailerModal {

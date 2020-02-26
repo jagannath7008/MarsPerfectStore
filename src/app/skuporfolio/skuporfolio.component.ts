@@ -2,7 +2,8 @@ import { Component, OnInit } from "@angular/core";
 import { FormGroup, FormBuilder, FormControl } from "@angular/forms";
 import {
   CommonService,
-  IsValidType
+  IsValidType,
+  ExportToExcel
 } from "src/providers/common-service/common.service";
 import { iNavigation } from "src/providers/iNavigation";
 import { AjaxService } from "src/providers/ajax.service";
@@ -310,5 +311,11 @@ export class SkuporfolioComponent implements OnInit {
           this.commonService.ShowToast("Unable to save data.");
         }
       });
+  }
+
+  ExportMe() {
+    if(!ExportToExcel('skuportfolio-table', 'skuportfolio')){
+      this.commonService.ShowToast("Incorrect value passed to export to excel.");
+    }
   }
 }

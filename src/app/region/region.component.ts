@@ -5,7 +5,8 @@ import { FormGroup } from "@angular/forms";
 import { FormControl } from "@angular/forms";
 import {
   CommonService,
-  IsValidType
+  IsValidType,
+  ExportToExcel
 } from "../../providers/common-service/common.service";
 import * as $ from "jquery";
 import { JourneyPlan, Region, PostParam } from "../../providers/constants";
@@ -239,6 +240,13 @@ export class RegionComponent implements OnInit {
           this.commonService.ShowToast("Unable to save data.");
         }
       });
+  }
+
+
+  ExportMe() {
+    if(!ExportToExcel('region-table', 'region')){
+      this.commonService.ShowToast("Incorrect value passed to export to excel.");
+    }
   }
 }
 
