@@ -6,6 +6,7 @@ import {
 } from "src/providers/common-service/common.service";
 import { ApplicationStorage } from "src/providers/ApplicationStorage";
 import { AjaxService } from "src/providers/ajax.service";
+import { NgbCalendar, NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: "app-workfffectiveness",
@@ -17,6 +18,10 @@ export class WorkfffectivenessComponent implements OnInit {
   WorkEffectiveness: Array<WorkEffectivenessModal>;
   MasterData: any;
   CalculatedDetail: any = [];
+  selectedDate: any;
+  datePickerConfig: any = {};
+  model: NgbDateStruct;
+  date: {year: number, month: number};
   AutodropdownCollection: any = {
     Region: { data: [], placeholder: "Region" },
     SubChannel: { data: [], placeholder: "SubChannel" },
@@ -26,11 +31,15 @@ export class WorkfffectivenessComponent implements OnInit {
     Marchandisor: { data: [], placeholder: "Marchandisor" },
     City: { data: [], placeholder: "City" }
   };
+
   constructor(
     private local: ApplicationStorage,
     private commonService: CommonService,
-    private http: AjaxService
-  ) {}
+    private http: AjaxService,
+    private calendar: NgbCalendar
+  ) { 
+    this.selectToday();
+  }
 
   ngOnInit() {
     let LocalMasterData = this.local.getMaster();
@@ -38,12 +47,40 @@ export class WorkfffectivenessComponent implements OnInit {
       this.MasterData = LocalMasterData;
     }
     this.InitData();
-    this.LoadData();
+    let Url = `Webportal/FetchAttendanceReportService?SD=20200201&ST=20200201&ET=20200224`;
+    this.LoadData(Url);
   }
 
-  LoadData() {
-    let Url = `Webportal/FetchAttendanceReportService?SD=20200201&ST=20200201&ET=20200224`;
+  selectToday() {
+    this.model = this.calendar.getToday();
+  }
 
+  LoadFilteredResult() {
+    let filterDate = this.model.year.toString() + 
+                     this.BuildDayAndMonth(this.model.month) + 
+                     this.BuildDayAndMonth(this.model.day);
+
+    let firstDay = new Date(this.model.year, this.model.month - 1, 1);
+    let FD = `${firstDay.getFullYear()}${this.BuildDayAndMonth(firstDay.getMonth() + 1)}${this.BuildDayAndMonth(firstDay.getDate())}`;
+    let lastDay = new Date(this.model.year, this.model.month, 0);
+    let LD = `${lastDay.getFullYear()}${this.BuildDayAndMonth(lastDay.getMonth() + 1)}${this.BuildDayAndMonth(lastDay.getDate())}`;
+    let Url = `Webportal/FetchAttendanceReportService?SD=${filterDate}&ST=${FD}&ET=${LD}`;
+    this.LoadData(Url);
+  }
+
+  BuildDayAndMonth(Value: number) {
+    let NewForm = '';
+    if(Value < 10){
+      NewForm = "0" + Value;
+    } else {
+      NewForm = Value.toString();
+    }
+    return NewForm;
+  }
+
+  LoadData(Url) {
+    this.CalculatedDetail = [];
+    this.AttendenceReportData = [];
     this.http
       .get(Url)
       .then(response => {
@@ -137,25 +174,25 @@ export class WorkfffectivenessComponent implements OnInit {
         }
       }
 
-      RegionData = MTDData.filter(x => x.LocType === "Region");
-      if (RegionData.length > 0) {
-        index = 0;
-        while (index < RegionData.length) {
-          if (RegionData[index].TotalAttendance !== null)
-            MTDTotalAttendance += RegionData[index].TotalAttendance;
+      // RegionData = MTDData.filter(x => x.LocType === "Region");
+      // if (RegionData.length > 0) {
+      //   index = 0;
+      //   while (index < RegionData.length) {
+      //     if (RegionData[index].TotalAttendance !== null)
+      //       MTDTotalAttendance += RegionData[index].TotalAttendance;
 
-          if (RegionData[index].ActualAttendance !== null)
-            MTDActualAttendance += RegionData[index].ActualAttendance;
+      //     if (RegionData[index].ActualAttendance !== null)
+      //       MTDActualAttendance += RegionData[index].ActualAttendance;
 
-          if (RegionData[index].TotalCallComplaince !== null)
-            MTDTotalCallComplaince += RegionData[index].TotalCallComplaince;
+      //     if (RegionData[index].TotalCallComplaince !== null)
+      //       MTDTotalCallComplaince += RegionData[index].TotalCallComplaince;
 
-          if (RegionData[index].ActualCallComplaince !== null)
-            MTDActualCallComplaince += RegionData[index].ActualCallComplaince;
+      //     if (RegionData[index].ActualCallComplaince !== null)
+      //       MTDActualCallComplaince += RegionData[index].ActualCallComplaince;
 
-          index++;
-        }
-      }
+      //     index++;
+      //   }
+      // }
 
       this.CalculatedDetail.push({
         WorkType: "Region",
@@ -208,25 +245,25 @@ export class WorkfffectivenessComponent implements OnInit {
         }
       }
 
-      RegionData = MTDData.filter(x => x.LocType === "State");
-      if (RegionData.length > 0) {
-        index = 0;
-        while (index < RegionData.length) {
-          if (RegionData[index].TotalAttendance !== null)
-            MTDTotalAttendance += RegionData[index].TotalAttendance;
+      // RegionData = MTDData.filter(x => x.LocType === "State");
+      // if (RegionData.length > 0) {
+      //   index = 0;
+      //   while (index < RegionData.length) {
+      //     if (RegionData[index].TotalAttendance !== null)
+      //       MTDTotalAttendance += RegionData[index].TotalAttendance;
 
-          if (RegionData[index].ActualAttendance !== null)
-            MTDActualAttendance += RegionData[index].ActualAttendance;
+      //     if (RegionData[index].ActualAttendance !== null)
+      //       MTDActualAttendance += RegionData[index].ActualAttendance;
 
-          if (RegionData[index].TotalCallComplaince !== null)
-            MTDTotalCallComplaince += RegionData[index].TotalCallComplaince;
+      //     if (RegionData[index].TotalCallComplaince !== null)
+      //       MTDTotalCallComplaince += RegionData[index].TotalCallComplaince;
 
-          if (RegionData[index].ActualCallComplaince !== null)
-            MTDActualCallComplaince += RegionData[index].ActualCallComplaince;
+      //     if (RegionData[index].ActualCallComplaince !== null)
+      //       MTDActualCallComplaince += RegionData[index].ActualCallComplaince;
 
-          index++;
-        }
-      }
+      //     index++;
+      //   }
+      // }
 
       this.CalculatedDetail.push({
         WorkType: "State",
@@ -279,25 +316,25 @@ export class WorkfffectivenessComponent implements OnInit {
         }
       }
 
-      RegionData = MTDData.filter(x => x.LocType === "City");
-      if (RegionData.length > 0) {
-        index = 0;
-        while (index < RegionData.length) {
-          if (RegionData[index].TotalAttendance !== null)
-            MTDTotalAttendance += RegionData[index].TotalAttendance;
+      // RegionData = MTDData.filter(x => x.LocType === "City");
+      // if (RegionData.length > 0) {
+      //   index = 0;
+      //   while (index < RegionData.length) {
+      //     if (RegionData[index].TotalAttendance !== null)
+      //       MTDTotalAttendance += RegionData[index].TotalAttendance;
 
-          if (RegionData[index].ActualAttendance !== null)
-            MTDActualAttendance += RegionData[index].ActualAttendance;
+      //     if (RegionData[index].ActualAttendance !== null)
+      //       MTDActualAttendance += RegionData[index].ActualAttendance;
 
-          if (RegionData[index].TotalCallComplaince !== null)
-            MTDTotalCallComplaince += RegionData[index].TotalCallComplaince;
+      //     if (RegionData[index].TotalCallComplaince !== null)
+      //       MTDTotalCallComplaince += RegionData[index].TotalCallComplaince;
 
-          if (RegionData[index].ActualCallComplaince !== null)
-            MTDActualCallComplaince += RegionData[index].ActualCallComplaince;
+      //     if (RegionData[index].ActualCallComplaince !== null)
+      //       MTDActualCallComplaince += RegionData[index].ActualCallComplaince;
 
-          index++;
-        }
-      }
+      //     index++;
+      //   }
+      // }
 
       this.CalculatedDetail.push({
         WorkType: "City",
@@ -350,61 +387,49 @@ export class WorkfffectivenessComponent implements OnInit {
         }
       }
 
-      RegionData = MTDData.filter(x => x.LocType === "SO");
-      if (RegionData.length > 0) {
-        index = 0;
-        while (index < RegionData.length) {
-          if (RegionData[index].TotalAttendance !== null)
-            MTDTotalAttendance += RegionData[index].TotalAttendance;
+      // RegionData = MTDData.filter(x => x.LocType === "SO");
+      // if (RegionData.length > 0) {
+      //   index = 0;
+      //   while (index < RegionData.length) {
+      //     if (RegionData[index].TotalAttendance !== null)
+      //       MTDTotalAttendance += RegionData[index].TotalAttendance;
 
-          if (RegionData[index].ActualAttendance !== null)
-            MTDActualAttendance += RegionData[index].ActualAttendance;
+      //     if (RegionData[index].ActualAttendance !== null)
+      //       MTDActualAttendance += RegionData[index].ActualAttendance;
 
-          if (RegionData[index].TotalCallComplaince !== null)
-            MTDTotalCallComplaince += RegionData[index].TotalCallComplaince;
+      //     if (RegionData[index].TotalCallComplaince !== null)
+      //       MTDTotalCallComplaince += RegionData[index].TotalCallComplaince;
 
-          if (RegionData[index].ActualCallComplaince !== null)
-            MTDActualCallComplaince += RegionData[index].ActualCallComplaince;
+      //     if (RegionData[index].ActualCallComplaince !== null)
+      //       MTDActualCallComplaince += RegionData[index].ActualCallComplaince;
 
-          index++;
-        }
-      }
+      //     index++;
+      //   }
+      // }
 
       this.CalculatedDetail.push({
         WorkType: "SO",
         Data: {
-          AttendneceByDate: this.CalculateValue(
-            TotalAttendance,
-            ActualAttendance
-          ),
-          CallComplianceByDate: this.CalculateValue(
-            TotalCallComplaince,
-            ActualCallComplaince
-          ),
-          AttendneceByMTD: this.CalculateValue(
-            MTDTotalCallComplaince,
-            MTDActualCallComplaince
-          ),
-          CallComplianceByMTD: this.CalculateValue(
-            MTDTotalCallComplaince,
-            MTDActualCallComplaince
-          )
+          AttendneceByDate: TotalAttendance + "/" + ActualAttendance,
+          CallComplianceByDate: TotalCallComplaince + "/" + ActualCallComplaince,
+          AttendneceByMTD: MTDTotalCallComplaince + "/" + MTDActualCallComplaince,
+          CallComplianceByMTD: MTDTotalCallComplaince + "/" + MTDActualCallComplaince
         }
       });
     }
   }
 
   CalculateValue(Total: any, Actual: any) {
-    if (Total === 0 || Actual === 0) return 0;
+    if (Total === 0 || Actual === 0 || Total === null || Actual === null) return 0;
     else {
       return parseFloat(((Total / Actual) * 100).toFixed(2));
     }
   }
 
-  InitData() {}
+  InitData() { }
 
   ExportMe() {
-    if(!ExportToExcel('work-table', 'work')){
+    if (!ExportToExcel('work-table', 'work')) {
       this.commonService.ShowToast("Incorrect value passed to export to excel.");
     }
   }

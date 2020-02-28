@@ -1,5 +1,4 @@
 .tbl-header-card {
-  width: 325px;
   padding: 10px;
   border: 1px solid #d9d9d9;
 }
@@ -9,12 +8,33 @@
 }
 
 .tbl-header1-card {
-  width: 550px !important;
   padding: 10px;
   border: 1px solid #d9d9d9;
 }
 
+.w-40 {
+  width: 40%;
+}
+
+.w-60 {
+  width: 60%;
+}
 
 .title-header {
   line-height: 30px;
+}
+
+.filter-cell{
+  width: 25%;
+}
+
+.date-cell{
+  width: 35% !important;
+}
+
+.filter{
+  border: 1px solid #d9d9d9;
+  padding-top: 15px;
+  display: flex !important;
+  border-radius: 4px;
 }

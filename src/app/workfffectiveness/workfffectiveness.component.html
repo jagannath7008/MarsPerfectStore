@@ -3,6 +3,85 @@
   <h4 class="card-title">
     <b>WORK EFFECTIVENESS</b>
   </h4>
+
+  <div class="col-md-12 mt-3 filter mb-3">
+    <div class="filter-cell date-cell">
+      <div class="col-12 row">
+        <div class="col-3 p-0 title-header">
+          Filter
+        </div>
+        <div class="col-9 p-0">
+          <div class="form-group">
+            <div class="input-group">
+              <input class="form-control" placeholder="yyyy-mm-dd"
+                      name="dp" [(ngModel)]="model" ngbDatepicker #d="ngbDatepicker">
+              <div class="input-group-append">
+                <button class="btn btn-outline-secondary calendar" (click)="d.toggle()" type="button"></button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="filter-cell">
+      <div class="col-12 row">
+        <div class="col-3 p-0 title-header">
+          Region
+        </div>
+        <div class="col-9 p-0">
+          <select name="region" class="form-control">
+            <option value="">Select Region</option>
+            <option *ngFor="let c of MasterData.Region" [attr.value]="c.Name">{{c.Name}}</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="filter-cell">
+      <div class="col-12 p-0 row">
+        <div class="col-3 p-0  title-header">
+          State
+        </div>
+        <div class="col-9 p-0">
+          <select name="state" class="form-control">
+            <option value="">Select State</option>
+            <option *ngFor="let c of MasterData.State" [attr.value]="c.Name">{{c.Name}}</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="filter-cell">
+      <div class="col-12 p-0 row">
+        <div class="col-2 p-0 title-header">
+          City
+        </div>
+        <div class="col-8 p-0">
+          <select name="city" class="form-control">
+            <option value="">Select City</option>
+            <option *ngFor="let c of MasterData.City" [attr.value]="c.Name">{{c.Name}}</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="filter-cell">
+      <div class="col-12 p-0 row">
+        <div class="col-2 p-0 title-header">
+          SO
+        </div>
+        <div class="col-8 p-0">
+          <select name="so" class="form-control">
+            <option value="all">
+              All
+            </option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-12">
+    <button class="btn btn-primary" (click)="LoadFilteredResult()">Filter</button>
+  </div>
+
   <div class="card">
     <div class="col-md-12">
       <div class="table-responsive">
@@ -23,19 +102,37 @@
               <td>Call Compliance</td>
             </tr>
             <tr rowspan="2" *ngFor="let work of CalculatedDetail">
-              <td>{{work.WorkType}}</td>
-              <td>
-                <h3>{{work.Data.AttendneceByDate}}%</h3>
-              </td>
-              <td>
-                <h3>{{work.Data.CallComplianceByDate}}%</h3>
-              </td>
-              <td>
-                <h3>{{work.Data.AttendneceByMTD}}%</h3>
-              </td>
-              <td>
-                <h3>{{work.Data.CallComplianceByMTD}}%</h3>
-              </td>
+              <ng-container *ngIf="work.WorkType !== 'SO'">
+                <td>{{work.WorkType}}</td>
+                <td>
+                  <h3>{{work.Data.AttendneceByDate}}%</h3>
+                </td>
+                <td>
+                  <h3>{{work.Data.CallComplianceByDate}}%</h3>
+                </td>
+                <td>
+                  <h3>{{work.Data.AttendneceByMTD}}%</h3>
+                </td>
+                <td>
+                  <h3>{{work.Data.CallComplianceByMTD}}%</h3>
+                </td>
+              </ng-container>
+
+              <ng-container *ngIf="work.WorkType === 'SO'">
+                <td>{{work.WorkType}}</td>
+                <td>
+                  <h3>{{work.Data.AttendneceByDate}}</h3>
+                </td>
+                <td>
+                  <h3>{{work.Data.CallComplianceByDate}}</h3>
+                </td>
+                <td>
+                  <h3>{{work.Data.AttendneceByMTD}}</h3>
+                </td>
+                <td>
+                  <h3>{{work.Data.CallComplianceByMTD}}</h3>
+                </td>
+              </ng-container>
             </tr>
           </tbody>
         </table>
@@ -43,81 +140,18 @@
     </div>
   </div>
 
-  <div class="col-md-12 mt-5">
-    <div class="table-responsive">
-      <table class="table">
-        <thead>
-          <tr>
-            <th>Detailed Report</th>
-            <th>
-              <div class="col-12 row">
-                <div class="col-3 p-0 title-header">
-                  Region
-                </div>
-                <div class="col-9 p-0">
-                  <select name="region" class="form-control">
-                    <option value="">Select Region</option>
-                    <option *ngFor="let c of MasterData.Region" [attr.value]="c.Name">{{c.Name}}</option>
-                  </select>
-                </div>
-              </div>
-            </th>
-            <th>
-              <div class="col-12 p-0 row">
-                <div class="col-3 p-0  title-header">
-                  State
-                </div>
-                <div class="col-9 p-0">
-                  <select name="state" class="form-control">
-                    <option value="">Select State</option>
-                    <option *ngFor="let c of MasterData.State" [attr.value]="c.Name">{{c.Name}}</option>
-                  </select>
-                </div>
-              </div>
-            </th>
-            <th>
-              <div class="col-12 p-0 row">
-                <div class="col-2 p-0 title-header">
-                  City
-                </div>
-                <div class="col-8 p-0">
-                  <select name="city" class="form-control">
-                    <option value="">Select City</option>
-                    <option *ngFor="let c of MasterData.City" [attr.value]="c.Name">{{c.Name}}</option>
-                  </select>
-                </div>
-              </div>
-            </th>
-            <th>
-              <div class="col-12 p-0 row">
-                <div class="col-2 p-0 title-header">
-                  SO
-                </div>
-                <div class="col-8 p-0">
-                  <select name="so" class="form-control">
-                    <option value="all">
-                      All
-                    </option>
-                  </select>
-                </div>
-              </div>
-            </th>
-          </tr>
-        </thead>
-      </table>
-    </div>
-  </div>
-
   <div class="card mt-4">
     <div class="card p-4">
       <div class="col-md-12 row">
-        <div class="col-md-6">
-          <div class="row tbl-header text-center mt-4">
+        <div class="col-md-12 row">
+          <div class="row tbl-header text-center mt-4 w-40">
             <div class="tbl-header-card">
               <b>Today/25th Feb, 2020</b></div>
           </div>
-          <div class="tbl-header1-card">
-            <b>MTD</b></div>
+          <div class="row tbl-header text-center mt-4 w-60">
+            <div class="tbl-header-card">
+              <b>MTD</b></div>
+          </div>
         </div>
 
         <div class="col-12 text-right">
@@ -151,7 +185,7 @@
                 <td>{{item.PlannedCalls}}</td>
                 <td>{{item.ActualCalls}}</td>
                 <td>{{item.TotalPlannedWorkdays}}</td>
-                <td>{{item.TotalActualWorkDays}}</td>
+                <td>{{item.TotalActualWorkdays}}</td>
                 <td>{{item.AttendencePercent}}</td>
                 <td>{{item.TotalPlannedCalls}}</td>
                 <td>{{item.TotalActualCalls}}</td>

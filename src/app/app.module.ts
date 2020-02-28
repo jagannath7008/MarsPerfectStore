@@ -40,6 +40,7 @@ import { PlanogramtransactionzoneComponent } from "./planogramtransactionzone/pl
 import { FooterComponent } from "./footer/footer.component";
 import { AvailabilityreportComponent } from "./availabilityreport/availabilityreport.component";
 import { PlanogramDetailReportComponent } from "./PlanogramDetailReport/planogram-detail-report/planogram-detail-report.component";
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
   declarations: [
@@ -82,7 +83,8 @@ import { PlanogramDetailReportComponent } from "./PlanogramDetailReport/planogra
     RouterModule,
     FormsModule,
     ReactiveFormsModule,
-    HttpClientModule
+    HttpClientModule,
+    NgbModule
   ],
   providers: [
     CommonService,
@@ -93,4 +95,4 @@ import { PlanogramDetailReportComponent } from "./PlanogramDetailReport/planogra
   ],
   bootstrap: [AppComponent]
 })
-export class AppModule {}
+export class AppModule { }
