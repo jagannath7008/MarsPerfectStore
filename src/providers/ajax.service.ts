@@ -140,19 +140,16 @@ export class AjaxService {
               this.commonService.ShowToast(
                 "Your session expired. Please login again."
               );
-              this.nav.navigate("/", "");
             } else if (error.status === 404) {
               this.commonService.ShowToast(
                 "Unable to get data. Your session is expired."
               );
               reject(error);
-              this.nav.navigate("/", null);
             } else {
               this.commonService.ShowToast(
                 "Unable to get data. Your session is expired."
               );
               reject(error);
-              this.nav.navigate("/", null);
             }
           }
         );

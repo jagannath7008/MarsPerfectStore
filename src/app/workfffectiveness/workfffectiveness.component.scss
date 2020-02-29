@@ -1,6 +1,7 @@
 .tbl-header-card {
   padding: 10px;
-  border: 1px solid #d9d9d9;
+  background-color: #eee;
+  color: #444;
 }
 
 .tbl-header {
@@ -24,15 +25,15 @@
   line-height: 30px;
 }
 
-.filter-cell{
+.filter-cell {
   width: 25%;
 }
 
-.date-cell{
+.date-cell {
   width: 35% !important;
 }
 
-.filter{
+.filter {
   border: 1px solid #d9d9d9;
   padding-top: 15px;
   display: flex !important;

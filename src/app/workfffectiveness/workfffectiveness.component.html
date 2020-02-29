@@ -13,8 +13,8 @@
         <div class="col-9 p-0">
           <div class="form-group">
             <div class="input-group">
-              <input class="form-control" placeholder="yyyy-mm-dd"
-                      name="dp" [(ngModel)]="model" ngbDatepicker #d="ngbDatepicker">
+              <input class="form-control" placeholder="yyyy-mm-dd" name="dp" [(ngModel)]="model" ngbDatepicker
+                #d="ngbDatepicker">
               <div class="input-group-append">
                 <button class="btn btn-outline-secondary calendar" (click)="d.toggle()" type="button"></button>
               </div>
@@ -29,8 +29,8 @@
           Region
         </div>
         <div class="col-9 p-0">
-          <select name="region" class="form-control">
-            <option value="">Select Region</option>
+          <select name="region" class="form-control" [(ngModel)]="Region">
+            <option value="">All Region</option>
             <option *ngFor="let c of MasterData.Region" [attr.value]="c.Name">{{c.Name}}</option>
           </select>
         </div>
@@ -42,8 +42,8 @@
           State
         </div>
         <div class="col-9 p-0">
-          <select name="state" class="form-control">
-            <option value="">Select State</option>
+          <select name="state" class="form-control" [(ngModel)]="State">
+            <option value="">All State</option>
             <option *ngFor="let c of MasterData.State" [attr.value]="c.Name">{{c.Name}}</option>
           </select>
         </div>
@@ -55,8 +55,8 @@
           City
         </div>
         <div class="col-8 p-0">
-          <select name="city" class="form-control">
-            <option value="">Select City</option>
+          <select name="city" class="form-control" [(ngModel)]="City">
+            <option value="">All City</option>
             <option *ngFor="let c of MasterData.City" [attr.value]="c.Name">{{c.Name}}</option>
           </select>
         </div>
@@ -68,18 +68,18 @@
           SO
         </div>
         <div class="col-8 p-0">
-          <select name="so" class="form-control">
-            <option value="all">
-              All
-            </option>
+          <select name="so" class="form-control" [(ngModel)]="SO">
+            <option value="">All</option>
+            <option *ngFor="let item of MasterData.Supervisor" [value]="item.Gid">{{item.Name}}</option>
           </select>
         </div>
       </div>
     </div>
   </div>
 
-  <div class="col-12">
-    <button class="btn btn-primary" (click)="LoadFilteredResult()">Filter</button>
+  <div class="col-12 p-0 mt-2 mb-2">
+    <button class="btn btn-outline-info" (click)="ResetResult()">Reset</button>
+    <button class="ml-2 btn btn-primary" (click)="LoadFilteredResult()">Filter</button>
   </div>
 
   <div class="card">
@@ -89,13 +89,12 @@
           <thead>
             <tr>
               <th>Filter</th>
-              <th colspan="2">25th Feb, 2020</th>
+              <th colspan="2">{{modalDate}}</th>
               <th colspan="2">MTD</th>
             </tr>
           </thead>
           <tbody>
             <tr>
-              <td>Type</td>
               <td>Attendance</td>
               <td>Call Compliance</td>
               <td>Attendance</td>
@@ -103,34 +102,32 @@
             </tr>
             <tr rowspan="2" *ngFor="let work of CalculatedDetail">
               <ng-container *ngIf="work.WorkType !== 'SO'">
-                <td>{{work.WorkType}}</td>
                 <td>
-                  <h3>{{work.Data.AttendneceByDate}}%</h3>
+                  <h3>{{work.TodayAttendancePercent}}%</h3>
                 </td>
                 <td>
-                  <h3>{{work.Data.CallComplianceByDate}}%</h3>
+                  <h3>{{work.TodayCallCompliancePercent}}%</h3>
                 </td>
                 <td>
-                  <h3>{{work.Data.AttendneceByMTD}}%</h3>
+                  <h3>{{work.MTDAttendancePercent}}%</h3>
                 </td>
                 <td>
-                  <h3>{{work.Data.CallComplianceByMTD}}%</h3>
+                  <h3>{{work.MTDCallCompliancePercent}}%</h3>
                 </td>
               </ng-container>
 
               <ng-container *ngIf="work.WorkType === 'SO'">
-                <td>{{work.WorkType}}</td>
                 <td>
-                  <h3>{{work.Data.AttendneceByDate}}</h3>
+                  <h3>{{work.TodayAttendanceSO}}</h3>
                 </td>
                 <td>
-                  <h3>{{work.Data.CallComplianceByDate}}</h3>
+                  <h3>{{work.TodayCallComplianceSO}}</h3>
                 </td>
                 <td>
-                  <h3>{{work.Data.AttendneceByMTD}}</h3>
+                  <h3>{{work.MTDAttendanceSO}}</h3>
                 </td>
                 <td>
-                  <h3>{{work.Data.CallComplianceByMTD}}</h3>
+                  <h3>{{work.MTDCallComplianceSO}}</h3>
                 </td>
               </ng-container>
             </tr>
@@ -143,17 +140,6 @@
   <div class="card mt-4">
     <div class="card p-4">
       <div class="col-md-12 row">
-        <div class="col-md-12 row">
-          <div class="row tbl-header text-center mt-4 w-40">
-            <div class="tbl-header-card">
-              <b>Today/25th Feb, 2020</b></div>
-          </div>
-          <div class="row tbl-header text-center mt-4 w-60">
-            <div class="tbl-header-card">
-              <b>MTD</b></div>
-          </div>
-        </div>
-
         <div class="col-12 text-right">
           <a (click)="ExportMe()" class="export-btn">
             <i class="far fa-file-excel"></i>
@@ -163,6 +149,18 @@
         <div class="table-responsive">
           <table class="table table-striped table-bordered table-hover" id="work-table">
             <thead>
+              <tr>
+                <th colspan="5">
+                  <div class="tbl-header-card">
+                    <b>Today | {{modalDate}}</b>
+                  </div>
+                </th>
+                <th colspan="6">
+                  <div class="tbl-header-card">
+                    <b>MTD</b>
+                  </div>
+                </th>
+              </tr>
               <tr>
                 <th rowspan="4">User</th>
                 <th rowspan="4">Role</th>

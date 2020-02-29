@@ -149,7 +149,8 @@ export class AppComponent {
       Region: [],
       City: [],
       Merchandiser: [],
-      Retailer: []
+      Retailer: [],
+      Supervisor: []
     };
     if (IsValidType(MasterData["LocationTable"])) {
       let Data = MasterData["LocationTable"];
@@ -193,6 +194,13 @@ export class AppComponent {
             0
           ) {
             FinalData.Retailer.push(Data[index]);
+          }
+        } else if (Data[index]["TypeEnum"] === "Supervisor") {
+          if (
+            FinalData.Supervisor.filter(x => x.Gid === Data[index].Gid)
+              .length === 0
+          ) {
+            FinalData.Supervisor.push(Data[index]);
           }
         }
         index++;
