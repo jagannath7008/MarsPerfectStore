@@ -21,18 +21,21 @@
                       <label for="Region">Region</label>
                       <select name="Region" class="form-control" [(ngModel)]="AdvanceSearch.Region">
                         <option value="">Select Region</option>
+                        <option *ngFor="let c of MasterData.Region" [attr.value]="c.Name">{{c.Name}}</option>
                       </select>
                     </div>
                     <div class="form-group col-md-4">
                       <label for="State">State</label>
                       <select name="State" class="form-control" [(ngModel)]="AdvanceSearch.State">
                         <option value="">Select State</option>
+                        <option *ngFor="let c of MasterData.State" [attr.value]="c.Name">{{c.Name}}</option>
                       </select>
                     </div>
                     <div class="form-group col-md-4">
                       <label for="City">City</label>
                       <select name="City" class="form-control" [(ngModel)]="AdvanceSearch.City">
                         <option value="">Select City</option>
+                        <option *ngFor="let c of MasterData.City" [attr.value]="c.Name">{{c.Name}}</option>
                       </select>
                     </div>
                   </div>
@@ -41,12 +44,14 @@
                       <label for="Supervisor">Supervisor</label>
                       <select name="Supervisor" class="form-control" [(ngModel)]="AdvanceSearch.Supervisor">
                         <option value="">Select Supervisor</option>
+                        <option *ngFor="let c of MasterData.Retailer" [attr.value]="c.Name">{{c.Name}}</option>
                       </select>
                     </div>
                     <div class="form-group col-md-4">
                       <label for="Marchandisor">Marchandisor</label>
                       <select name="Marchandisor" class="form-control" [(ngModel)]="AdvanceSearch.Marchandisor">
                         <option value="">Select Marchandisor</option>
+                        <option *ngFor="let c of MasterData.Merchandiser" [attr.value]="c.Name">{{c.Name}}</option>
                       </select>
                     </div>
                   </div>

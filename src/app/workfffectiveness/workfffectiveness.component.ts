@@ -79,11 +79,26 @@ export class WorkfffectivenessComponent implements OnInit {
       firstDay.getMonth() + 1
     )}${this.BuildDayAndMonth(firstDay.getDate())}`;
     let lastDay = new Date(this.model.year, this.model.month, 0);
-    let LD = `${lastDay.getFullYear()}${this.BuildDayAndMonth(
-      lastDay.getMonth() + 1
-    )}${this.BuildDayAndMonth(lastDay.getDate())}`;
+    let LD = this.GetLastOrCurrentDate();
     let Url = `Webportal/FetchAttendanceReportService?SD=${filterDate}&ST=${FD}&ET=${LD}&Region=${this.Region}&State=${this.State}&City=${this.City}&SO=${this.SO}`;
     this.LoadData(Url);
+  }
+
+  GetLastOrCurrentDate() {
+    let LD = "";
+    let CurrentMonth = new Date().getMonth();
+    if (this.model.month - 1 < CurrentMonth) {
+      let lastDay = new Date(this.model.year, this.model.month, 0);
+      LD = `${lastDay.getFullYear()}${this.BuildDayAndMonth(
+        lastDay.getMonth() + 1
+      )}${this.BuildDayAndMonth(lastDay.getDate())}`;
+    } else {
+      LD =
+        this.model.year.toString() +
+        this.BuildDayAndMonth(this.model.month) +
+        this.BuildDayAndMonth(this.model.day);
+    }
+    return LD;
   }
 
   BuildDayAndMonth(Value: number) {
@@ -144,20 +159,20 @@ export class WorkfffectivenessComponent implements OnInit {
       {
         WorkType: "Percentage",
         TodayAttendancePercent: this.CalculateValue(
-          TodayHeader.TotalAttendance,
-          TodayHeader.ActualAttendance
+          TodayHeader.ActualAttendance,
+          TodayHeader.TotalAttendance
         ),
         TodayCallCompliancePercent: this.CalculateValue(
-          TodayHeader.TotalCallComplaince,
-          TodayHeader.ActualCallComplaince
+          TodayHeader.ActualCallComplaince,
+          TodayHeader.TotalCallComplaince
         ),
         MTDAttendancePercent: this.CalculateValue(
-          MTDHeader.TotalCallComplaince,
-          MTDHeader.ActualCallComplaince
+          MTDHeader.ActualAttendance,
+          MTDHeader.TotalAttendance
         ),
         MTDCallCompliancePercent: this.CalculateValue(
-          MTDHeader.TotalCallComplaince,
-          MTDHeader.ActualCallComplaince
+          MTDHeader.ActualCallComplaince,
+          MTDHeader.TotalCallComplaince
         )
       },
       {
@@ -242,9 +257,9 @@ export class WorkfffectivenessComponent implements OnInit {
       var hDisplay = h > 0 ? h : "0";
       var mDisplay = m > 0 ? m : "0";
       var sDisplay = s > 0 ? s : "0";
-      return `${hDisplay}:${mDisplay}:${sDisplay}`;
+      return `${hDisplay}:${mDisplay}`;
     } else {
-      return "0:0";
+      return "-";
     }
   }
 
@@ -252,7 +267,8 @@ export class WorkfffectivenessComponent implements OnInit {
     if (Total === 0 || Actual === 0 || Total === null || Actual === null)
       return 0;
     else {
-      return parseFloat(((Total / Actual) * 100).toFixed(2));
+      let value = parseFloat(((Total / Actual) * 100).toFixed(2));
+      return Math.round(value);
     }
   }
 

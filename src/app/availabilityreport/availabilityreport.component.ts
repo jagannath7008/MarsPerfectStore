@@ -1,30 +1,35 @@
-import { Component, OnInit, Input, ViewChild  } from '@angular/core';
-import { Observable } from 'rxjs/internal/Observable';
-import * as _ from 'lodash';
-import { DatePipe } from '@angular/common';
+import { Component, OnInit, Input, ViewChild } from "@angular/core";
+import { Observable } from "rxjs/internal/Observable";
+import * as _ from "lodash";
+import { DatePipe } from "@angular/common";
 import { IGrid } from "src/providers/Generic/Interface/IGrid";
 import { FormBuilder } from "@angular/forms";
 import { FormGroup } from "@angular/forms";
 import { FormControl } from "@angular/forms";
-import { CommonService ,IsValidType, ExportToExcel} from "src/providers/common-service/common.service";
+import {
+  CommonService,
+  IsValidType,
+  ExportToExcel
+} from "src/providers/common-service/common.service";
 import * as $ from "jquery";
 import { JourneyPlan, Employee, PostParam } from "src/providers/constants";
 import { iNavigation } from "src/providers/iNavigation";
 import { AjaxService } from "src/providers/ajax.service";
-import { BusinessunitModel } from 'src/app/businessunit/businessunit.component';
+import { BusinessunitModel } from "src/app/businessunit/businessunit.component";
+import { ApplicationStorage } from "src/providers/ApplicationStorage";
 
 @Component({
-  selector: 'app-availabilityreport',
-  templateUrl: './availabilityreport.component.html',
-  styleUrls: ['./availabilityreport.component.sass']
+  selector: "app-availabilityreport",
+  templateUrl: "./availabilityreport.component.html",
+  styleUrls: ["./availabilityreport.component.sass"]
 })
 export class AvailabilityreportComponent implements OnInit {
-  selectedClass: string = 'Assigned';
-  public TodayJourneyPlanViewModel:Array<AvailabilityReportCategoryViewModel>;
-  public ChildModel:Array<AvailabilityReportBrandViewModel>;
-  public GCModel:Array<AvailabilityReportSKUViewModel>;
+  selectedClass: string = "Assigned";
+  public TodayJourneyPlanViewModel: Array<AvailabilityReportCategoryViewModel>;
+  public ChildModel: Array<AvailabilityReportBrandViewModel>;
+  public GCModel: Array<AvailabilityReportSKUViewModel>;
 
-  TableResultSet:any[];
+  TableResultSet: any[];
   IsEmptyRow: boolean = true;
   HeaderName: string = "Page Name";
   EnableFilter: boolean = false;
@@ -34,6 +39,7 @@ export class AvailabilityreportComponent implements OnInit {
   pageIndex: number = 1;
   pageSize: number = 15;
   TotalCount: number = 0;
+  MasterData: any = {};
   TotalPageCount: number = 0;
   AdvanceSearch: AdvanceFilter;
   AutodropdownCollection: any = {
@@ -49,17 +55,16 @@ export class AvailabilityreportComponent implements OnInit {
     private fb: FormBuilder,
     private commonService: CommonService,
     private nav: iNavigation,
-    private http: AjaxService
+    private http: AjaxService,
+    private local: ApplicationStorage
   ) {
     let PageName = this.commonService.GetCurrentPageName();
-      this.HeaderName = "Availability Report";
-      this.ResetAdvanceFilter();
+    this.HeaderName = "Availability Report";
+    this.ResetAdvanceFilter();
   }
-  ActiveRow:boolean[]=[];
-  ActiveRowGC:boolean[]=[];
-  icon:string="assets/images/view.png";
-
-  
+  ActiveRow: boolean[] = [];
+  ActiveRowGC: boolean[] = [];
+  icon: string = "assets/images/view.png";
 
   ResetAdvanceFilter() {
     this.AdvanceSearch = {
@@ -167,45 +172,52 @@ export class AvailabilityreportComponent implements OnInit {
       this.LoadData();
     }
   }
-  
+
   ngOnInit() {
     this.LoadData();
+    let LocalMasterData = this.local.getMaster();
+    if (IsValidType(LocalMasterData)) {
+      this.MasterData = LocalMasterData;
+    }
   }
   LoadData() {
-
     let MSData = JSON.parse(PostParam);
     MSData.content.searchString = this.searchQuery;
     MSData.content.sortBy = this.sortBy;
     MSData.content.pageIndex = this.pageIndex;
     MSData.content.pageSize = this.pageSize;
 
-this.http.post("Webportal/FetchAvailabilityReport", MSData).then(response => {
-  this.TableResultSet = [];
-  if (this.commonService.IsValidResponse(response)) {
-    let Data = response.content.data;
-    if (Data != null && Data != "") {
-      let Data = JSON.parse(response.content.data);
-      // console.log(Data);
-      // console.log(Data[0]["Record"]);
-      if (IsValidType(Data[0]["Record"]) && IsValidType(Data[0]["Count"])) {
-        
-        let Record = Data[0]["Record"];
-        this.TotalCount = Data[0]["Count"][0].TotalCount;
-        this.TotalPageCount = this.TotalCount / this.pageSize;
-        if (this.TotalCount % this.pageSize > 0) {
-          this.TotalPageCount = parseInt(
-            (this.TotalPageCount + 1).toString()
-          );
+    this.http
+      .post("Webportal/FetchAvailabilityReport", MSData)
+      .then(response => {
+        this.TableResultSet = [];
+        if (this.commonService.IsValidResponse(response)) {
+          let Data = response.content.data;
+          if (Data != null && Data != "") {
+            let Data = JSON.parse(response.content.data);
+            // console.log(Data);
+            // console.log(Data[0]["Record"]);
+            if (
+              IsValidType(Data[0]["Record"]) &&
+              IsValidType(Data[0]["Count"])
+            ) {
+              let Record = Data[0]["Record"];
+              this.TotalCount = Data[0]["Count"][0].TotalCount;
+              this.TotalPageCount = this.TotalCount / this.pageSize;
+              if (this.TotalCount % this.pageSize > 0) {
+                this.TotalPageCount = parseInt(
+                  (this.TotalPageCount + 1).toString()
+                );
+              }
+              this.IsEmptyRow = false;
+              this.TodayJourneyPlanViewModel = Record;
+            }
+            this.commonService.ShowToast("Data retrieve successfully.");
+          } else {
+            this.commonService.ShowToast("Unable to get data.");
+          }
         }
-        this.IsEmptyRow = false;
-        this.TodayJourneyPlanViewModel = Record;
-      }
-      this.commonService.ShowToast("Data retrieve successfully.");
-    } else {
-      this.commonService.ShowToast("Unable to get data.");
-    }
-  }
-});
+      });
 
     // this.TodayJourneyPlanViewModel=[
     //   {CategoryCode:"CA1", TotalNoOfStores:"4",AvailabileIn:"2",AvailabilityPercentage:"50",
@@ -225,7 +237,6 @@ this.http.post("Webportal/FetchAvailabilityReport", MSData).then(response => {
     //   ]
     // },
 
-
     //   {CategoryCode:"CA2", TotalNoOfStores:"4",AvailabileIn:"2",AvailabilityPercentage:"50",
     //   lstAvailabilityReportBrandViewModel:[
     //     {CategoryCode:"CA2", BrandCode:"BA3",TotalNoOfStores:"4",AvailabileIn:"2",AvailabilityPercentage:"50"
@@ -243,9 +254,6 @@ this.http.post("Webportal/FetchAvailabilityReport", MSData).then(response => {
     //   ]
     // },
     // ];
-
-    
-
   }
   NextPage() {
     if (this.pageIndex + 1 <= this.TotalPageCount) {
@@ -275,59 +283,51 @@ this.http.post("Webportal/FetchAvailabilityReport", MSData).then(response => {
     this.TotalPageCount = 0;
     this.LoadData();
   }
-  toggleIcon(event:Event)
-  {
-     var imagevalue=(event.target as Element).getAttribute("src");    
-     if( imagevalue=="assets/images/view.png")      {
-          (event.target as Element).setAttribute("src","assets/images/view1.png")       
-       }
-          else if(imagevalue=="assets/images/view1.png")
-          {
-            (event.target as Element).setAttribute("src","assets/images/view.png")
-          }
-       
-     }
-    
-    ExportMe() {
-      if(!ExportToExcel('avability-table', 'avability')){
-        this.commonService.ShowToast("Incorrect value passed to export to excel.");
-      }
+  toggleIcon(event: Event) {
+    var imagevalue = (event.target as Element).getAttribute("src");
+    if (imagevalue == "assets/images/view.png") {
+      (event.target as Element).setAttribute("src", "assets/images/view1.png");
+    } else if (imagevalue == "assets/images/view1.png") {
+      (event.target as Element).setAttribute("src", "assets/images/view.png");
     }
+  }
+
+  ExportMe() {
+    if (!ExportToExcel("avability-table", "avability")) {
+      this.commonService.ShowToast(
+        "Incorrect value passed to export to excel."
+      );
+    }
+  }
 }
 
 export class AvailabilityReportCategoryViewModel {
-  CategoryCode:string;
-  TotalNoOfStores:string;
-  AvailabileIn:string;
-  AvailabilityPercentage:string;
-  lstAvailabilityReportBrandViewModel :Array<AvailabilityReportBrandViewModel> ;
- 
- 
- }
- 
- export class AvailabilityReportBrandViewModel{
- CategoryCode:string;
- BrandCode:string;
- TotalNoOfStores:string;
- AvailabileIn:string;
- AvailabilityPercentage:string;
- lstAvailabilityReportSKUViewModel:Array<AvailabilityReportSKUViewModel> ;
- 
- }
- 
- export class AvailabilityReportSKUViewModel
- {
-    CategoryCode:string;
-     BrandCode:string;
-     ItemCode:string;
-     TotalNoOfStores:string;
-     AvailabileIn:string;
-     AvailabilityPercentage:string;
- 
- 
- }
+  CategoryCode: string;
+  TotalNoOfStores: string;
+  AvailabileIn: string;
+  AvailabilityPercentage: string;
+  lstAvailabilityReportBrandViewModel: Array<AvailabilityReportBrandViewModel>;
+}
 
- interface AdvanceFilter {
+export class AvailabilityReportBrandViewModel {
+  CategoryCode: string;
+  BrandCode: string;
+  TotalNoOfStores: string;
+  AvailabileIn: string;
+  AvailabilityPercentage: string;
+  lstAvailabilityReportSKUViewModel: Array<AvailabilityReportSKUViewModel>;
+}
+
+export class AvailabilityReportSKUViewModel {
+  CategoryCode: string;
+  BrandCode: string;
+  ItemCode: string;
+  TotalNoOfStores: string;
+  AvailabileIn: string;
+  AvailabilityPercentage: string;
+}
+
+interface AdvanceFilter {
   Region: string;
   SubChannel: string;
   CustomerCode: string;
