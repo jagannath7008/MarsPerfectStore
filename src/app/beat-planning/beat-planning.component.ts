@@ -5,7 +5,8 @@ import { AjaxService } from "src/providers/ajax.service";
 import {
   CommonService,
   IsValidType,
-  ExportToExcel
+  ExportToExcel,
+  IsValidResponse
 } from "src/providers/common-service/common.service";
 import { FormBuilder } from "@angular/forms";
 import { FormGroup } from "@angular/forms";
@@ -50,6 +51,15 @@ export class BeatPlanningComponent implements OnInit {
     });
   }
 
+  QueryInit() {
+    this.searchQuery = " 1=1 ";
+    this.sortBy = "";
+    this.pageIndex = 1;
+    this.pageSize = 15;
+    this.TotalCount = 0;
+    this.TotalPageCount = 0;
+  }
+
   InitGridHeader() {
     this.BeatPlanningHeader = [
       { column: "Index", type: "hidden" },
@@ -73,12 +83,15 @@ export class BeatPlanningComponent implements OnInit {
 
   SubmitAddBeatPlan() {
     if (this.BeatsAdd !== null) {
+      this.QueryInit();
       let MSData = JSON.parse(PostParam);
       MSData.content.beatViewModel = this.BeatsAdd.value;
 
+      this.AddBeatPlan();
       this.http
         .post("Beat/AddEditBeat", MSData)
         .then(result => {
+          this.LoadGridData();
           this.commonService.ShowToast("Beats added successfully.");
         })
         .catch(e => {
@@ -96,6 +109,7 @@ export class BeatPlanningComponent implements OnInit {
       .then(result => {
         if (this.commonService.IsValidResponse(result)) {
           let Data = JSON.parse(result.content.beats);
+          this.commonService.ShowToast("Data loaded successfully.");
           this.CheckAndBindData(Data);
         } else {
           this.commonService.ShowToast(
@@ -110,11 +124,11 @@ export class BeatPlanningComponent implements OnInit {
 
   CheckAndBindData(ResultData: any) {
     if (IsValidType(ResultData)) {
+      this.QueryInit();
       this.BeatPlanningRows = [];
       this.BeatMerchandiserData = [];
       this.BeatSupervisorData = [];
       this.BuildGrid(ResultData);
-      this.commonService.ShowToast("Data loaded successfully.");
     }
   }
 
@@ -254,6 +268,29 @@ export class BeatPlanningComponent implements OnInit {
   ExportMe() {
     if(!ExportToExcel('beatplanning-table', 'beatplanning')){
       this.commonService.ShowToast("Incorrect value passed to export to excel.");
+    }
+  }
+
+  RemoveBeatCustomer(CurrentCtx: any) {
+    if (IsValidType(CurrentCtx)) {
+      let MSData = JSON.parse(PostParam);
+      MSData.content.rowGid = CurrentCtx.Gid;
+
+      this.http
+        .post("Beat/RemoveBeat", MSData)
+        .then(result => {
+          if (this.commonService.IsValidResponse(result)) {
+            let Data = JSON.parse(result.content.beats);
+            this.CheckAndBindData(Data);
+          } else {
+            this.commonService.ShowToast(
+              "Unable to add customer. Please contact to admin."
+            );
+          }
+        })
+        .catch(e => {
+          this.commonService.ShowToast("Getting server error.");
+        });
     }
   }
 }
