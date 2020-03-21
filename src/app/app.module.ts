@@ -40,7 +40,8 @@ import { PlanogramtransactionzoneComponent } from "./planogramtransactionzone/pl
 import { FooterComponent } from "./footer/footer.component";
 import { AvailabilityreportComponent } from "./availabilityreport/availabilityreport.component";
 import { PlanogramDetailReportComponent } from "./PlanogramDetailReport/planogram-detail-report/planogram-detail-report.component";
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
+import { ChartsModule } from "ng2-charts";
 
 @NgModule({
   declarations: [
@@ -84,7 +85,8 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
-    NgbModule
+    NgbModule,
+    ChartsModule
   ],
   providers: [
     CommonService,
@@ -95,4 +97,4 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
   ],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {}

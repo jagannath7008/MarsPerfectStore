@@ -33,6 +33,7 @@ export class BeatPlanningComponent implements OnInit {
   pageSize: number = 15;
   TotalCount: number = 0;
   TotalPageCount: number = 0;
+  AdvanceEnableFilter: boolean = false;
   constructor(
     private http: AjaxService,
     private commonService: CommonService,
@@ -91,6 +92,7 @@ export class BeatPlanningComponent implements OnInit {
     let MSData = JSON.parse(PostParam);
     MSData.content.searchString = this.searchQuery;
 
+    this.EnableFilter = false;
     this.http
       .post("Beat/GetBeats", MSData)
       .then(result => {
@@ -106,6 +108,10 @@ export class BeatPlanningComponent implements OnInit {
       .catch(e => {
         this.commonService.ShowToast("Getting server error.");
       });
+  }
+
+  GetAdvanceFilter() {
+    this.AdvanceEnableFilter = !this.AdvanceEnableFilter;
   }
 
   CheckAndBindData(ResultData: any) {
@@ -252,9 +258,15 @@ export class BeatPlanningComponent implements OnInit {
   }
 
   ExportMe() {
-    if(!ExportToExcel('beatplanning-table', 'beatplanning')){
-      this.commonService.ShowToast("Incorrect value passed to export to excel.");
+    if (!ExportToExcel("beatplanning-table", "beatplanning")) {
+      this.commonService.ShowToast(
+        "Incorrect value passed to export to excel."
+      );
     }
+  }
+
+  RemoveCustomer(item: any) {
+    alert(JSON.stringify(item));
   }
 }
 

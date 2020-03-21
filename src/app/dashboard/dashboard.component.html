@@ -3,15 +3,69 @@
     <div class="card dashboard">
       <div class="card-body text-left">
         <h5 class="card-title">Card title</h5>
-        <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
-        <p class="card-text">Demo dashboard. Use below button to navigate on respective pages.</p>
-        <!-- <div>
-          <div class="form-group">
-            <a (click)="SignOut()" class="form-control btn btn-outline-danger">
-              Sign out
-            </a>
-          </div>
-        </div> -->
+        <ngb-tabset [destroyOnHide]="false">
+          <ngb-tab title="Availability">
+            <ng-template ngbTabContent>
+              <div class="chart-wrapper mt-4">
+                <canvas
+                  baseChart
+                  width="400"
+                  height="180"
+                  [datasets]="lineChartData"
+                  [labels]="lineChartLabels"
+                  [options]="lineChartOptions"
+                  [colors]="lineChartColors"
+                  [legend]="lineChartLegend"
+                  [chartType]="lineChartType"
+                  [plugins]="lineChartPlugins"
+                  (chartHover)="chartHovered($event)"
+                  (chartClick)="chartClicked($event)"
+                >
+                </canvas>
+              </div>
+            </ng-template>
+          </ngb-tab>
+          <ngb-tab>
+            <ng-template ngbTabTitle>Perfect Store</ng-template>
+            <ng-template ngbTabContent>
+              <div class="chart-wrapper mt-4">
+                <canvas
+                  baseChart
+                  width="400"
+                  height="180"
+                  [datasets]="lineChartData"
+                  [labels]="lineChartLabels"
+                  [options]="lineChartOptions"
+                  [colors]="lineChartColors"
+                  [legend]="lineChartLegend"
+                  [chartType]="lineChartType"
+                  [plugins]="lineChartPlugins"
+                  (chartHover)="chartHovered($event)"
+                  (chartClick)="chartClicked($event)"
+                >
+                </canvas>
+              </div>
+            </ng-template>
+          </ngb-tab>
+          <ngb-tab title="Checkout penetration">
+            <ng-template ngbTabContent>
+              <p>
+                Sed commodo, leo at suscipit dictum, quam est porttitor sapien,
+                eget sodales nibh elit id diam. Nulla facilisi. Donec egestas
+                ligula vitae odio interdum aliquet. Duis lectus turpis, luctus
+                eget tincidunt eu, congue et odio. Duis pharetra et nisl at
+                faucibus. Quisque luctus pulvinar arcu, et molestie lectus
+                ultrices et. Sed diam urna, egestas ut ipsum vel, volutpat
+                volutpat neque. Praesent fringilla tortor arcu. Vivamus faucibus
+                nisl enim, nec tristique ipsum euismod facilisis. Morbi ut
+                bibendum est, eu tincidunt odio. Orci varius natoque penatibus
+                et magnis dis parturient montes, nascetur ridiculus mus. Mauris
+                aliquet odio ac lorem aliquet ultricies in eget neque. Phasellus
+                nec tortor vel tellus pulvinar feugiat.
+              </p>
+            </ng-template>
+          </ngb-tab>
+        </ngb-tabset>
       </div>
     </div>
   </div>

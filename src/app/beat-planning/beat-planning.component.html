@@ -59,7 +59,7 @@
                 <option value="">Select Merchandiser</option>
                 <ng-container *ngFor="let item of BeatMerchandiserData">
                   <option [attr.value]="item.JobGid">{{item.Role}} - {{item.JobName}} {{item.Name}}</option>
-                  </ng-container>
+                </ng-container>
               </select>
             </div>
           </div>
@@ -70,6 +70,92 @@
             </div>
           </div>
         </div>
+      </form>
+    </div>
+  </div>
+
+  <div *ngIf="AdvanceEnableFilter" class="ipopup">
+    <div class="ipopup__content">
+      <div class="ipopup__header">
+        <header>Advance filter</header>
+      </div>
+
+      <form (submit)="SubmitSearchCriateria()" class="pt-2" (keydown.enter)="$event.preventDefault()">
+        <table class="mt-2">
+          <tbody>
+            <tr>
+              <td>
+                <div class="pt-2">
+                  <div class="col-md-12 row">
+                    <div class="form-group col-md-4">
+                      <label for="Region">Region</label>
+                      <select name="Region" class="form-control" [(ngModel)]="AdvanceSearch.Region">
+                        <option value="">Select Region</option>
+                        <option *ngFor="let c of MasterData.Region" [attr.value]="c.Name">{{c.Name}}</option>
+                      </select>
+                    </div>
+                    <div class="form-group col-md-4">
+                      <label for="State">State</label>
+                      <select name="State" class="form-control" [(ngModel)]="AdvanceSearch.State">
+                        <option value="">Select State</option>
+                        <option *ngFor="let c of MasterData.State" [attr.value]="c.Name">{{c.Name}}</option>
+                      </select>
+                    </div>
+                    <div class="form-group col-md-4">
+                      <label for="City">City</label>
+                      <select name="City" class="form-control" [(ngModel)]="AdvanceSearch.City">
+                        <option value="">Select City</option>
+                        <option *ngFor="let c of MasterData.City" [attr.value]="c.Name">{{c.Name}}</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="col-md-12 row">
+                    <div class="form-group col-md-4">
+                      <label for="Supervisor">Supervisor</label>
+                      <select name="Supervisor" class="form-control" [(ngModel)]="AdvanceSearch.Supervisor">
+                        <option value="">Select Supervisor</option>
+                        <option *ngFor="let c of MasterData.Retailer" [attr.value]="c.Name">{{c.Name}}</option>
+                      </select>
+                    </div>
+                    <div class="form-group col-md-4">
+                      <label for="Marchandisor">Marchandisor</label>
+                      <select name="Marchandisor" class="form-control" [(ngModel)]="AdvanceSearch.Marchandisor">
+                        <option value="">Select Marchandisor</option>
+                        <option *ngFor="let c of MasterData.Merchandiser" [attr.value]="c.Name">{{c.Name}}</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="col-md-12 row">
+                    <div class="form-group col-md-4">
+                      <label for="ChainName">Chain Name</label>
+                      <select name="ChainName" class="form-control" [(ngModel)]="AdvanceSearch.ChainName">
+                        <option value="">Select Chain Name</option>
+                      </select>
+                    </div>
+                    <div class="form-group col-md-4">
+                      <label for="CustomerName">Customer Name</label>
+                      <input class="form-control" name="CustomerName" [(ngModel)]="AdvanceSearch.CustomerName"
+                        placeholder="Customer name">
+                    </div>
+                    <div class="form-group col-md-4">
+                      <label for="Address">Customer Code</label>
+                      <input class="form-control plain-input" [(ngModel)]="AdvanceSearch.CustomerCode"
+                        name="CustomerCode" placeholder="Customer Code">
+                    </div>
+                  </div>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+          <tfoot class="border-top">
+            <div class="form-group mt-3">
+              <button class="btn btn-primary form-control">Search</button>
+            </div>
+            <div class="form-group mt-2">
+              <button class="btn btn-outline-dark form-control" (click)="GetAdvanceFilter()">Close</button>
+            </div>
+          </tfoot>
+        </table>
       </form>
     </div>
   </div>
@@ -93,6 +179,8 @@
                         class="fas fa-sync"></i>&ensp;Reset</button>
                     <button type="button" (click)="AddBeatPlan()" class="btn btn-success"><i
                         class="fa fa-plus"></i>&ensp;Create</button>
+                    <button type="button" (click)="GetAdvanceFilter()" class="btn btn-success"><i
+                        class="fa fa-filter"></i>&ensp;Advance Search</button>
                   </div>
                 </div>
               </div>
