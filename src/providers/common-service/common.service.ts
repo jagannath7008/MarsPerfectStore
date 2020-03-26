@@ -2,11 +2,11 @@ import { Injectable } from "@angular/core";
 import * as $ from "jquery";
 import { FormGroup } from "@angular/forms";
 import { MappedActionPage } from "./../MappedActionPage";
-import * as XLSX from 'xlsx'; 
+import * as XLSX from "xlsx";
 
 const AllowedKey = [8, 9, 46];
-const AuthenticationBase = "MarsAuth";
-const OperationBase = "MarsAuth"; //"MarsMerchandiser";
+const AuthenticationBase = "MarsAuthDEV";
+const OperationBase = "MarsAuthDEV"; //"MarsMerchandiser";
 @Injectable({
   providedIn: "root"
 })
@@ -572,20 +572,20 @@ export function IsValidResponse(Data: any) {
 }
 
 export function ExportToExcel(TableId: string, fileName: string): boolean {
-   /* table id is passed over here */
-   let Flag = false;
-   if(IsValidType(TableId) && IsValidType(fileName)){
+  /* table id is passed over here */
+  let Flag = false;
+  if (IsValidType(TableId) && IsValidType(fileName)) {
     Flag = true;
     fileName = `${fileName}.xlsx`;
-    let element = document.getElementById(TableId); 
-    const ws: XLSX.WorkSheet =XLSX.utils.table_to_sheet(element);
+    let element = document.getElementById(TableId);
+    const ws: XLSX.WorkSheet = XLSX.utils.table_to_sheet(element);
 
     /* generate workbook and add the worksheet */
     const wb: XLSX.WorkBook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
+    XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
 
     /* save to file */
     XLSX.writeFile(wb, fileName);
-   }
-   return Flag;
+  }
+  return Flag;
 }

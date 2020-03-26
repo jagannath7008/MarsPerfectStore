@@ -3,24 +3,84 @@
     <div class="card dashboard">
       <div class="card-body text-left">
         <h5 class="card-title">Card title</h5>
+
+        <div class="col-md-12 mt-3 row mb-3">
+          <div class="col-md-3">
+            <div class="col-12 row">
+              <div class="col-3 p-0 title">
+                Region
+              </div>
+              <div class="col-9">
+                <select name="region" class="form-control" [(ngModel)]="Region">
+                  <option value="">All Region</option>
+                  <option *ngFor="let c of MasterData.Region" [attr.value]="c.Name">{{
+                    c.Name
+                  }}</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="col-12 row">
+              <div class="col-3 p-0 title">
+                State
+              </div>
+              <div class="col-9 p-0">
+                <select name="state" class="form-control" [(ngModel)]="State">
+                  <option value="">All State</option>
+                  <option *ngFor="let c of MasterData.State" [attr.value]="c.Name">{{
+                    c.Name
+                  }}</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="col-12 row">
+              <div class="col-3 p-0 title">
+                City
+              </div>
+              <div class="col-8 p-0">
+                <select name="city" class="form-control" [(ngModel)]="City">
+                  <option value="">All City</option>
+                  <option *ngFor="let c of MasterData.City" [attr.value]="c.Name">{{
+                    c.Name
+                  }}</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="col-12 row">
+              <div class="col-3 p-0 title">
+                SO
+              </div>
+              <div class="col-9 p-0">
+                <select name="so" class="form-control" [(ngModel)]="SO">
+                  <option value="">All</option>
+                  <option *ngFor="let item of MasterData.Supervisor" [value]="item.Gid">{{ item.Name }}</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-12 d-flex mb-2 action">
+          <button class="btn btn-primary">
+            <i class="fa fa-filter"></i>
+            Filter</button>
+          <button class="btn btn-outline-info mr-2">
+            <i class="fa fa-redo"></i>
+            Clear</button>
+        </div>
+
         <ngb-tabset [destroyOnHide]="false">
           <ngb-tab title="Availability">
             <ng-template ngbTabContent>
               <div class="chart-wrapper mt-4">
-                <canvas
-                  baseChart
-                  width="400"
-                  height="180"
-                  [datasets]="lineChartData"
-                  [labels]="lineChartLabels"
-                  [options]="lineChartOptions"
-                  [colors]="lineChartColors"
-                  [legend]="lineChartLegend"
-                  [chartType]="lineChartType"
-                  [plugins]="lineChartPlugins"
-                  (chartHover)="chartHovered($event)"
-                  (chartClick)="chartClicked($event)"
-                >
+                <canvas baseChart width="400" height="140" [datasets]="lineChartData" [labels]="lineChartLabels"
+                  [options]="lineChartOptions" [colors]="lineChartColors" [legend]="lineChartLegend"
+                  [chartType]="lineChartType" [plugins]="lineChartPlugins" (chartHover)="chartHovered($event)"
+                  (chartClick)="chartClicked($event)">
                 </canvas>
               </div>
             </ng-template>
@@ -29,20 +89,10 @@
             <ng-template ngbTabTitle>Perfect Store</ng-template>
             <ng-template ngbTabContent>
               <div class="chart-wrapper mt-4">
-                <canvas
-                  baseChart
-                  width="400"
-                  height="180"
-                  [datasets]="lineChartData"
-                  [labels]="lineChartLabels"
-                  [options]="lineChartOptions"
-                  [colors]="lineChartColors"
-                  [legend]="lineChartLegend"
-                  [chartType]="lineChartType"
-                  [plugins]="lineChartPlugins"
-                  (chartHover)="chartHovered($event)"
-                  (chartClick)="chartClicked($event)"
-                >
+                <canvas baseChart width="400" height="140" [datasets]="lineChartData" [labels]="lineChartLabels"
+                  [options]="lineChartOptions" [colors]="lineChartColors" [legend]="lineChartLegend"
+                  [chartType]="lineChartType" [plugins]="lineChartPlugins" (chartHover)="chartHovered($event)"
+                  (chartClick)="chartClicked($event)">
                 </canvas>
               </div>
             </ng-template>

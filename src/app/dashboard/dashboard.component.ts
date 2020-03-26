@@ -1,128 +1,82 @@
 import { Component, OnInit } from "@angular/core";
 import { PageName, RouteDescription } from "src/providers/constants";
 import { iNavigation } from "src/providers/iNavigation";
-import { CommonService } from "src/providers/common-service/common.service";
+import {
+  CommonService,
+  IsValidType
+} from "src/providers/common-service/common.service";
 import { ApplicationStorage } from "src/providers/ApplicationStorage";
 import { ChartDataSets, ChartOptions } from "chart.js";
 import { Color, Label } from "ng2-charts";
+import { AjaxService } from "src/providers/ajax.service";
 
 @Component({
   selector: "app-dashboard",
   templateUrl: "./dashboard.component.html",
-  styleUrls: ["./dashboard.component.sass"]
+  styleUrls: ["./dashboard.component.scss"]
 })
 export class DashboardComponent implements OnInit {
-  Pages: Array<RouteDescription> = [];
-  chartLine = [];
-  data = {
-    labels: [
-      "JAN",
-      "FEB",
-      "MAR",
-      "APR",
-      "MAY",
-      "JUN",
-      "JUL",
-      "AUG",
-      "SEP",
-      "OCT",
-      "NOV",
-      "DEC"
-    ],
-    datasets: [
-      {
-        label: "# of Votes",
-        data: [50, 100, 60, 120, 80, 100, 60, 120, 60, 100, 80, 150],
-        backgroundColor: "rgba(255, 99, 132, 0.4)",
-        borderColor: "rgba(255,99,132,.6)",
-        borderWidth: 1
-      }
-    ]
+  MasterData: any;
+  Region: string;
+  State: string;
+  City: string;
+  SO: string;
+  TotalVisitedLine = {
+    data: [],
+    label: "Total store visited"
   };
-  data2 = {
-    labels: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
-    datasets: [
-      {
-        label: "# of Votes",
-        data: [0.5, 0.8, 0.4, 0.6, 0.5, 0.3, 0.9],
-        backgroundColor: "rgba(255, 99, 132, 0.4)",
-        borderColor: "rgba(255,99,132,.6)",
-        borderWidth: 1
-      }
-    ]
-  };
-  options = {
-    scales: {
-      yAxes: [
-        {
-          ticks: {
-            fontColor: "rgba(0,0,0,.6)",
-            fontStyle: "bold",
-            beginAtZero: true,
-            maxTicksLimit: 8,
-            padding: 10
-          },
-          gridLines: {
-            drawTicks: true,
-            drawBorder: true,
-            display: true,
-            color: "rgba(0,0,0,.1)"
-            // zeroLineColor: 'transparent'
-          }
-        }
-      ],
-      xAxes: [
-        {
-          gridLines: {
-            // zeroLineColor: 'transparent',
-            display: true
-          },
-          ticks: {
-            padding: 0,
-            fontColor: "rgba(0,0,0,0.6)",
-            fontStyle: "bold"
-          }
-        }
-      ]
-    },
-    responsive: true
-  };
-  constructor(
-    private nav: iNavigation,
-    private commonService: CommonService,
-    private storage: ApplicationStorage
-  ) {}
 
-  ngOnInit() {
-    this.chartLine = new Chart("sales-line", {
-      type: "line",
-      data: this.data,
-      options: this.options
-    });
-  }
+  AvailableLine = {
+    data: [],
+    label: "Available"
+  };
 
-  SignOut() {
-    this.storage.clear();
-    this.nav.navigate("/", null);
-  }
+  OOSLine = {
+    data: [],
+    label: "Out of stock"
+  };
+  private Months = [
+    { MonthNum: 1, Name: "JAN" },
+    { MonthNum: 2, Name: "FEB" },
+    { MonthNum: 3, Name: "MAR" },
+    { MonthNum: 4, Name: "APR" },
+    { MonthNum: 5, Name: "MAY" },
+    { MonthNum: 6, Name: "JUN" },
+    { MonthNum: 7, Name: "JUL" },
+    { MonthNum: 8, Name: "AUG" },
+    { MonthNum: 9, Name: "SEP" },
+    { MonthNum: 10, Name: "OCT" },
+    { MonthNum: 11, Name: "NOV" },
+    { MonthNum: 12, Name: "DEC" }
+  ];
+  //  public lineChartData: ChartDataSets[] = [
+  //   { data: [65, 59, 80, 81, 56, 55, 40], label: "Series A" },
+  //   { data: [28, 48, 40, 19, 86, 27, 90], label: "Series B" },
+  //   {
+  //     data: [180, 480, 770, 90, 1000, 270, 400],
+  //     label: "Series C",
+  //     yAxisID: "y-axis-1"
+  //   }
+  // ];
 
   public lineChartData: ChartDataSets[] = [
-    { data: [65, 59, 80, 81, 56, 55, 40], label: "Series A" },
-    { data: [28, 48, 40, 19, 86, 27, 90], label: "Series B" },
-    {
-      data: [180, 480, 770, 90, 1000, 270, 400],
-      label: "Series C",
-      yAxisID: "y-axis-1"
-    }
+    this.TotalVisitedLine,
+    this.AvailableLine,
+    this.OOSLine
   ];
   public lineChartLabels: Label[] = [
-    "January",
-    "February",
-    "March",
-    "April",
-    "May",
-    "June",
-    "July"
+    "JAN",
+    "FEB",
+    "MAR",
+    "APR",
+    "MAY",
+    "JUN",
+    "JUL",
+    "AUG",
+    "SEP",
+    "OCT",
+    "NOV",
+    "DEC"
   ];
   public lineChartOptions: ChartOptions & { annotation: any } = {
     responsive: true,
@@ -164,6 +118,95 @@ export class DashboardComponent implements OnInit {
       ]
     }
   };
+  constructor(
+    private nav: iNavigation,
+    private commonService: CommonService,
+    private storage: ApplicationStorage,
+    private http: AjaxService
+  ) {}
+  Pages: Array<RouteDescription> = [];
+
+  ngOnInit() {
+    this.Region = "";
+    this.State = "";
+    this.City = "";
+    this.SO = "";
+    let LocalMasterData = this.storage.getMaster();
+    if (IsValidType(LocalMasterData)) {
+      this.MasterData = LocalMasterData;
+    }
+    let FilterModal: DashboardFilterModal = new DashboardFilterModal();
+    this.http
+      .post("Webportal/GetDashboardData", JSON.stringify(FilterModal))
+      .then(result => {
+        if (IsValidType(result)) {
+          if (result.content.data) {
+            let Data = JSON.parse(result.content.data);
+            if (IsValidType(Data["Dashboard"])) {
+              let DashboardData = Data["Dashboard"];
+              this.BuildDashboard(DashboardData);
+            }
+          }
+        } else {
+          this.commonService.ShowToast(
+            "Invalid result. Please contact to admin."
+          );
+        }
+      })
+      .catch(err => {
+        this.commonService.ShowToast("Server error. Please contact to admin.");
+      });
+  }
+
+  BeZero() {
+    let Values = [];
+    let item = 1;
+    while (item <= 12) {
+      Values.push(item);
+      item++;
+    }
+    return Values;
+  }
+
+  BuildDashboard(DashboardData: Array<DashboardFilterModal>) {
+    let index = 0;
+    let TotalVisitedLocalData: Array<any> = this.BeZero();
+    let Available: Array<any> = this.BeZero();
+    let OutofStock: Array<any> = this.BeZero();
+    let Position = -1;
+    while (index < DashboardData.length) {
+      Position = DashboardData[index].MonthNum;
+      if (Position <= 12 && Position > 0) {
+        TotalVisitedLocalData[Position] = DashboardData[index].Total;
+      }
+      index++;
+    }
+    this.TotalVisitedLine = {
+      data: TotalVisitedLocalData,
+      label: "Total store visited"
+    };
+
+    this.AvailableLine = {
+      data: Available,
+      label: "Available"
+    };
+
+    this.OOSLine = {
+      data: OutofStock,
+      label: "Out of stock"
+    };
+    this.lineChartData = [
+      this.TotalVisitedLine,
+      this.AvailableLine,
+      this.OOSLine
+    ];
+  }
+
+  SignOut() {
+    this.storage.clear();
+    this.nav.navigate("/", null);
+  }
+
   public lineChartColors: Color[] = [
     {
       // grey
@@ -195,4 +238,21 @@ export class DashboardComponent implements OnInit {
   ];
   public lineChartLegend = true;
   public lineChartType = "line";
+}
+
+class DashboardFilterModal {
+  SegmentName: string = "";
+  Region: string = "";
+  State: string = "";
+  City: string = "";
+  Channel: string = "";
+  SubChannel: string = "";
+  ChainName: string = "";
+  ParentSKU: string = "";
+  Gid: string = "";
+  BrandName: string = "";
+  MonthNum: number = 0;
+  isAvailable: boolean = false;
+  Total: number = 0;
+  CustomerCode: string = "";
 }
