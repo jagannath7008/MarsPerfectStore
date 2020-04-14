@@ -3,7 +3,7 @@ import { PageName, RouteDescription } from "src/providers/constants";
 import { iNavigation } from "src/providers/iNavigation";
 import {
   CommonService,
-  IsValidType
+  IsValidType,
 } from "src/providers/common-service/common.service";
 import { ApplicationStorage } from "src/providers/ApplicationStorage";
 import { ChartDataSets, ChartOptions } from "chart.js";
@@ -13,7 +13,7 @@ import { AjaxService } from "src/providers/ajax.service";
 @Component({
   selector: "app-dashboard",
   templateUrl: "./dashboard.component.html",
-  styleUrls: ["./dashboard.component.scss"]
+  styleUrls: ["./dashboard.component.scss"],
 })
 export class DashboardComponent implements OnInit {
   MasterData: any;
@@ -21,19 +21,24 @@ export class DashboardComponent implements OnInit {
   State: string;
   City: string;
   SO: string;
+  Subchannel: string;
+  Chain: string;
+  Catagory: string;
+  Brand: string;
+  ParentSku: string;
   TotalVisitedLine = {
     data: [],
-    label: "Total store visited"
+    label: "Total store visited",
   };
 
   AvailableLine = {
     data: [],
-    label: "Available"
+    label: "Available",
   };
 
   OOSLine = {
     data: [],
-    label: "Out of stock"
+    label: "Out of stock",
   };
   private Months = [
     { MonthNum: 1, Name: "JAN" },
@@ -47,7 +52,7 @@ export class DashboardComponent implements OnInit {
     { MonthNum: 9, Name: "SEP" },
     { MonthNum: 10, Name: "OCT" },
     { MonthNum: 11, Name: "NOV" },
-    { MonthNum: 12, Name: "DEC" }
+    { MonthNum: 12, Name: "DEC" },
   ];
   //  public lineChartData: ChartDataSets[] = [
   //   { data: [65, 59, 80, 81, 56, 55, 40], label: "Series A" },
@@ -62,7 +67,7 @@ export class DashboardComponent implements OnInit {
   public lineChartData: ChartDataSets[] = [
     this.TotalVisitedLine,
     this.AvailableLine,
-    this.OOSLine
+    this.OOSLine,
   ];
   public lineChartLabels: Label[] = [
     "JAN",
@@ -76,7 +81,7 @@ export class DashboardComponent implements OnInit {
     "SEP",
     "OCT",
     "NOV",
-    "DEC"
+    "DEC",
   ];
   public lineChartOptions: ChartOptions & { annotation: any } = {
     responsive: true,
@@ -86,19 +91,19 @@ export class DashboardComponent implements OnInit {
       yAxes: [
         {
           id: "y-axis-0",
-          position: "left"
+          position: "left",
         },
         {
           id: "y-axis-1",
           position: "right",
           gridLines: {
-            color: "rgba(255,0,0,0.3)"
+            color: "rgba(255,0,0,0.3)",
           },
           ticks: {
-            fontColor: "red"
-          }
-        }
-      ]
+            fontColor: "red",
+          },
+        },
+      ],
     },
     annotation: {
       annotations: [
@@ -112,18 +117,20 @@ export class DashboardComponent implements OnInit {
           label: {
             enabled: true,
             fontColor: "orange",
-            content: "LineAnno"
-          }
-        }
-      ]
-    }
+            content: "LineAnno",
+          },
+        },
+      ],
+    },
   };
+
   constructor(
     private nav: iNavigation,
     private commonService: CommonService,
     private storage: ApplicationStorage,
     private http: AjaxService
   ) {}
+
   Pages: Array<RouteDescription> = [];
 
   ngOnInit() {
@@ -131,14 +138,39 @@ export class DashboardComponent implements OnInit {
     this.State = "";
     this.City = "";
     this.SO = "";
+    this.Subchannel = "";
+    this.Chain = "";
+    this.Catagory = "";
+    this.Brand = "";
+    this.ParentSku = "";
     let LocalMasterData = this.storage.getMaster();
     if (IsValidType(LocalMasterData)) {
       this.MasterData = LocalMasterData;
     }
     let FilterModal: DashboardFilterModal = new DashboardFilterModal();
+    this.GetDashboardData(FilterModal);
+  }
+
+  GetFilteredDashboardData() {
+    let FilterModal: DashboardFilterModal = new DashboardFilterModal();
+    FilterModal.Region = this.Region;
+    FilterModal.State = this.State;
+    FilterModal.City = this.City;
+    FilterModal.BrandName = this.SO;
+    FilterModal.SubChannel = this.Subchannel;
+    FilterModal.ChainName = this.Chain;
+    FilterModal.SegmentName = this.Catagory;
+    FilterModal.BrandName = this.Brand;
+    FilterModal.ParentSKU = this.ParentSku;
+    this.GetDashboardData(FilterModal);
+  }
+
+  chartHovered(ele: any) {}
+
+  GetDashboardData(FilteredModal: DashboardFilterModal) {
     this.http
-      .post("Webportal/GetDashboardData", JSON.stringify(FilterModal))
-      .then(result => {
+      .post("Webportal/GetDashboardData", JSON.stringify(FilteredModal))
+      .then((result) => {
         if (IsValidType(result)) {
           if (result.content.data) {
             let Data = JSON.parse(result.content.data);
@@ -153,7 +185,7 @@ export class DashboardComponent implements OnInit {
           );
         }
       })
-      .catch(err => {
+      .catch((err) => {
         this.commonService.ShowToast("Server error. Please contact to admin.");
       });
   }
@@ -183,22 +215,22 @@ export class DashboardComponent implements OnInit {
     }
     this.TotalVisitedLine = {
       data: TotalVisitedLocalData,
-      label: "Total store visited"
+      label: "Total store visited",
     };
 
     this.AvailableLine = {
       data: Available,
-      label: "Available"
+      label: "Available",
     };
 
     this.OOSLine = {
       data: OutofStock,
-      label: "Out of stock"
+      label: "Out of stock",
     };
     this.lineChartData = [
       this.TotalVisitedLine,
       this.AvailableLine,
-      this.OOSLine
+      this.OOSLine,
     ];
   }
 
@@ -215,7 +247,7 @@ export class DashboardComponent implements OnInit {
       pointBackgroundColor: "rgba(148,159,177,1)",
       pointBorderColor: "#fff",
       pointHoverBackgroundColor: "#fff",
-      pointHoverBorderColor: "rgba(148,159,177,0.8)"
+      pointHoverBorderColor: "rgba(148,159,177,0.8)",
     },
     {
       // dark grey
@@ -224,7 +256,7 @@ export class DashboardComponent implements OnInit {
       pointBackgroundColor: "rgba(77,83,96,1)",
       pointBorderColor: "#fff",
       pointHoverBackgroundColor: "#fff",
-      pointHoverBorderColor: "rgba(77,83,96,1)"
+      pointHoverBorderColor: "rgba(77,83,96,1)",
     },
     {
       // red
@@ -233,8 +265,8 @@ export class DashboardComponent implements OnInit {
       pointBackgroundColor: "rgba(148,159,177,1)",
       pointBorderColor: "#fff",
       pointHoverBackgroundColor: "#fff",
-      pointHoverBorderColor: "rgba(148,159,177,0.8)"
-    }
+      pointHoverBorderColor: "rgba(148,159,177,0.8)",
+    },
   ];
   public lineChartLegend = true;
   public lineChartType = "line";

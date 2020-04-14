@@ -26,6 +26,7 @@ export const CustomerFootprint = "customerfootprint";
 export const WorkEffectiveness = "workeffectiveness";
 export const AvailabilityReport = "availabilityreport";
 export const PlanogramDetailReport = "planogramdetailreport";
+export const KYCReport = "kycreport";
 
 export const PageName: Array<RouteDescription> = [
   { title: Login, display: "Login" },
@@ -37,7 +38,7 @@ export const PageName: Array<RouteDescription> = [
   { title: Employee, display: "Employee" },
   { title: RetailerDetail, display: "Retailer Detail" },
   { title: CustomerReport, display: "Customer Report" },
-  { title: JourneyPlan, display: "Journey Plan" }
+  { title: JourneyPlan, display: "Journey Plan" },
 ];
 
 export const AddCustomer: Array<RouteDescription> = [
@@ -50,7 +51,7 @@ export const AddCustomer: Array<RouteDescription> = [
   { title: Employee, display: "Employee" },
   { title: RetailerDetail, display: "Retailer Detail" },
   { title: CustomerReport, display: "Customer Report" },
-  { title: JourneyPlan, display: "Journey Plan" }
+  { title: JourneyPlan, display: "Journey Plan" },
 ];
 
 export interface RouteDescription {

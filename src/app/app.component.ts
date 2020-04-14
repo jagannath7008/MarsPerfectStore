@@ -22,11 +22,12 @@ import {
   CustomerFootprint,
   PlanogramTransactionzone,
   PlanogramDetailReport,
-  AvailabilityReport
+  AvailabilityReport,
+  KYCReport,
 } from "src/providers/constants";
 import {
   CommonService,
-  IsValidType
+  IsValidType,
 } from "src/providers/common-service/common.service";
 import { AjaxService } from "src/providers/ajax.service";
 import { ApplicationStorage } from "src/providers/ApplicationStorage";
@@ -37,13 +38,13 @@ import {
   Router,
   NavigationEnd,
   NavigationError,
-  Event
+  Event,
 } from "@angular/router";
 
 @Component({
   selector: "app-root",
   templateUrl: "./app.component.html",
-  styleUrls: ["./app.component.scss"]
+  styleUrls: ["./app.component.scss"],
 })
 export class AppComponent {
   title = "Retail Connect";
@@ -119,6 +120,8 @@ export class AppComponent {
                 break;
               case "/" + PlanogramDetailReport:
                 break;
+              case "/" + KYCReport:
+                break;
               default:
                 this.commonService.EnableAuthBase();
                 this.IsLogin = true;
@@ -150,7 +153,7 @@ export class AppComponent {
       City: [],
       Merchandiser: [],
       Retailer: [],
-      Supervisor: []
+      Supervisor: [],
     };
     if (IsValidType(MasterData["LocationTable"])) {
       let Data = MasterData["LocationTable"];
@@ -158,46 +161,48 @@ export class AppComponent {
       while (index < Data.length) {
         if (Data[index]["TypeEnum"] === "COU") {
           if (
-            FinalData.Countries.filter(x => x.Gid === Data[index].Gid)
+            FinalData.Countries.filter((x) => x.Gid === Data[index].Gid)
               .length === 0
           ) {
             FinalData.Countries.push(Data[index]);
           }
         } else if (Data[index]["TypeEnum"] === "STA") {
           if (
-            FinalData.State.filter(x => x.Gid === Data[index].Gid).length === 0
+            FinalData.State.filter((x) => x.Gid === Data[index].Gid).length ===
+            0
           ) {
             FinalData.State.push(Data[index]);
           }
         } else if (Data[index]["TypeEnum"] === "REG") {
           if (
-            FinalData.Region.filter(x => x.Gid === Data[index].Gid).length === 0
+            FinalData.Region.filter((x) => x.Gid === Data[index].Gid).length ===
+            0
           ) {
             FinalData.Region.push(Data[index]);
           }
         } else if (Data[index]["TypeEnum"] === "CIT") {
           if (
-            FinalData.City.filter(x => x.Gid === Data[index].Gid).length === 0
+            FinalData.City.filter((x) => x.Gid === Data[index].Gid).length === 0
           ) {
             FinalData.City.push(Data[index]);
           }
         } else if (Data[index]["TypeEnum"] === "Merchandiser") {
           if (
-            FinalData.Merchandiser.filter(x => x.Gid === Data[index].Gid)
+            FinalData.Merchandiser.filter((x) => x.Gid === Data[index].Gid)
               .length === 0
           ) {
             FinalData.Merchandiser.push(Data[index]);
           }
         } else if (Data[index]["TypeEnum"] === "Retailer") {
           if (
-            FinalData.Retailer.filter(x => x.Gid === Data[index].Gid).length ===
-            0
+            FinalData.Retailer.filter((x) => x.Gid === Data[index].Gid)
+              .length === 0
           ) {
             FinalData.Retailer.push(Data[index]);
           }
         } else if (Data[index]["TypeEnum"] === "Supervisor") {
           if (
-            FinalData.Supervisor.filter(x => x.Gid === Data[index].Gid)
+            FinalData.Supervisor.filter((x) => x.Gid === Data[index].Gid)
               .length === 0
           ) {
             FinalData.Supervisor.push(Data[index]);
@@ -220,15 +225,15 @@ export class AppComponent {
             app: "MerchandiserApp",
             action: "WebLogin",
             requestId: "0",
-            deviceId: "web"
+            deviceId: "web",
           },
           content: {
             deviceId: "web",
             deviceType: "web",
             deviceOS: "Windows",
             deviceVersion: "web",
-            deviceInfo: "web"
-          }
+            deviceInfo: "web",
+          },
         };
         input.content.username = Credential.Username;
         input.content.password = Credential.Password;
@@ -236,7 +241,7 @@ export class AppComponent {
         this.http
           .auth("AuthStandard/WebLogin", input)
           .then(
-            response => {
+            (response) => {
               if (this.commonService.IsValidResponse(response)) {
                 let StringifiedMasterData = response.content.data;
                 if (IsValidType(StringifiedMasterData)) {
@@ -255,13 +260,13 @@ export class AppComponent {
                 );
               }
             },
-            error => {
+            (error) => {
               this.commonService.ShowToast(
                 "Invalid username or password. Please try again later."
               );
             }
           )
-          .catch(err => {
+          .catch((err) => {
             this.commonService.ShowToast("Login error. Please contact admin.");
           });
       }

@@ -1,39 +1,28 @@
 import { Component, OnInit, Input, ViewChild } from "@angular/core";
-import { Observable } from "rxjs/internal/Observable";
 import * as _ from "lodash";
-import { DatePipe } from "@angular/common";
-import { IGrid } from "src/providers/Generic/Interface/IGrid";
 import { FormBuilder } from "@angular/forms";
-import { FormGroup } from "@angular/forms";
-import { FormControl } from "@angular/forms";
 import {
   CommonService,
   IsValidType,
   ExportToExcel,
 } from "src/providers/common-service/common.service";
 import * as $ from "jquery";
-import { JourneyPlan, Employee, PostParam } from "src/providers/constants";
+import { PostParam } from "src/providers/constants";
 import { iNavigation } from "src/providers/iNavigation";
 import { AjaxService } from "src/providers/ajax.service";
-import { BusinessunitModel } from "src/app/businessunit/businessunit.component";
 import { ApplicationStorage } from "src/providers/ApplicationStorage";
 
 @Component({
-  selector: "app-availabilityreport",
-  templateUrl: "./availabilityreport.component.html",
-  styleUrls: ["./availabilityreport.component.sass"],
+  selector: "app-kycreport",
+  templateUrl: "./kycreport.component.html",
+  styleUrls: ["./kycreport.component.scss"],
 })
-export class AvailabilityreportComponent implements OnInit {
-  selectedClass: string = "Assigned";
-  public TodayJourneyPlanViewModel: Array<AvailabilityReportCategoryViewModel>;
-  public ChildModel: Array<AvailabilityReportBrandViewModel>;
-  public GCModel: Array<AvailabilityReportSKUViewModel>;
-
+export class KycreportComponent implements OnInit {
+  KYCRepor: Array<KYCReporModal>;
   TableResultSet: any[];
   IsEmptyRow: boolean = true;
   HeaderName: string = "Page Name";
   EnableFilter: boolean = false;
-  TotalHeaders: number = 5;
   searchQuery: string = " 1=1 ";
   sortBy: string = "";
   pageIndex: number = 1;
@@ -59,7 +48,7 @@ export class AvailabilityreportComponent implements OnInit {
     private local: ApplicationStorage
   ) {
     let PageName = this.commonService.GetCurrentPageName();
-    this.HeaderName = "Availability Report";
+    this.HeaderName = "KYC Report";
     this.ResetAdvanceFilter();
   }
   ActiveRow: boolean[] = [];
@@ -174,7 +163,7 @@ export class AvailabilityreportComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.LoadData();
+    //this.LoadData();
     let LocalMasterData = this.local.getMaster();
     if (IsValidType(LocalMasterData)) {
       this.MasterData = LocalMasterData;
@@ -193,29 +182,6 @@ export class AvailabilityreportComponent implements OnInit {
         this.TableResultSet = [];
         if (this.commonService.IsValidResponse(response)) {
           let Data = response.content.data;
-          if (Data != null && Data != "") {
-            let Data = JSON.parse(response.content.data);
-            // console.log(Data);
-            // console.log(Data[0]["Record"]);
-            if (
-              IsValidType(Data[0]["Record"]) &&
-              IsValidType(Data[0]["Count"])
-            ) {
-              let Record = Data[0]["Record"];
-              this.TotalCount = Data[0]["Count"][0].TotalCount;
-              this.TotalPageCount = this.TotalCount / this.pageSize;
-              if (this.TotalCount % this.pageSize > 0) {
-                this.TotalPageCount = parseInt(
-                  (this.TotalPageCount + 1).toString()
-                );
-              }
-              this.IsEmptyRow = false;
-              this.TodayJourneyPlanViewModel = Record;
-            }
-            this.commonService.ShowToast("Data retrieve successfully.");
-          } else {
-            this.commonService.ShowToast("Unable to get data.");
-          }
         }
       });
   }
@@ -247,14 +213,6 @@ export class AvailabilityreportComponent implements OnInit {
     this.TotalPageCount = 0;
     this.LoadData();
   }
-  toggleIcon(event: Event) {
-    var imagevalue = (event.target as Element).getAttribute("src");
-    if (imagevalue == "assets/images/view.png") {
-      (event.target as Element).setAttribute("src", "assets/images/view1.png");
-    } else if (imagevalue == "assets/images/view1.png") {
-      (event.target as Element).setAttribute("src", "assets/images/view.png");
-    }
-  }
 
   ExportMe() {
     if (!ExportToExcel("avability-table", "avability")) {
@@ -263,32 +221,6 @@ export class AvailabilityreportComponent implements OnInit {
       );
     }
   }
-}
-
-export class AvailabilityReportCategoryViewModel {
-  CategoryCode: string;
-  TotalNoOfStores: string;
-  AvailabileIn: string;
-  AvailabilityPercentage: string;
-  lstAvailabilityReportBrandViewModel: Array<AvailabilityReportBrandViewModel>;
-}
-
-export class AvailabilityReportBrandViewModel {
-  CategoryCode: string;
-  BrandCode: string;
-  TotalNoOfStores: string;
-  AvailabileIn: string;
-  AvailabilityPercentage: string;
-  lstAvailabilityReportSKUViewModel: Array<AvailabilityReportSKUViewModel>;
-}
-
-export class AvailabilityReportSKUViewModel {
-  CategoryCode: string;
-  BrandCode: string;
-  ItemCode: string;
-  TotalNoOfStores: string;
-  AvailabileIn: string;
-  AvailabilityPercentage: string;
 }
 
 interface AdvanceFilter {
@@ -303,4 +235,14 @@ interface AdvanceFilter {
   Beat: string;
   Supervisor: string;
   Marchandisor: string;
+}
+
+class KYCReporModal {
+  Region: string = null;
+  City: string = null;
+  SOName: string = null;
+  MerchandiserName: string = null;
+  TotalStoreCount: number = null;
+  KYCCompleted: number = null;
+  CompletedPercent: number;
 }

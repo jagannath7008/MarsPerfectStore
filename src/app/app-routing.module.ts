@@ -23,7 +23,8 @@ import {
   WorkEffectiveness,
   PlanogramTransactionzone,
   AvailabilityReport,
-  PlanogramDetailReport
+  PlanogramDetailReport,
+  KYCReport,
 } from "src/providers/constants";
 import { LoginComponent } from "./login/login.component";
 import { DashboardComponent } from "./dashboard/dashboard.component";
@@ -49,6 +50,7 @@ import { CustomerfootprintComponent } from "./customerfootprint/customerfootprin
 import { PlanogramtransactionzoneComponent } from "./planogramtransactionzone/planogramtransactionzone.component";
 import { AvailabilityreportComponent } from "./availabilityreport/availabilityreport.component";
 import { PlanogramDetailReportComponent } from "./PlanogramDetailReport/planogram-detail-report/planogram-detail-report.component";
+import { KycreportComponent } from "./kycreport/kycreport.component";
 
 const routes: Routes = [
   { path: "", component: LoginComponent },
@@ -66,29 +68,30 @@ const routes: Routes = [
   { path: BeatPlan, component: ManageBeatPlanComponent },
   {
     path: ManageSupervisorCustomer,
-    component: ManageSupervisorCustomerComponent
+    component: ManageSupervisorCustomerComponent,
   },
   { path: SupervisorCustomer, component: SupervisorCustomerComponent },
   { path: Sku, component: SkuComponent },
   { path: Planogrammainaisle, component: PlanogrammainaisleComponent },
   {
     path: PlanogramSecondaryVisibility,
-    component: PlanogramsecondaryvisibilityComponent
+    component: PlanogramsecondaryvisibilityComponent,
   },
   { path: SKUPortfolio, component: SkuporfolioComponent },
   { path: ManageSKUPortfolio, component: ManageskuportfolioComponent },
   { path: CustomerFootprint, component: CustomerfootprintComponent },
   { path: WorkEffectiveness, component: WorkfffectivenessComponent },
   { path: AvailabilityReport, component: AvailabilityreportComponent },
+  { path: KYCReport, component: KycreportComponent },
   { path: PlanogramDetailReport, component: PlanogramDetailReportComponent },
   {
     path: PlanogramTransactionzone,
-    component: PlanogramtransactionzoneComponent
-  }
+    component: PlanogramtransactionzoneComponent,
+  },
 ];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes, { useHash: true })],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
 export class AppRoutingModule {}

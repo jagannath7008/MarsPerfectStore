@@ -6,66 +6,83 @@
 
         <div class="col-md-12 mt-3 row mb-3">
           <div class="col-md-3">
-            <div class="col-12 row">
-              <div class="col-3 p-0 title">
-                Region
-              </div>
-              <div class="col-9">
-                <select name="region" class="form-control" [(ngModel)]="Region">
-                  <option value="">All Region</option>
-                  <option *ngFor="let c of MasterData.Region" [attr.value]="c.Name">{{
-                    c.Name
-                  }}</option>
-                </select>
-              </div>
+            <div class="form-group">
+              <label for="Region">Region</label>
+              <select name="region" class="form-control" [(ngModel)]="Region">
+                <option value="">All Region</option>
+                <option *ngFor="let c of MasterData.Region" [attr.value]="c.Name">{{
+                  c.Name
+                }}</option>
+              </select>
             </div>
           </div>
           <div class="col-md-3">
-            <div class="col-12 row">
-              <div class="col-3 p-0 title">
-                State
-              </div>
-              <div class="col-9 p-0">
-                <select name="state" class="form-control" [(ngModel)]="State">
-                  <option value="">All State</option>
-                  <option *ngFor="let c of MasterData.State" [attr.value]="c.Name">{{
-                    c.Name
-                  }}</option>
-                </select>
-              </div>
+            <div class="form-group">
+              <label for="State">State</label>
+              <select name="state" class="form-control" [(ngModel)]="State">
+                <option value="">All State</option>
+                <option *ngFor="let c of MasterData.State" [attr.value]="c.Name">{{
+                  c.Name
+                }}</option>
+              </select>
             </div>
           </div>
           <div class="col-md-3">
-            <div class="col-12 row">
-              <div class="col-3 p-0 title">
-                City
-              </div>
-              <div class="col-8 p-0">
-                <select name="city" class="form-control" [(ngModel)]="City">
-                  <option value="">All City</option>
-                  <option *ngFor="let c of MasterData.City" [attr.value]="c.Name">{{
-                    c.Name
-                  }}</option>
-                </select>
-              </div>
+            <div class="form-group">
+              <label for="exampleInputEmail1">City</label>
+              <select name="city" class="form-control" [(ngModel)]="City">
+                <option value="">All City</option>
+                <option *ngFor="let c of MasterData.City" [attr.value]="c.Name">{{
+                  c.Name
+                }}</option>
+              </select>
             </div>
           </div>
           <div class="col-md-3">
-            <div class="col-12 row">
-              <div class="col-3 p-0 title">
-                SO
-              </div>
-              <div class="col-9 p-0">
-                <select name="so" class="form-control" [(ngModel)]="SO">
-                  <option value="">All</option>
-                  <option *ngFor="let item of MasterData.Supervisor" [value]="item.Gid">{{ item.Name }}</option>
-                </select>
-              </div>
+            <div class="form-group">
+              <label for="exampleInputEmail1">SO</label>
+              <select name="so" class="form-control" [(ngModel)]="SO">
+                <option value="">All</option>
+                <option *ngFor="let item of MasterData.Supervisor" [value]="item.Gid">{{ item.Name }}</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-12 mt-3 row mb-3">
+          <div class="col-md-3">
+            <div class="form-group">
+              <label for="SubChannel">Sub-Channel</label>
+              <input [(ngModel)]="Subchannel" class="form-control" placeholder="Sub-Channel">
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="form-group">
+              <label for="Chain">Chain</label>
+              <input [(ngModel)]="Chain" class="form-control" placeholder="Chain">
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="form-group">
+              <label for="Catagory">Catagory</label>
+              <input [(ngModel)]="Catagory" class="form-control" placeholder="Catagory">
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="form-group">
+              <label for="Brand">Brand</label>
+              <input [(ngModel)]="Brand" class="form-control" placeholder="Brand">
+            </div>
+          </div>
+
+          <div class="col-md-3">
+            <div class="form-group">
+              <label for="Brand">Parent SKU</label>
+              <input [(ngModel)]="ParentSku" class="form-control" placeholder="Parent SKU">
             </div>
           </div>
         </div>
         <div class="col-md-12 d-flex mb-2 action">
-          <button class="btn btn-primary">
+          <button class="btn btn-primary" (click)="GetFilteredDashboardData()">
             <i class="fa fa-filter"></i>
             Filter</button>
           <button class="btn btn-outline-info mr-2">
@@ -89,30 +106,19 @@
             <ng-template ngbTabTitle>Perfect Store</ng-template>
             <ng-template ngbTabContent>
               <div class="chart-wrapper mt-4">
-                <canvas baseChart width="400" height="140" [datasets]="lineChartData" [labels]="lineChartLabels"
-                  [options]="lineChartOptions" [colors]="lineChartColors" [legend]="lineChartLegend"
-                  [chartType]="lineChartType" [plugins]="lineChartPlugins" (chartHover)="chartHovered($event)"
-                  (chartClick)="chartClicked($event)">
-                </canvas>
+                <div class="soon-dv">
+                  PERFECT STORE. COMMING SOON!
+                </div>
               </div>
             </ng-template>
           </ngb-tab>
           <ngb-tab title="Checkout penetration">
             <ng-template ngbTabContent>
-              <p>
-                Sed commodo, leo at suscipit dictum, quam est porttitor sapien,
-                eget sodales nibh elit id diam. Nulla facilisi. Donec egestas
-                ligula vitae odio interdum aliquet. Duis lectus turpis, luctus
-                eget tincidunt eu, congue et odio. Duis pharetra et nisl at
-                faucibus. Quisque luctus pulvinar arcu, et molestie lectus
-                ultrices et. Sed diam urna, egestas ut ipsum vel, volutpat
-                volutpat neque. Praesent fringilla tortor arcu. Vivamus faucibus
-                nisl enim, nec tristique ipsum euismod facilisis. Morbi ut
-                bibendum est, eu tincidunt odio. Orci varius natoque penatibus
-                et magnis dis parturient montes, nascetur ridiculus mus. Mauris
-                aliquet odio ac lorem aliquet ultricies in eget neque. Phasellus
-                nec tortor vel tellus pulvinar feugiat.
-              </p>
+              <div class="chart-wrapper mt-4">
+                <div class="soon-dv">
+                  CHECKOUT PENETRATION. COMMING SOON!
+                </div>
+              </div>
             </ng-template>
           </ngb-tab>
         </ngb-tabset>
