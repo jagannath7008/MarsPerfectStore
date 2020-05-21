@@ -32,20 +32,27 @@
     color: #73879c;
     background-color: #f7f7f7;
     font-family: "MarsCentra-Book", Roboto, Arial, "Helvetica Neue", sans-serif !important;
-    font-size:  14px !important; //0.9rem
+    font-size: 14px !important; //0.9rem
     font-weight: 400 !important;
     line-height: 1 !important;
   }
 
   @font-face {
     font-family: "MarsCentra-Book";
-    src: url("assets/fonts/MarsCentra-Book.eot"); /* IE9 Compat Modes */
-    src: url("assets/fonts/MarsCentra-Book.eot?#iefix") format("embedded-opentype"), /* IE6-IE8 */
-      url("assets/fonts/MarsCentra-Book.otf") format("opentype"), /* Open Type Font */
-      url("assets/fonts/MarsCentra-Book.svg") format("svg"), /* Legacy iOS */
-      url("assets/fonts/MarsCentra-Book.ttf") format("truetype"), /* Safari, Android, iOS */
-      url("assets/fonts/MarsCentra-Book.woff") format("woff"), /* Modern Browsers */
-      url("assets/fonts/MarsCentra-Book.woff2") format("woff2"); /* Modern Browsers */
+    src: url("assets/fonts/MarsCentra-Book.eot");
+    /* IE9 Compat Modes */
+    src: url("assets/fonts/MarsCentra-Book.eot?#iefix") format("embedded-opentype"),
+      /* IE6-IE8 */
+      url("assets/fonts/MarsCentra-Book.otf") format("opentype"),
+      /* Open Type Font */
+      url("assets/fonts/MarsCentra-Book.svg") format("svg"),
+      /* Legacy iOS */
+      url("assets/fonts/MarsCentra-Book.ttf") format("truetype"),
+      /* Safari, Android, iOS */
+      url("assets/fonts/MarsCentra-Book.woff") format("woff"),
+      /* Modern Browsers */
+      url("assets/fonts/MarsCentra-Book.woff2") format("woff2");
+    /* Modern Browsers */
     font-weight: normal;
     font-style: normal;
   }
@@ -56,10 +63,17 @@
   area {
     line-height: 1 !important;
   }
- 
 
-.table thead th{background-color: #0000a0; color: #fff;}
-.table-hover tbody tr:hover {color: #ffffff !important;background-color: #00d6b8 !important;}
+
+  .table thead th {
+    background-color: #0000a0;
+    color: #fff;
+  }
+
+  .table-hover tbody tr:hover {
+    color: #ffffff !important;
+    background-color: #00d6b8 !important;
+  }
 
   .x_panel {
     position: relative;
@@ -450,7 +464,7 @@
     color: #444 !important;
   }
 
-  
+
 
   .d-inherit {
     display: inherit;
@@ -662,7 +676,7 @@
       background-color: white;
       border-radius: 4px;
       transform: translate(-50%, -50%);
-      animation: bubbleup-popup .2s ease-in-out;
+      //animation: bubbleup-popup .2s ease-in-out;
     }
 
     &__header {
@@ -689,17 +703,17 @@
     }
   }
 
-  @keyframes bubbleup-popup {
-    0% {
-      opacity: 0;
-      width: 70%;
-    }
+  // @keyframes bubbleup-popup {
+  //   0% {
+  //     opacity: 0;
+  //     width: 70%;
+  //   }
 
-    100% {
-      opacity: 1;
-      width: 80%;
-    }
-  }
+  //   100% {
+  //     opacity: 1;
+  //     width: 80%;
+  //   }
+  // }
 
   .round {
     border-radius: 50%;
@@ -728,29 +742,40 @@
     color: #fff;
     background-color: #00d6b8 !important;
     border-color: #00d6b8 !important;
-}
+  }
 
-.btn-success:hover {
-  color: #fff;
-  background-color: #01af97 !important;
-  border-color: #01af97 !important;
-}
+  .btn-success:hover {
+    color: #fff;
+    background-color: #01af97 !important;
+    border-color: #01af97 !important;
+  }
 
-.table td, .table th{
-  padding: 5px !important;
-}
+  .table td,
+  .table th {
+    padding: 5px !important;
+  }
 
-.dashboard{
-  float: left;
-  width: 100%;
-  min-height: 350px;
-}
+  .dashboard {
+    float: left;
+    width: 100%;
+    min-height: 350px;
+  }
 
-a.export-btn:hover {
-  font-size: 24px;
-  cursor: pointer;
-}
+  a.export-btn:hover {
+    font-size: 24px;
+    cursor: pointer;
+  }
 
-a.export-btn {
-  font-size: 20px;
-}
+  a.export-btn {
+    font-size: 20px;
+  }
+
+  .action {
+    color: #444;
+    font-size: 14px;
+    cursor: pointer;
+  }
+
+  .action:hover {
+    font-size: 16px;
+  }

@@ -43,6 +43,12 @@ import { PlanogramDetailReportComponent } from "./PlanogramDetailReport/planogra
 import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
 import { ChartsModule } from "ng2-charts";
 import { KycreportComponent } from './kycreport/kycreport.component';
+import { PromotionheaderComponent } from './promotionheader/promotionheader.component';
+import { SpecialvisibilityheaderComponent } from './specialvisibilityheader/specialvisibilityheader.component';
+import { IncentivetargetheaderComponent } from './incentivetargetheader/incentivetargetheader.component';
+import { PromotiondetailComponent } from './promotiondetail/promotiondetail.component';
+import { SpecialvisibilitydetailComponent } from './specialvisibilitydetail/specialvisibilitydetail.component';
+import { IncentivetargetdetailComponent } from './incentivetargetdetail/incentivetargetdetail.component';
 
 @NgModule({
   declarations: [
@@ -74,7 +80,13 @@ import { KycreportComponent } from './kycreport/kycreport.component';
     AvailabilityreportComponent,
     PlanogramDetailReportComponent,
     FooterComponent,
-    KycreportComponent
+    KycreportComponent,
+    PromotionheaderComponent,
+    SpecialvisibilityheaderComponent,
+    IncentivetargetheaderComponent,
+    PromotiondetailComponent,
+    SpecialvisibilitydetailComponent,
+    IncentivetargetdetailComponent
   ],
   imports: [
     NgMultiSelectDropDownModule.forRoot(),

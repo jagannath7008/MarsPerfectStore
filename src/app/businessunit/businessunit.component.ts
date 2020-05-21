@@ -6,13 +6,13 @@ import { FormControl } from "@angular/forms";
 import {
   CommonService,
   IsValidType,
-  ExportToExcel
+  ExportToExcel,
 } from "../../providers/common-service/common.service";
 import * as $ from "jquery";
 import {
   JourneyPlan,
   Businessunit,
-  PostParam
+  PostParam,
 } from "../../providers/constants";
 import { iNavigation } from "../../providers/iNavigation";
 import { AjaxService } from "src/providers/ajax.service";
@@ -20,7 +20,7 @@ import { AjaxService } from "src/providers/ajax.service";
 @Component({
   selector: "app-businessunit",
   templateUrl: "./businessunit.component.html",
-  styleUrls: ["./businessunit.component.scss"]
+  styleUrls: ["./businessunit.component.scss"],
 })
 export class BusinessunitComponent implements OnInit {
   entity: any = new BusinessunitModel();
@@ -57,7 +57,7 @@ export class BusinessunitComponent implements OnInit {
       Address: new FormControl(""),
       Beat: new FormControl(""),
       Supervisor: new FormControl(""),
-      Marchandisor: new FormControl("")
+      Marchandisor: new FormControl(""),
     });
   }
 
@@ -105,7 +105,7 @@ export class BusinessunitComponent implements OnInit {
     MSData.content.pageIndex = this.pageIndex;
     MSData.content.pageSize = this.pageSize;
 
-    this.http.post("Webportal/FetchBusinessunits", MSData).then(response => {
+    this.http.post("Webportal/FetchBusinessunits", MSData).then((response) => {
       this.TableResultSet = [];
       if (this.commonService.IsValidResponse(response)) {
         let Data = response.content.data;
@@ -138,7 +138,7 @@ export class BusinessunitComponent implements OnInit {
     this.BindingHeader = [
       { column: "Code", displayheader: "Code" },
       { column: "Name", displayheader: "Office Name", width: 10 },
-      { column: "Gid", type: "hidden" }
+      { column: "Gid", type: "hidden" },
     ];
     this.LoadData();
 
@@ -150,7 +150,10 @@ export class BusinessunitComponent implements OnInit {
   }
 
   ResetFilter() {
-    this.searchQuery = "";
+    this.searchQuery = "1=1";
+    this.sortBy = "'";
+    this.pageIndex = 1;
+    this.pageSize = 15;
     this.LoadData();
   }
 
@@ -171,7 +174,7 @@ export class BusinessunitComponent implements OnInit {
     console.log(this.entity);
     this.http
       .post("Webportal/SaveBusinessunit", JSON.stringify(this.entity))
-      .then(response => {
+      .then((response) => {
         if (this.commonService.IsValidResponse(response)) {
           this.commonService.ShowToast("Office details saved successfully.");
           this.Close();
@@ -195,7 +198,7 @@ export class BusinessunitComponent implements OnInit {
     this.entity = editEntity;
     this.http
       .post("Webportal/RemoveBusinessunit", JSON.stringify(this.entity))
-      .then(response => {
+      .then((response) => {
         if (this.commonService.IsValidResponse(response)) {
           this.commonService.ShowToast("Office removed successfully.");
           this.Close();
@@ -219,8 +222,10 @@ export class BusinessunitComponent implements OnInit {
   DeleteRecord() {}
 
   ExportMe() {
-    if(!ExportToExcel('businessunit-table', 'businessunit')){
-      this.commonService.ShowToast("Incorrect value passed to export to excel.");
+    if (!ExportToExcel("businessunit-table", "businessunit")) {
+      this.commonService.ShowToast(
+        "Incorrect value passed to export to excel."
+      );
     }
   }
 }

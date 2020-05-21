@@ -42,10 +42,10 @@
               <span>Supervisor:</span>
             </div>
             <div class="col-md-9">
-              <select class="form-control" formControlName="JobGid">
+              <select class="form-control" formControlName="SupervisorJobGid">
                 <option value="">Select Supervisor</option>
-                <<ng-container *ngFor="let item of BeatSupervisorData">
-                  <option [attr.value]="item.JobGid">{{item.JobName}} - {{item.Name}}</option>
+                <<ng-container *ngFor="let item of MasterData.Supervisor">
+                  <option [attr.value]="item.Gid">{{item.Name}}</option>
                   </ng-container>
               </select>
             </div>
@@ -55,10 +55,10 @@
               <span>Merchandiser:</span>
             </div>
             <div class="col-md-9">
-              <select class="form-control" formControlName="SupervisorJobGid">
+              <select class="form-control" formControlName="JobGid">
                 <option value="">Select Merchandiser</option>
-                <ng-container *ngFor="let item of BeatMerchandiserData">
-                  <option [attr.value]="item.JobGid">{{item.Role}} - {{item.JobName}} {{item.Name}}</option>
+                <ng-container *ngFor="let item of MasterData.Merchandiser">
+                  <option [attr.value]="item.Gid">{{item.Name}}</option>
                 </ng-container>
               </select>
             </div>

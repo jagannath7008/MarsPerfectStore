@@ -25,6 +25,12 @@ import {
   AvailabilityReport,
   PlanogramDetailReport,
   KYCReport,
+  PromotionHeader,
+  PromotionDetail,
+  SpecialVisibilityHeader,
+  SpecialVisibilityDetail,
+  IncentiveTargetHeader,
+  IncentiveTargetDetail,
 } from "src/providers/constants";
 import { LoginComponent } from "./login/login.component";
 import { DashboardComponent } from "./dashboard/dashboard.component";
@@ -51,6 +57,12 @@ import { PlanogramtransactionzoneComponent } from "./planogramtransactionzone/pl
 import { AvailabilityreportComponent } from "./availabilityreport/availabilityreport.component";
 import { PlanogramDetailReportComponent } from "./PlanogramDetailReport/planogram-detail-report/planogram-detail-report.component";
 import { KycreportComponent } from "./kycreport/kycreport.component";
+import { PromotionheaderComponent } from "./promotionheader/promotionheader.component";
+import { PromotiondetailComponent } from "./promotiondetail/promotiondetail.component";
+import { SpecialvisibilityheaderComponent } from "./specialvisibilityheader/specialvisibilityheader.component";
+import { SpecialvisibilitydetailComponent } from "./specialvisibilitydetail/specialvisibilitydetail.component";
+import { IncentivetargetheaderComponent } from "./incentivetargetheader/incentivetargetheader.component";
+import { IncentivetargetdetailComponent } from "./incentivetargetdetail/incentivetargetdetail.component";
 
 const routes: Routes = [
   { path: "", component: LoginComponent },
@@ -88,6 +100,18 @@ const routes: Routes = [
     path: PlanogramTransactionzone,
     component: PlanogramtransactionzoneComponent,
   },
+  { path: PromotionHeader, component: PromotionheaderComponent },
+  { path: PromotionDetail, component: PromotiondetailComponent },
+  {
+    path: SpecialVisibilityHeader,
+    component: SpecialvisibilityheaderComponent,
+  },
+  {
+    path: SpecialVisibilityDetail,
+    component: SpecialvisibilitydetailComponent,
+  },
+  { path: IncentiveTargetHeader, component: IncentivetargetheaderComponent },
+  { path: IncentiveTargetDetail, component: IncentivetargetdetailComponent },
 ];
 
 @NgModule({

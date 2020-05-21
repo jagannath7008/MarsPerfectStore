@@ -24,6 +24,12 @@ import {
   PlanogramDetailReport,
   AvailabilityReport,
   KYCReport,
+  PromotionHeader,
+  PromotionDetail,
+  SpecialVisibilityDetail,
+  SpecialVisibilityHeader,
+  IncentiveTargetDetail,
+  IncentiveTargetHeader,
 } from "src/providers/constants";
 import {
   CommonService,
@@ -121,6 +127,18 @@ export class AppComponent {
               case "/" + PlanogramDetailReport:
                 break;
               case "/" + KYCReport:
+                break;
+              case "/" + PromotionHeader:
+                break;
+              case "/" + PromotionDetail:
+                break;
+              case "/" + SpecialVisibilityHeader:
+                break;
+              case "/" + SpecialVisibilityDetail:
+                break;
+              case "/" + IncentiveTargetHeader:
+                break;
+              case "/" + IncentiveTargetDetail:
                 break;
               default:
                 this.commonService.EnableAuthBase();

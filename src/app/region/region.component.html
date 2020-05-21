@@ -4,7 +4,7 @@
     <h4>{{HeaderName | uppercase}}</h4>
   </div>
   <div *ngIf="EnableFilter" class="ipopup">
-    <div class="ipopup__content">
+    <div class="ipopup__content w-50">
       <div class="ipopup__header">
         <header>Add/Edit Region</header>
       </div>
@@ -13,29 +13,30 @@
           <tbody>
             <tr>
               <td>
-                <div class="d-md-flex pt-2">
-                  <!-- <div class="col-md-3">
-                    <label for="Code">Code</label>
-                    <input class="plain-input form-control" name="Code" required [(ngModel)]="entity.Code"
-                      placeholder="Code">
-                  </div> -->
-                  <div class="col-md-3">
+                <div class="d-md-flex pt-2 mt-4 ml-4">
+                  <div class="col-md-10">
                     <label for="Name">Name</label>
                     <input class="plain-input form-control" required [(ngModel)]="entity.Name" name="Name"
                       placeholder="Name">
                   </div>
-                  <div class="col-md-3">
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <div class="d-md-flex pt-2 mb-4 ml-4">
+                  <div class="col-md-10">
                     <label for="ParentName">Country</label>
-                    <select class="plain-input form-control" [value]="entity.ParentGid" required
-                      (change)="entity.ParentGid = $event.target.value">
-                      <option value="">--Select--</option>
-                      <option *ngFor="let obj of parentCollection" value="{{obj.Gid}}">
-                        {{obj.Name}}
-                      </option>
+                    <select name="Region" class="form-control" [(ngModel)]="entity.Region">
+                      <option value="">Select Region</option>
+                      <option *ngFor="let c of MasterData.Region" [attr.value]="c.Name">{{c.Name}}</option>
                     </select>
                   </div>
                 </div>
               </td>
+            </tr>
+            <tr>
+              <td></td>
             </tr>
           </tbody>
           <tfoot class="border-top">

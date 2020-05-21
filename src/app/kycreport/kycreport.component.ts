@@ -19,6 +19,7 @@ import { ApplicationStorage } from "src/providers/ApplicationStorage";
 })
 export class KycreportComponent implements OnInit {
   KYCRepor: Array<KYCReporModal>;
+  IsReportPresent: boolean;
   TableResultSet: any[];
   IsEmptyRow: boolean = true;
   HeaderName: string = "Page Name";
@@ -163,7 +164,8 @@ export class KycreportComponent implements OnInit {
   }
 
   ngOnInit() {
-    //this.LoadData();
+    this.IsReportPresent = true;
+    this.LoadData();
     let LocalMasterData = this.local.getMaster();
     if (IsValidType(LocalMasterData)) {
       this.MasterData = LocalMasterData;
@@ -177,11 +179,22 @@ export class KycreportComponent implements OnInit {
     MSData.content.pageSize = this.pageSize;
 
     this.http
-      .post("Webportal/FetchAvailabilityReport", MSData)
+      .post("Webportal/FetchKYCReport", {
+        Region: "",
+        City: "",
+        SOName: "",
+        MerchandiserName: "",
+      })
       .then((response) => {
         this.TableResultSet = [];
         if (this.commonService.IsValidResponse(response)) {
           let Data = response.content.data;
+          if (Data !== null && Data !== "") {
+            this.IsReportPresent = false;
+            this.KYCRepor = JSON.parse(Data);
+          } else {
+            this.commonService.ShowToast("Returned empty result.");
+          }
         }
       });
   }
@@ -238,11 +251,11 @@ interface AdvanceFilter {
 }
 
 class KYCReporModal {
-  Region: string = null;
   City: string = null;
-  SOName: string = null;
-  MerchandiserName: string = null;
-  TotalStoreCount: number = null;
-  KYCCompleted: number = null;
-  CompletedPercent: number;
+  Merchandiser: string = null;
+  Region: string = null;
+  TotalKYC: number = 0;
+  Supervisor: string = null;
+  TotalKYCCompleted: number = 0;
+  CompletionPercentage: number = 0;
 }

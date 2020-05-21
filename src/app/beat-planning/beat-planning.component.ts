@@ -6,18 +6,19 @@ import {
   CommonService,
   IsValidType,
   ExportToExcel,
-  IsValidResponse
+  IsValidResponse,
 } from "src/providers/common-service/common.service";
 import { FormBuilder } from "@angular/forms";
 import { FormGroup } from "@angular/forms";
 import { FormControl } from "@angular/forms";
 import { iNavigation } from "src/providers/iNavigation";
 import * as $ from "jquery";
+import { ApplicationStorage } from "src/providers/ApplicationStorage";
 
 @Component({
   selector: "app-beat-planning",
   templateUrl: "./beat-planning.component.html",
-  styleUrls: ["./beat-planning.component.scss"]
+  styleUrls: ["./beat-planning.component.scss"],
 })
 export class BeatPlanningComponent implements OnInit {
   HeaderName: string = "";
@@ -34,12 +35,14 @@ export class BeatPlanningComponent implements OnInit {
   pageSize: number = 15;
   TotalCount: number = 0;
   TotalPageCount: number = 0;
+  MasterData: any;
   AdvanceEnableFilter: boolean = false;
   constructor(
     private http: AjaxService,
     private commonService: CommonService,
     private fb: FormBuilder,
-    private nav: iNavigation
+    private nav: iNavigation,
+    private local: ApplicationStorage
   ) {
     this.HeaderName = "Beat Planning";
     this.InitGridHeader();
@@ -48,7 +51,7 @@ export class BeatPlanningComponent implements OnInit {
       Code: [""],
       Description: [""],
       SupervisorJobGid: [""],
-      JobGid: [""]
+      JobGid: [""],
     });
   }
 
@@ -74,11 +77,17 @@ export class BeatPlanningComponent implements OnInit {
       { column: "MerchandiserLoginId", displayheader: "Merchandiser LoginId" },
       { column: "MerchandiserName", displayheader: "Merchandiser Name" },
       { column: "MerchandiserRole", displayheader: "Merchandiser Role" },
-      { column: "SupervisorName", displayheader: "Supervisor Name" }
+      { column: "SupervisorName", displayheader: "Supervisor Name" },
     ];
   }
 
   ngOnInit() {
+    this.MasterData = null;
+    let LocalMasterData = this.local.getMaster();
+    if (IsValidType(LocalMasterData)) {
+      this.MasterData = LocalMasterData;
+    }
+
     this.LoadGridData();
   }
 
@@ -91,11 +100,11 @@ export class BeatPlanningComponent implements OnInit {
       this.AddBeatPlan();
       this.http
         .post("Beat/AddEditBeat", MSData)
-        .then(result => {
+        .then((result) => {
           this.LoadGridData();
           this.commonService.ShowToast("Beats added successfully.");
         })
-        .catch(e => {
+        .catch((e) => {
           this.commonService.ShowToast("Getting server error.");
         });
     }
@@ -108,7 +117,7 @@ export class BeatPlanningComponent implements OnInit {
     this.EnableFilter = false;
     this.http
       .post("Beat/GetBeats", MSData)
-      .then(result => {
+      .then((result) => {
         if (this.commonService.IsValidResponse(result)) {
           let Data = JSON.parse(result.content.beats);
           this.commonService.ShowToast("Data loaded successfully.");
@@ -119,7 +128,7 @@ export class BeatPlanningComponent implements OnInit {
           );
         }
       })
-      .catch(e => {
+      .catch((e) => {
         this.commonService.ShowToast("Getting server error.");
       });
   }
@@ -159,7 +168,7 @@ export class BeatPlanningComponent implements OnInit {
         "j2.Code",
         "c2.Name",
         "j2.MobileAppRole",
-        "c1.Name"
+        "c1.Name",
       ];
       this.searchQuery = " 1=1 ";
       let searchStmt = "";
@@ -203,7 +212,7 @@ export class BeatPlanningComponent implements OnInit {
 
     this.http
       .post("Beat/GetBeatsFilterData", MSData)
-      .then(result => {
+      .then((result) => {
         if (this.commonService.IsValid(result)) {
           if (IsValidType(result)) {
             this.BeatPlanningRows = [];
@@ -234,7 +243,7 @@ export class BeatPlanningComponent implements OnInit {
           );
         }
       })
-      .catch(e => {
+      .catch((e) => {
         this.commonService.ShowToast("Getting server error.");
       });
   }
@@ -286,7 +295,7 @@ export class BeatPlanningComponent implements OnInit {
 
       this.http
         .post("Beat/RemoveBeat", MSData)
-        .then(result => {
+        .then((result) => {
           if (this.commonService.IsValidResponse(result)) {
             let Data = JSON.parse(result.content.beats);
             this.CheckAndBindData(Data);
@@ -296,7 +305,7 @@ export class BeatPlanningComponent implements OnInit {
             );
           }
         })
-        .catch(e => {
+        .catch((e) => {
           this.commonService.ShowToast("Getting server error.");
         });
     }

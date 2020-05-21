@@ -1,0 +1,141 @@
+<div class="page-card pb-4">
+  <app-pagebreadcrumb></app-pagebreadcrumb>
+  <div class="container p-0 m-0">
+    <h4>{{HeaderName | uppercase}}</h4>
+  </div>
+
+  <div *ngIf="EnablePopup" class="ipopup">
+    <div class="ipopup__content">
+      <div class="ipopup__header">
+        <header>Advance filter</header>
+      </div>
+
+      <form (submit)="SubmitSearchCriateria()" class="pt-2" (keydown.enter)="$event.preventDefault()">
+        <table class="mt-2">
+          <tbody>
+            <tr>
+              <td>
+                <div class="pt-2 mt-4">
+                  <div class="col-md-12 row">
+                    <div class="form-group text-right col-md-3">
+                      <label for="Region">Header Code</label>
+                    </div>
+                    <div class="form-group col-md-8">
+                      <input name="Code" class="form-control" placeholder="Promotion header code"
+                        [(ngModel)]="PromotionHeader.Code">
+                    </div>
+                  </div>
+                  <div class="col-md-12 row">
+                    <div class="form-group text-right col-md-3">
+                      <label for="Region">Header Name</label>
+                    </div>
+                    <div class="form-group col-md-8">
+                      <input name="Name" class="form-control" placeholder="Promotion header Name"
+                        [(ngModel)]="PromotionHeader.Name">
+                    </div>
+                  </div>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+          <tfoot class="border-top">
+            <div class="form-group mt-3">
+              <button class="btn btn-primary form-control" (click)="AddNewPrmotionHeader()">Add</button>
+            </div>
+            <div class="form-group mt-2">
+              <button class="btn btn-outline-dark form-control" (click)="ClosePopup()">Close</button>
+            </div>
+          </tfoot>
+        </table>
+      </form>
+    </div>
+  </div>
+
+  <div class="pl-0 pr-1 d-inline-block panel-body col-md-12 col-xs-12">
+    <div class="row">
+      <div class="col-md-6">
+        <div class="pl-0 pr-0 form-group col-md-12 col-sm-12 d-inline-block">
+          <input id="ShopFilter" placeholder="Global search" class="form-control" (keyup)="FilterLocaldata()"
+            required="required" type="text">
+        </div>
+      </div>
+      <div class="col-md-6 d-inline-block text-right no-padding">
+        <button type="submit" (click)="ResetFilter()" class="btn btn-outline-info mr-1">
+          <i class="fas fa-sync"></i>&ensp;Reset</button>
+        <button type="button" (click)="GetPopup()" class="btn btn-success"><i class="fa fa-filter"></i>&ensp;Add
+          new</button>
+      </div>
+    </div>
+
+    <div class="col-12 text-right">
+      <a (click)="ExportMe()" class="export-btn">
+        <i class="far fa-file-excel"></i>
+      </a>
+    </div>
+
+    <div id="viewfeestimetable-dv" class="h-tbl">
+      <div id="dynamic-grid-table" class="table-responsive border">
+        <table class="table table-striped" id="avability-table">
+          <thead>
+            <tr>
+              <th>
+                Id
+              </th>
+              <th>
+                Gid
+              </th>
+              <th>
+                Code
+              </th>
+              <th>
+                Name
+              </th>
+              <th>
+                IsPublished
+              </th>
+              <th>
+                Action
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <ng-container *ngIf="!IsReportPresent">
+              <tr class="cls_norecord">No record found</tr>
+            </ng-container>
+            <ng-container *ngFor="let item of Promotion">
+              <tr>
+                <td>{{item.Id}}</td>
+                <td>{{item.Gid}}</td>
+                <td>{{item.Code}}</td>
+                <td>{{item.Name}}</td>
+                <td>{{item.IsPublished}}</td>
+                <td>
+                  <a href="javascript:void(0)" class="action" (click)="GetDetail(item)">
+                    <i class="fa fa-edit"></i>
+                  </a>
+                </td>
+              </tr>
+            </ng-container>
+          </tbody>
+
+          <tfoot>
+            <tr>
+              <td colspan="50">
+                <div class="d-flex flex-row-reverse">
+                  <div class="d-inline-block font-weight-bold">
+                    <a class="round" (click)="PreviousPage()">&#8249;</a>
+                    <a class="round" (click)="NextPage()">&#8250;</a>
+                  </div>
+                  <div class="ml-2 d-inline-block p-text mr-4">
+                    Showing page:
+                    <b>{{ pageIndex }} of {{ TotalPageCount }}</b>
+                  </div>
+                </div>
+              </td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

@@ -2,7 +2,7 @@ import { Component, OnInit } from "@angular/core";
 import {
   IsValidType,
   CommonService,
-  ExportToExcel
+  ExportToExcel,
 } from "src/providers/common-service/common.service";
 import { ApplicationStorage } from "src/providers/ApplicationStorage";
 import { AjaxService } from "src/providers/ajax.service";
@@ -12,7 +12,7 @@ import { ZerothIndex } from "./../../providers/constants";
 @Component({
   selector: "app-workfffectiveness",
   templateUrl: "./workfffectiveness.component.html",
-  styleUrls: ["./workfffectiveness.component.scss"]
+  styleUrls: ["./workfffectiveness.component.scss"],
 })
 export class WorkfffectivenessComponent implements OnInit {
   AttendenceReportData: Array<AttendenceReportByDate> = [];
@@ -69,6 +69,13 @@ export class WorkfffectivenessComponent implements OnInit {
   }
 
   LoadFilteredResult() {
+    let SOCode = "";
+    let SupervisorDetail = this.MasterData.Supervisor.filter(
+      (x) => x.Gid === this.SO
+    );
+    if (SupervisorDetail.length > 0) {
+      SOCode = SupervisorDetail[ZerothIndex].Code;
+    }
     let filterDate =
       this.model.year.toString() +
       this.BuildDayAndMonth(this.model.month) +
@@ -80,7 +87,7 @@ export class WorkfffectivenessComponent implements OnInit {
     )}${this.BuildDayAndMonth(firstDay.getDate())}`;
     let lastDay = new Date(this.model.year, this.model.month, 0);
     let LD = this.GetLastOrCurrentDate();
-    let Url = `Webportal/FetchAttendanceReportService?SD=${filterDate}&ST=${FD}&ET=${LD}&Region=${this.Region}&State=${this.State}&City=${this.City}&SO=${this.SO}`;
+    let Url = `Webportal/FetchAttendanceReportService?SD=${filterDate}&ST=${FD}&ET=${LD}&Region=${this.Region}&State=${this.State}&City=${this.City}&SO=${SOCode}`;
     this.LoadData(Url);
   }
 
@@ -117,7 +124,7 @@ export class WorkfffectivenessComponent implements OnInit {
     this.AttendenceReportData = [];
     this.http
       .get(Url)
-      .then(response => {
+      .then((response) => {
         if (this.commonService.IsValidResponse(response)) {
           let Data = response.content.data;
           if (Data != null && Data != "") {
@@ -126,9 +133,9 @@ export class WorkfffectivenessComponent implements OnInit {
               let HeaderDetail = Data["Header"];
               let GridDetail = Data["Detail"];
               let TodayHeaderDetail = HeaderDetail.filter(
-                x => x.Dy === "Today"
+                (x) => x.Dy === "Today"
               );
-              let MTDHeaderDetail = HeaderDetail.filter(x => x.Dy === "MTD");
+              let MTDHeaderDetail = HeaderDetail.filter((x) => x.Dy === "MTD");
               if (
                 IsValidType(TodayHeaderDetail) &&
                 IsValidType(MTDHeaderDetail)
@@ -149,7 +156,7 @@ export class WorkfffectivenessComponent implements OnInit {
           this.commonService.ShowToast("Unable to get data.");
         }
       })
-      .catch(err => {
+      .catch((err) => {
         console.log(err);
       });
   }
@@ -173,7 +180,7 @@ export class WorkfffectivenessComponent implements OnInit {
         MTDCallCompliancePercent: this.CalculateValue(
           MTDHeader.ActualCallComplaince,
           MTDHeader.TotalCallComplaince
-        )
+        ),
       },
       {
         WorkType: "SO",
@@ -192,8 +199,8 @@ export class WorkfffectivenessComponent implements OnInit {
         MTDCallComplianceSO:
           MTDHeader.ActualCallComplaince.toString() +
           "/" +
-          MTDHeader.TotalCallComplaince.toString()
-      }
+          MTDHeader.TotalCallComplaince.toString(),
+      },
     ];
   }
 
@@ -240,7 +247,7 @@ export class WorkfffectivenessComponent implements OnInit {
           CallCompliancePercent: this.CalculateValue(
             GridDetail[index].TotalActualCalls,
             GridDetail[index].TotalPlannedCalls
-          )
+          ),
         });
         index++;
       }

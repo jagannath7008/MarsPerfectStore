@@ -6,17 +6,19 @@ import { FormControl } from "@angular/forms";
 import {
   CommonService,
   IsValidType,
-  ExportToExcel
+  ExportToExcel,
 } from "../../providers/common-service/common.service";
 import * as $ from "jquery";
 import { JourneyPlan, Region, PostParam } from "../../providers/constants";
 import { iNavigation } from "../../providers/iNavigation";
 import { AjaxService } from "src/providers/ajax.service";
+import { ApplicationStorage } from "src/providers/ApplicationStorage";
+import { AdvanceFilter } from "../customerreports/customerreports.component";
 
 @Component({
   selector: "app-region",
   templateUrl: "./region.component.html",
-  styleUrls: ["./region.component.scss"]
+  styleUrls: ["./region.component.scss"],
 })
 export class RegionComponent implements OnInit {
   entity: any = new RegionModel();
@@ -35,13 +37,20 @@ export class RegionComponent implements OnInit {
   TotalCount: number = 0;
   TotalPageCount: number = 0;
   AdvanceFilterObject: FormGroup;
+  MasterData: any = {};
   constructor(
     private fb: FormBuilder,
     private commonService: CommonService,
     private nav: iNavigation,
-    private http: AjaxService
+    private http: AjaxService,
+    private local: ApplicationStorage
   ) {
     let PageName = this.commonService.GetCurrentPageName();
+    let LocalMasterData = this.local.getMaster();
+    if (IsValidType(LocalMasterData)) {
+      this.MasterData = LocalMasterData;
+    }
+
     this.HeaderName = "Region";
     this.AdvanceFilterObject = this.fb.group({
       Region: new FormControl(""),
@@ -54,7 +63,7 @@ export class RegionComponent implements OnInit {
       Address: new FormControl(""),
       Beat: new FormControl(""),
       Supervisor: new FormControl(""),
-      Marchandisor: new FormControl("")
+      Marchandisor: new FormControl(""),
     });
   }
 
@@ -89,7 +98,7 @@ export class RegionComponent implements OnInit {
     MSData.content.pageSize = this.pageSize;
     MSData.content.locType = this.TypeEnum;
 
-    this.http.post("Webportal/FetchLocations", MSData).then(response => {
+    this.http.post("Webportal/FetchLocations", MSData).then((response) => {
       this.TableResultSet = [];
       if (this.commonService.IsValidResponse(response)) {
         let Data = response.content.data;
@@ -138,19 +147,19 @@ export class RegionComponent implements OnInit {
         app: "MerchandiserApp",
         action: "WebLogin",
         requestId: "0",
-        deviceId: "web"
+        deviceId: "web",
       },
       content: {
         deviceId: "web",
         deviceType: "web",
         deviceOS: "Windows",
         deviceVersion: "web",
-        deviceInfo: "web"
-      }
+        deviceInfo: "web",
+      },
     };
     input.content.searchString = "";
     input.content.locType = "COU";
-    this.http.post("Webportal/FetchLocations", input).then(response => {
+    this.http.post("Webportal/FetchLocations", input).then((response) => {
       this.TableResultSet = [];
       if (this.commonService.IsValidResponse(response)) {
         let Data = response.content.data;
@@ -166,7 +175,7 @@ export class RegionComponent implements OnInit {
       { column: "Name", displayheader: "Region Name", width: 10 },
       { column: "ParentName", displayheader: "Country Name", width: 10 },
       { column: "ParentGid", type: "hidden" },
-      { column: "Gid", type: "hidden" }
+      { column: "Gid", type: "hidden" },
     ];
 
     this.BindParent();
@@ -201,7 +210,7 @@ export class RegionComponent implements OnInit {
     console.log(this.entity);
     this.http
       .post("Webportal/SaveLocation", JSON.stringify(this.entity))
-      .then(response => {
+      .then((response) => {
         if (this.commonService.IsValidResponse(response)) {
           this.commonService.ShowToast("Region details saved successfully.");
           this.Close();
@@ -225,7 +234,7 @@ export class RegionComponent implements OnInit {
     this.entity = editEntity;
     this.http
       .post("Webportal/RemoveLocation", JSON.stringify(this.entity))
-      .then(response => {
+      .then((response) => {
         if (this.commonService.IsValidResponse(response)) {
           this.commonService.ShowToast("Regopm removed successfully.");
           this.Close();
@@ -242,10 +251,11 @@ export class RegionComponent implements OnInit {
       });
   }
 
-
   ExportMe() {
-    if(!ExportToExcel('region-table', 'region')){
-      this.commonService.ShowToast("Incorrect value passed to export to excel.");
+    if (!ExportToExcel("region-table", "region")) {
+      this.commonService.ShowToast(
+        "Incorrect value passed to export to excel."
+      );
     }
   }
 }
@@ -254,6 +264,7 @@ export class RegionModel {
   Gid: string;
   Code: string;
   Name: string;
+  Region: string;
   TypeEnum: string;
   ParentGid: string;
   ParentName: string;

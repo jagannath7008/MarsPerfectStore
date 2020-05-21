@@ -26,6 +26,12 @@ export const CustomerFootprint = "customerfootprint";
 export const WorkEffectiveness = "workeffectiveness";
 export const AvailabilityReport = "availabilityreport";
 export const PlanogramDetailReport = "planogramdetailreport";
+export const PromotionHeader = "promotionheader";
+export const PromotionDetail = "promotiondetail";
+export const SpecialVisibilityHeader = "specialvisibilityheader";
+export const SpecialVisibilityDetail = "specialvisibilitydetail";
+export const IncentiveTargetHeader = "incentivetargetheader";
+export const IncentiveTargetDetail = "incentivetargetdetail";
 export const KYCReport = "kycreport";
 
 export const PageName: Array<RouteDescription> = [
@@ -57,6 +63,13 @@ export const AddCustomer: Array<RouteDescription> = [
 export interface RouteDescription {
   title: string;
   display: string;
+}
+
+export class SearchModal {
+  SearchString: string = "1=1";
+  SortBy: string = "";
+  PageIndex: number = 1;
+  PageSize: number = 20;
 }
 
 export const PostParam: any = `{"meta":{"app":"MerchandiserApp","action":"WebLogin","requestId":"0","deviceId":"web"},"content":{"deviceId":"web","deviceType":"web","deviceOS":"Windows","deviceVersion":"web","deviceInfo":"web"}}`;
