@@ -6,7 +6,7 @@ import { FormControl } from "@angular/forms";
 import {
   CommonService,
   IsValidType,
-  ExportToExcel
+  ExportToExcel,
 } from "../../providers/common-service/common.service";
 import * as $ from "jquery";
 import { JourneyPlan, Employee, PostParam } from "../../providers/constants";
@@ -19,7 +19,7 @@ import { ApplicationStorage } from "src/providers/ApplicationStorage";
 @Component({
   selector: "app-employee",
   templateUrl: "./employee.component.html",
-  styleUrls: ["./employee.component.scss"]
+  styleUrls: ["./employee.component.scss"],
 })
 export class EmployeeComponent implements OnInit {
   entity: any = new EmployeeModel();
@@ -49,7 +49,7 @@ export class EmployeeComponent implements OnInit {
     State: { data: [], placeholder: "State" },
     ChainName: { data: [], placeholder: "ChainName" },
     Marchandisor: { data: [], placeholder: "Marchandisor" },
-    City: { data: [], placeholder: "City" }
+    City: { data: [], placeholder: "City" },
   };
   constructor(
     private fb: FormBuilder,
@@ -150,7 +150,7 @@ export class EmployeeComponent implements OnInit {
       Designation: "",
       Department: "",
       Code: "",
-      Marchandisor: ""
+      Marchandisor: "",
     };
   }
 
@@ -191,7 +191,7 @@ export class EmployeeComponent implements OnInit {
     MSData.content.pageSize = this.pageSize;
 
     this.Close();
-    this.http.post("Webportal/FetchContacts", MSData).then(response => {
+    this.http.post("Webportal/FetchContacts", MSData).then((response) => {
       this.TableResultSet = [];
       if (this.commonService.IsValidResponse(response)) {
         let Data = response.content.data;
@@ -223,7 +223,7 @@ export class EmployeeComponent implements OnInit {
     MSData.content.sortBy = this.sortBy;
     MSData.content.pageIndex = this.pageIndex;
     MSData.content.pageSize = this.pageSize;
-    this.http.post("Webportal/FetchBusinessUnits", MSData).then(response => {
+    this.http.post("Webportal/FetchBusinessUnits", MSData).then((response) => {
       this.TableResultSet = [];
       if (this.commonService.IsValidResponse(response)) {
         let Data = response.content.data;
@@ -240,18 +240,18 @@ export class EmployeeComponent implements OnInit {
         app: "MerchandiserApp",
         action: "WebLogin",
         requestId: "0",
-        deviceId: "web"
+        deviceId: "web",
       },
       content: {
         deviceId: "web",
         deviceType: "web",
         deviceOS: "Windows",
         deviceVersion: "web",
-        deviceInfo: "web"
-      }
+        deviceInfo: "web",
+      },
     };
     input.content.searchString = "";
-    this.http.post("Webportal/FetchEmployees", input).then(response => {
+    this.http.post("Webportal/FetchEmployees", input).then((response) => {
       this.TableResultSet = [];
       if (this.commonService.IsValidResponse(response)) {
         let Data = response.content.data;
@@ -277,7 +277,7 @@ export class EmployeeComponent implements OnInit {
       { column: "Email", displayheader: "Email" },
       { column: "Designation", displayheader: "Designation" },
       { column: "Department", displayheader: "Department" },
-      { column: "Gid", type: "hidden" }
+      { column: "Gid", type: "hidden" },
     ];
 
     this.BindBusinessunit();
@@ -296,6 +296,7 @@ export class EmployeeComponent implements OnInit {
   }
 
   ResetFilter() {
+    this.pageIndex = 1;
     this.searchQuery = " 1=1 ";
     this.LoadData();
   }
@@ -323,7 +324,7 @@ export class EmployeeComponent implements OnInit {
     console.log(this.entity);
     this.http
       .post("Webportal/SaveContact", JSON.stringify(this.entity))
-      .then(response => {
+      .then((response) => {
         if (this.commonService.IsValidResponse(response)) {
           this.commonService.ShowToast("Employee details saved successfully.");
           this.Close();
@@ -347,7 +348,7 @@ export class EmployeeComponent implements OnInit {
     this.entity = editEntity;
     this.http
       .post("Webportal/RemoveContact", JSON.stringify(this.entity))
-      .then(response => {
+      .then((response) => {
         if (this.commonService.IsValidResponse(response)) {
           this.commonService.ShowToast("Regopm removed successfully.");
           this.Close();
@@ -365,8 +366,10 @@ export class EmployeeComponent implements OnInit {
   }
 
   ExportMe() {
-    if(!ExportToExcel('emp-table', 'employee')){
-      this.commonService.ShowToast("Incorrect value passed to export to excel.");
+    if (!ExportToExcel("emp-table", "employee")) {
+      this.commonService.ShowToast(
+        "Incorrect value passed to export to excel."
+      );
     }
   }
 }

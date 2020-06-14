@@ -6,7 +6,7 @@ import { FormControl } from "@angular/forms";
 import {
   CommonService,
   IsValidType,
-  ExportToExcel
+  ExportToExcel,
 } from "../../providers/common-service/common.service";
 import * as $ from "jquery";
 import { JourneyPlan, City, PostParam } from "../../providers/constants";
@@ -18,7 +18,7 @@ import { ApplicationStorage } from "src/providers/ApplicationStorage";
 @Component({
   selector: "app-city",
   templateUrl: "./city.component.html",
-  styleUrls: ["./city.component.scss"]
+  styleUrls: ["./city.component.scss"],
 })
 export class CityComponent implements OnInit {
   entity: any = new CityModel();
@@ -102,7 +102,8 @@ export class CityComponent implements OnInit {
     MSData.content.pageSize = this.pageSize;
     MSData.content.locType = this.TypeEnum;
 
-    this.http.post("Webportal/FetchLocations", MSData).then(response => {
+    this.Close();
+    this.http.post("Webportal/FetchLocations", MSData).then((response) => {
       this.TableResultSet = [];
       if (this.commonService.IsValidResponse(response)) {
         let Data = response.content.data;
@@ -117,6 +118,8 @@ export class CityComponent implements OnInit {
                 (this.TotalPageCount + 1).toString()
               );
             }
+
+            this.ClearFilter();
             this.IsEmptyRow = false;
             this.TableResultSet = Record;
           }
@@ -139,7 +142,7 @@ export class CityComponent implements OnInit {
     MSData.content.pageSize = 10000;
     MSData.content.locType = "STA";
 
-    this.http.post("Webportal/FetchLocations", MSData).then(response => {
+    this.http.post("Webportal/FetchLocations", MSData).then((response) => {
       this.TableResultSet = [];
       if (this.commonService.IsValidResponse(response)) {
         let Data = response.content.data;
@@ -158,21 +161,39 @@ export class CityComponent implements OnInit {
     });
   }
 
+  ClearFilter() {
+    this.AdvanceSearch = {
+      Region: "",
+      SubChannel: "",
+      CustomerCode: "",
+      CustomerName: "",
+      State: "",
+      ChainName: "",
+      City: "",
+      Address: "",
+      Beat: "",
+      Supervisor: "",
+      Marchandisor: "",
+    };
+  }
+
   ngOnInit() {
     this.BindingHeader = [
       { column: "Name", displayheader: "City Name", width: 10 },
       { column: "ParentName", displayheader: "State Name", width: 10 },
       { column: "ParentGid", type: "hidden" },
-      { column: "Gid", type: "hidden" }
+      { column: "Gid", type: "hidden" },
     ];
 
-    this.BindParent();
-    this.LoadData();
-    this.LoadTableData();
     let LocalMasterData = this.local.getMaster();
     if (IsValidType(LocalMasterData)) {
       this.MasterData = LocalMasterData;
     }
+
+    this.ClearFilter();
+    this.BindParent();
+    this.LoadData();
+    this.LoadTableData();
   }
 
   Close() {
@@ -181,7 +202,8 @@ export class CityComponent implements OnInit {
   }
 
   ResetFilter() {
-    this.searchQuery = "";
+    this.searchQuery = " 1=1 ";
+    this.ClearFilter();
     this.LoadData();
   }
 
@@ -200,7 +222,12 @@ export class CityComponent implements OnInit {
     this.EnableFilter = true;
   }
 
-  SubmitSearchCriateria() {}
+  SubmitSearchCriateria() {
+    this.searchQuery = "1=1 ";
+    if (this.AdvanceSearch.City !== "")
+      this.searchQuery += ` And j.Name='${this.AdvanceSearch.City}' `;
+    this.LoadData();
+  }
 
   Edit(editEntity: any) {
     this.Open();
@@ -210,7 +237,7 @@ export class CityComponent implements OnInit {
     console.log(this.entity);
     this.http
       .post("Webportal/SaveLocation", JSON.stringify(this.entity))
-      .then(response => {
+      .then((response) => {
         if (this.commonService.IsValidResponse(response)) {
           this.commonService.ShowToast("City details saved successfully.");
           this.Close();
@@ -234,7 +261,7 @@ export class CityComponent implements OnInit {
     this.entity = editEntity;
     this.http
       .post("Webportal/RemoveLocation", JSON.stringify(this.entity))
-      .then(response => {
+      .then((response) => {
         if (this.commonService.IsValidResponse(response)) {
           this.commonService.ShowToast("Regopm removed successfully.");
           this.Close();
@@ -252,8 +279,10 @@ export class CityComponent implements OnInit {
   }
 
   ExportMe() {
-    if(!ExportToExcel('city-table', 'city')){
-      this.commonService.ShowToast("Incorrect value passed to export to excel.");
+    if (!ExportToExcel("city-table", "city")) {
+      this.commonService.ShowToast(
+        "Incorrect value passed to export to excel."
+      );
     }
   }
 }

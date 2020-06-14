@@ -7,10 +7,26 @@ import {
   ExportToExcel,
 } from "src/providers/common-service/common.service";
 import * as $ from "jquery";
-import { PostParam } from "src/providers/constants";
+import {
+  JourneyPlan,
+  Employee,
+  PostParam,
+  M_Countries,
+  M_Region,
+  M_State,
+  M_City,
+  M_Supervisor,
+  M_Merchandiser,
+  State,
+  M_Retailer,
+} from "src/providers/constants";
 import { iNavigation } from "src/providers/iNavigation";
 import { AjaxService } from "src/providers/ajax.service";
 import { ApplicationStorage } from "src/providers/ApplicationStorage";
+import {
+  MasterDataModal,
+  AdvanceFilter,
+} from "../availabilityreport/availabilityreport.component";
 
 @Component({
   selector: "app-kycreport",
@@ -29,7 +45,7 @@ export class KycreportComponent implements OnInit {
   pageIndex: number = 1;
   pageSize: number = 15;
   TotalCount: number = 0;
-  MasterData: any = {};
+  MasterData: MasterDataModal;
   TotalPageCount: number = 0;
   AdvanceSearch: AdvanceFilter;
   AutodropdownCollection: any = {
@@ -48,6 +64,7 @@ export class KycreportComponent implements OnInit {
     private http: AjaxService,
     private local: ApplicationStorage
   ) {
+    this.MasterData = new MasterDataModal();
     let PageName = this.commonService.GetCurrentPageName();
     this.HeaderName = "KYC Report";
     this.ResetAdvanceFilter();
@@ -69,6 +86,7 @@ export class KycreportComponent implements OnInit {
       Beat: "",
       Supervisor: "",
       Marchandisor: "",
+      Country: "",
     };
   }
 
@@ -166,9 +184,9 @@ export class KycreportComponent implements OnInit {
   ngOnInit() {
     this.IsReportPresent = true;
     this.LoadData();
-    let LocalMasterData = this.local.getMaster();
+    let LocalMasterData = this.local.GetMasterDataValues(M_Region, null);
     if (IsValidType(LocalMasterData)) {
-      this.MasterData = LocalMasterData;
+      this.MasterData.M_Region = LocalMasterData;
     }
   }
   LoadData() {
@@ -234,20 +252,69 @@ export class KycreportComponent implements OnInit {
       );
     }
   }
-}
 
-interface AdvanceFilter {
-  Region: string;
-  SubChannel: string;
-  CustomerCode: string;
-  CustomerName: string;
-  State: string;
-  ChainName: string;
-  City: string;
-  Address: string;
-  Beat: string;
-  Supervisor: string;
-  Marchandisor: string;
+  LoadNextField() {
+    let currentType = $(event.currentTarget).attr("name");
+    if (IsValidType(currentType)) {
+      let NextFieldValue = null;
+      switch (currentType) {
+        case M_Countries:
+          NextFieldValue = this.local.GetMasterDataValues(
+            M_Region,
+            this.AdvanceSearch.Country
+          );
+          if (IsValidType(NextFieldValue)) {
+            this.MasterData.M_Region = NextFieldValue;
+          }
+          break;
+
+        case M_Region:
+          NextFieldValue = this.local.GetMasterDataValues(
+            M_State,
+            this.AdvanceSearch.Region
+          );
+          if (IsValidType(NextFieldValue)) {
+            this.MasterData.M_State = NextFieldValue;
+          }
+          break;
+
+        case M_State:
+          NextFieldValue = this.local.GetMasterDataValues(
+            M_City,
+            this.AdvanceSearch.State
+          );
+          if (IsValidType(NextFieldValue)) {
+            this.MasterData.M_City = NextFieldValue;
+          }
+          break;
+
+        case M_City:
+          NextFieldValue = this.local.GetMasterDataValues(
+            M_Retailer,
+            this.AdvanceSearch.City
+          );
+          if (IsValidType(NextFieldValue)) {
+            this.MasterData.M_Retailer = NextFieldValue;
+          }
+          break;
+
+        case M_Supervisor:
+          NextFieldValue = this.local.GetMasterDataValues(
+            M_Merchandiser,
+            this.AdvanceSearch.Supervisor
+          );
+          if (IsValidType(NextFieldValue)) {
+            this.MasterData.M_Merchandiser = NextFieldValue;
+          }
+          break;
+
+        case M_Merchandiser:
+          break;
+      }
+    } else {
+      this.commonService.ShowToast("Invalid selection.");
+    }
+  }
 }
 
 class KYCReporModal {

@@ -34,6 +34,16 @@ export const IncentiveTargetHeader = "incentivetargetheader";
 export const IncentiveTargetDetail = "incentivetargetdetail";
 export const KYCReport = "kycreport";
 
+//---------------- Master fields names ------------------------------
+
+export const M_Countries = "Countries";
+export const M_State = "State";
+export const M_Region = "Region";
+export const M_City = "City";
+export const M_Merchandiser = "Merchandiser";
+export const M_Retailer = "Retailer";
+export const M_Supervisor = "Supervisor";
+
 export const PageName: Array<RouteDescription> = [
   { title: Login, display: "Login" },
   { title: Dashboard, display: "Dashboard" },

@@ -49,6 +49,10 @@ import { IncentivetargetheaderComponent } from './incentivetargetheader/incentiv
 import { PromotiondetailComponent } from './promotiondetail/promotiondetail.component';
 import { SpecialvisibilitydetailComponent } from './specialvisibilitydetail/specialvisibilitydetail.component';
 import { IncentivetargetdetailComponent } from './incentivetargetdetail/incentivetargetdetail.component';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MatPaginatorModule } from '@angular/material/paginator'
 
 @NgModule({
   declarations: [
@@ -100,7 +104,11 @@ import { IncentivetargetdetailComponent } from './incentivetargetdetail/incentiv
     ReactiveFormsModule,
     HttpClientModule,
     NgbModule,
-    ChartsModule
+    ChartsModule,
+    MatFormFieldModule,
+    MatInputModule,
+    BrowserAnimationsModule,
+    MatPaginatorModule
   ],
   providers: [
     CommonService,

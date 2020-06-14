@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { CommonService } from "./common-service/common.service";
+import { CommonService, IsValidType } from "./common-service/common.service";
 
 @Injectable()
 export class ApplicationStorage {
@@ -125,5 +125,25 @@ export class ApplicationStorage {
       }
     }
     return flag;
+  }
+
+  public GetMasterDataValues(
+    TableName: string = "",
+    Gid: string = ""
+  ): Array<any> {
+    let ResponseData = new Array<any>();
+    if (TableName !== "") {
+      let MasterData = this.getMaster();
+      if (IsValidType(TableName)) {
+        if (IsValidType(Gid)) {
+          ResponseData = MasterData[TableName].filter(
+            (x) => x.ParentGid == Gid
+          );
+        } else {
+          ResponseData = MasterData[TableName];
+        }
+      }
+    }
+    return ResponseData;
   }
 }

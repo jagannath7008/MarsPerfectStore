@@ -2,7 +2,7 @@ import { Component, OnInit } from "@angular/core";
 import { FormBuilder, FormGroup, FormControl } from "@angular/forms";
 import {
   CommonService,
-  IsValidType
+  IsValidType,
 } from "./../../providers/common-service/common.service";
 import * as $ from "jquery";
 import { AjaxService } from "src/providers/ajax.service";
@@ -12,7 +12,7 @@ import { ZerothIndex, PostParam } from "./../../providers/constants";
 @Component({
   selector: "app-retailer-detail",
   templateUrl: "./retailer-detail.component.html",
-  styleUrls: ["./retailer-detail.component.scss"]
+  styleUrls: ["./retailer-detail.component.scss"],
 })
 export class RetailerDetailComponent implements OnInit {
   Row: Array<FormGroup> = [];
@@ -69,7 +69,7 @@ export class RetailerDetailComponent implements OnInit {
       { Name: "Transaction Zone", IsEnabled: false },
       { Name: "Competition", IsEnabled: false },
       { Name: "SKUPorfolio", IsEnabled: false },
-      { Name: "Merchandiser Plan", IsEnabled: false }
+      { Name: "Merchandiser Plan", IsEnabled: false },
     ];
   }
 
@@ -78,7 +78,7 @@ export class RetailerDetailComponent implements OnInit {
     let PageData = this.nav.getValue();
     if (PageData !== null) {
       this.CurrentPageData = PageData;
-      // this.InitGridForm();
+      this.InitGridForm();
       this.InitCompletition();
       this.LoadData();
     } else {
@@ -91,26 +91,26 @@ export class RetailerDetailComponent implements OnInit {
       SearchString: "1=1",
       SortBy: "Name",
       Index: 1,
-      Offset: 10
+      Offset: 10,
     };
     let input: any = {
       meta: {
         app: "MerchandiserApp",
         action: "FetchPlanogrammainaisles",
         requestId: "0",
-        deviceId: "web"
+        deviceId: "web",
       },
       content: {
         deviceId: "web",
         deviceType: "web",
         deviceOS: "Windows",
         deviceVersion: "web",
-        deviceInfo: "web"
-      }
+        deviceInfo: "web",
+      },
     };
 
     input.content.Gid = this.CurrentPageData.Gid;
-    this.http.post("Webportal/FetchCustomerDetail", input).then(response => {
+    this.http.post("Webportal/FetchCustomerDetail", input).then((response) => {
       if (this.commonService.IsValidResponse(response)) {
         let Data = response.content.data;
         if (Data != null && Data != "") {
@@ -141,7 +141,7 @@ export class RetailerDetailComponent implements OnInit {
               while (index < this.PlanogrammainaisleModal.length) {
                 if (
                   this.PlanogrammainaisleDropdownValues.filter(
-                    x => x.Gid === this.PlanogrammainaisleModal[index].Gid
+                    (x) => x.Gid === this.PlanogrammainaisleModal[index].Gid
                   ).length === 0
                 ) {
                   this.PlanogrammainaisleDropdownValues.push(
@@ -176,7 +176,8 @@ export class RetailerDetailComponent implements OnInit {
                 afiles.forEach((item, index) => {
                   FilePath = `${this.ServerUrl}\\${item.RelativePathText}\\${item.Label}.${item.FileExtension}`;
                   if (
-                    this.RetailerAfiles.filter(x => x === FilePath).length === 0
+                    this.RetailerAfiles.filter((x) => x === FilePath).length ===
+                    0
                   )
                     this.RetailerAfiles.push(FilePath);
                 });
@@ -212,14 +213,14 @@ export class RetailerDetailComponent implements OnInit {
             let Afiles = [];
             while (index < planogramvisibilityModal.length) {
               Items = this.PlanogramdVisibilityModal.filter(
-                x => x.Gid === planogramvisibilityModal[index].Gid
+                (x) => x.Gid === planogramvisibilityModal[index].Gid
               );
               if (Items.length === 0) {
                 Items = planogramvisibilityModal.filter(
-                  x => x.Gid === planogramvisibilityModal[index].Gid
+                  (x) => x.Gid === planogramvisibilityModal[index].Gid
                 );
                 Afiles = [];
-                Items.forEach(element => {
+                Items.forEach((element) => {
                   if (IsValidType(element["afileViewModels"])) {
                     Afiles = Afiles.concat(element["afileViewModels"]);
                   }
@@ -237,7 +238,7 @@ export class RetailerDetailComponent implements OnInit {
           if (IsValidType(Data["transactionzoneplanogram"])) {
             this.TransactionZonePlanogram = Data["transactionzoneplanogram"];
             let SeletedItem = this.TransactionZonePlanogram.filter(
-              x => x.Gid === this.RetailerDetail.TransactionZonePlanogramGid
+              (x) => x.Gid === this.RetailerDetail.TransactionZonePlanogramGid
             );
             if (SeletedItem.length > 0) {
               this.OptionsTransactionZonePlanogramImpagePath =
@@ -268,15 +269,15 @@ export class RetailerDetailComponent implements OnInit {
           app: "MerchandiserApp",
           action: "FetchPlanogrammainaisles",
           requestId: "0",
-          deviceId: "web"
+          deviceId: "web",
         },
         content: {
           deviceId: "web",
           deviceType: "web",
           deviceOS: "Windows",
           deviceVersion: "web",
-          deviceInfo: "web"
-        }
+          deviceInfo: "web",
+        },
       };
 
       if (IsValidType(this.visibilityEntity.PlanogramGid)) {
@@ -291,7 +292,7 @@ export class RetailerDetailComponent implements OnInit {
           "Webportal/UpdatePlanogramsecondaryvisibilitys",
           JSON.stringify(this.visibilityEntity)
         )
-        .then(response => {
+        .then((response) => {
           if (this.commonService.IsValidResponse(response)) {
             let Data = response.content.data;
             if (IsValidType(Data)) {
@@ -321,22 +322,22 @@ export class RetailerDetailComponent implements OnInit {
               app: "MerchandiserApp",
               action: "UpdatePlanogrammainaisle",
               requestId: "0",
-              deviceId: "web"
+              deviceId: "web",
             },
             content: {
               deviceId: "web",
               deviceType: "web",
               deviceOS: "Windows",
               deviceVersion: "web",
-              deviceInfo: "web"
-            }
+              deviceInfo: "web",
+            },
           };
 
           input.content.planogramGid = planogrammainaisleGid;
           input.content.retailermainaisleGid = this.RetailerMainasles[0].Gid;
           this.http
             .post("Webportal/UpdatePlanogrammainaisle", input)
-            .then(response => {
+            .then((response) => {
               if (this.commonService.IsValidResponse(response)) {
                 let Data = response.content.data;
                 if (IsValidType(Data)) {
@@ -372,7 +373,7 @@ export class RetailerDetailComponent implements OnInit {
       Email: new FormControl(""),
       Designation: new FormControl(""),
       Dob: new FormControl(""),
-      Anniversorydate: new FormControl("")
+      Anniversorydate: new FormControl(""),
     });
   }
 
@@ -383,7 +384,7 @@ export class RetailerDetailComponent implements OnInit {
       Mobile: new FormControl(RowData.Mobile),
       WhatsAppMobile: new FormControl(RowData.WhatsAppPhone),
       BirthDate: new FormControl(RowData.BirthDate),
-      AnniversaryDate: new FormControl("")
+      AnniversaryDate: new FormControl(""),
     });
   }
 
@@ -410,26 +411,26 @@ export class RetailerDetailComponent implements OnInit {
         Type: "Type 1",
         Size: "Normal",
         UniqueId: "adndgsa89-asdfn-sakfj-asodif-asdfhaslk",
-        Image: "No image"
+        Image: "No image",
       },
       {
         Type: "Type 2",
         Size: "Average",
         UniqueId: "adndgsa89-asdfn-sakfj-asodif-asdfhaslk",
-        Image: "No image"
+        Image: "No image",
       },
       {
         Type: "Type 3",
         Size: "Big",
         UniqueId: "adndgsa89-asdfn-sakfj-asodif-asdfhaslk",
-        Image: "No image"
+        Image: "No image",
       },
       {
         Type: "Type 4",
         Size: "Huge",
         UniqueId: "adndgsa89-asdfn-sakfj-asodif-asdfhaslk",
-        Image: "No image"
-      }
+        Image: "No image",
+      },
     ];
   }
 
@@ -445,7 +446,7 @@ export class RetailerDetailComponent implements OnInit {
         Thu: "4",
         Fri: "5",
         Sat: "6",
-        Sun: "7"
+        Sun: "7",
       },
       {
         Supervisor: "Supervisor 1",
@@ -457,7 +458,7 @@ export class RetailerDetailComponent implements OnInit {
         Thu: "4",
         Fri: "5",
         Sat: "6",
-        Sun: "7"
+        Sun: "7",
       },
       {
         Supervisor: "Supervisor 1",
@@ -469,8 +470,8 @@ export class RetailerDetailComponent implements OnInit {
         Thu: "4",
         Fri: "5",
         Sat: "6",
-        Sun: "7"
-      }
+        Sun: "7",
+      },
     ];
   }
 
@@ -481,9 +482,7 @@ export class RetailerDetailComponent implements OnInit {
       .find('li[name="linkitem"]')
       .removeClass("active-link");
 
-    $(event.currentTarget)
-      .closest("li")
-      .addClass("active-link");
+    $(event.currentTarget).closest("li").addClass("active-link");
     while (index < this.CurrentSection.length) {
       if (this.CurrentSection[index].Name === LinkName) {
         this.CurrentSection[index].IsEnabled = true;
@@ -525,7 +524,7 @@ export class RetailerDetailComponent implements OnInit {
     let CompetitionGid = $("#retailer-competition").val();
     if (IsValidType(CompetitionGid)) {
       let CurrentCompetition = this.Competition.filter(
-        x => x.Gid == CompetitionGid
+        (x) => x.Gid == CompetitionGid
       );
       if (CurrentCompetition.length > 0) {
         CurrentCompetition = CurrentCompetition[ZerothIndex];
@@ -535,15 +534,15 @@ export class RetailerDetailComponent implements OnInit {
             app: "MerchandiserApp",
             action: "FetchPlanogrammainaisles",
             requestId: "0",
-            deviceId: "web"
+            deviceId: "web",
           },
           content: {
             deviceId: "web",
             deviceType: "web",
             deviceOS: "Windows",
             deviceVersion: "web",
-            deviceInfo: "web"
-          }
+            deviceInfo: "web",
+          },
         };
 
         this.http
@@ -551,7 +550,7 @@ export class RetailerDetailComponent implements OnInit {
             "Webportal/AddUpdateCompetition",
             JSON.stringify(CurrentCompetition)
           )
-          .then(response => {
+          .then((response) => {
             if (this.commonService.IsValidResponse(response)) {
               let Data = response.content.data;
               if (Data != null && Data != "") {
@@ -571,7 +570,7 @@ export class RetailerDetailComponent implements OnInit {
   ShowImage() {
     let ImageGid = $(event.currentTarget).val();
     let CurrentObject = this.PlanogramdVisibilityModal.filter(
-      x => x.Gid === ImageGid
+      (x) => x.Gid === ImageGid
     );
     if (CurrentObject.length) {
       let Current: any = CurrentObject[0];
@@ -579,7 +578,7 @@ export class RetailerDetailComponent implements OnInit {
       Current["afileViewModels"].forEach((element: Afile) => {
         this.OptionsPlanogramImpagePath.push({
           path: `${this.ServerUrl}\\${element.RelativePathText}\\${element.Label}.${element.FileExtension}`,
-          Gid: element.Gid
+          Gid: element.Gid,
         });
       });
     }
@@ -591,13 +590,13 @@ export class RetailerDetailComponent implements OnInit {
     if (IsValidType(this.visibilityEntity.PlanogramGid)) {
       this.OptionsPlanogramImpagePath = [];
       let Items = this.PlanogramdVisibilityModal.filter(
-        x => x.Gid === this.visibilityEntity.PlanogramGid
+        (x) => x.Gid === this.visibilityEntity.PlanogramGid
       );
       if (IsValidType(Items)) {
         Items[ZerothIndex]["afileViewModels"].forEach((element: Afile) => {
           this.OptionsPlanogramImpagePath.push({
             path: `${this.ServerUrl}\\${element.RelativePathText}\\${element.Label}.${element.FileExtension}`,
-            Gid: element.Gid
+            Gid: element.Gid,
           });
         });
       }
@@ -636,7 +635,7 @@ export class RetailerDetailComponent implements OnInit {
         Code: "",
         WebPortalRole: "",
         MobileAppRole: "",
-        ReportingToJobId: ""
+        ReportingToJobId: "",
       };
 
       if (this.NewContactDetail.get("Anniversorydate").value !== "") {
@@ -663,7 +662,7 @@ export class RetailerDetailComponent implements OnInit {
 
       if (this.NewContactDetail.get("Gender").value !== "") {
       } else {
-        //ErrorField.push("Gender");
+        ErrorField.push("Gender");
       }
 
       if (this.NewContactDetail.get("Mobile").value !== "") {
@@ -715,7 +714,7 @@ export class RetailerDetailComponent implements OnInit {
     let Items = [];
     if (IsValidType(CurrentPlanogramGid)) {
       let PlanogramRecord = this.PlanogrammainaisleModal.filter(
-        x => x.Gid === CurrentPlanogramGid
+        (x) => x.Gid === CurrentPlanogramGid
       );
       if (PlanogramRecord.length > 0) {
         Items = [];
@@ -741,22 +740,22 @@ export class RetailerDetailComponent implements OnInit {
           app: "MerchandiserApp",
           action: "UpdateRetailerTransactionZonePlanogram",
           requestId: "0",
-          deviceId: "web"
+          deviceId: "web",
         },
         content: {
           deviceId: "web",
           deviceType: "web",
           deviceOS: "Windows",
           deviceVersion: "web",
-          deviceInfo: "web"
-        }
+          deviceInfo: "web",
+        },
       };
 
       input.content.planogramGid = this.TzGid;
       input.content.retailerGid = this.RetailerDetail.Gid;
       this.http
         .post("Webportal/UpdateRetailerTransactionZonePlanogram", input)
-        .then(response => {
+        .then((response) => {
           if (this.commonService.IsValidResponse(response)) {
             let Data = response.content.data;
             if (IsValidType(Data) && Data !== "Fail to update") {
@@ -777,7 +776,7 @@ export class RetailerDetailComponent implements OnInit {
     this.TzGid = $(event.currentTarget).val();
     if (IsValidType(this.TzGid)) {
       let CurrentObject = this.TransactionZonePlanogram.filter(
-        x => x.Gid === this.TzGid
+        (x) => x.Gid === this.TzGid
       );
       if (CurrentObject.length) {
         let Current: TransactionZonePlanogramModal = CurrentObject[ZerothIndex];
@@ -824,7 +823,7 @@ export class RetailerDetailComponent implements OnInit {
         this.MainaisleImage = <File>Files[index];
         let reader = new FileReader();
         reader.readAsDataURL(this.MainaisleImage);
-        reader.onload = fileEvent => {
+        reader.onload = (fileEvent) => {
           this.MainaisleImageBuffer = reader.result;
         };
         // let mimeType: any = <File>Files[index].type;
@@ -851,7 +850,7 @@ export class RetailerDetailComponent implements OnInit {
         formData.append("retailerDetail", JSON.stringify(this.entity));
         this.http
           .upload("Webportal/ReplacePlanogrammainaisleImages", formData)
-          .then(response => {
+          .then((response) => {
             if (this.commonService.IsValidResponse(response)) {
               let Data = JSON.parse(response.content.data);
               if (IsValidType(Data["Afile"])) {
@@ -863,8 +862,8 @@ export class RetailerDetailComponent implements OnInit {
                   afiles.forEach((item, index) => {
                     FilePath = `${this.ServerUrl}\\${item.RelativePathText}\\${item.Label}.${item.FileExtension}`;
                     if (
-                      this.RetailerAfiles.filter(x => x === FilePath).length ===
-                      0
+                      this.RetailerAfiles.filter((x) => x === FilePath)
+                        .length === 0
                     )
                       this.RetailerAfiles.push(FilePath);
                   });
@@ -875,7 +874,7 @@ export class RetailerDetailComponent implements OnInit {
               }
             }
           })
-          .catch(error => {
+          .catch((error) => {
             this.commonService.ShowToast(
               "Server error. Please contact to admin."
             );
@@ -891,14 +890,14 @@ export class RetailerDetailComponent implements OnInit {
       MSData.content.portfolioGid = this.RetailerDetail.PortfolioGid;
       this.http
         .upload("Webportal/UpdateRetailerPortfolio", MSData)
-        .then(response => {
+        .then((response) => {
           if (this.commonService.IsValidResponse(response)) {
             this.commonService.ShowToast("Updated successfully.");
           } else {
             this.commonService.ShowToast("Fail to update.");
           }
         })
-        .catch(error => {
+        .catch((error) => {
           this.commonService.ShowToast(
             "Server error. Please contact to admin."
           );

@@ -8,7 +8,7 @@
       <div class="ipopup__header">
         <header>Add/Edit Region</header>
       </div>
-      <form (submit)="SubmitSearchCriateria()" class="pt-2" (keydown.enter)="$event.preventDefault()">
+      <form class="pt-2">
         <table class="mt-2">
           <tbody>
             <tr>
@@ -27,9 +27,10 @@
                 <div class="d-md-flex pt-2 mb-4 ml-4">
                   <div class="col-md-10">
                     <label for="ParentName">Country</label>
-                    <select name="Region" class="form-control" [(ngModel)]="entity.Region">
-                      <option value="">Select Region</option>
-                      <option *ngFor="let c of MasterData.Region" [attr.value]="c.Name">{{c.Name}}</option>
+                    <select name="ParentGid" class="form-control" [(ngModel)]="entity.ParentGid">
+                      <option value="">Select Country</option>
+                      <option *ngFor="let c of MasterData.Countries" [attr.value]="c.Gid">{{c.ParentName}}
+                      </option>
                     </select>
                   </div>
                 </div>

@@ -12,7 +12,19 @@ import {
   ExportToExcel,
 } from "src/providers/common-service/common.service";
 import * as $ from "jquery";
-import { JourneyPlan, Employee, PostParam } from "src/providers/constants";
+import {
+  JourneyPlan,
+  Employee,
+  PostParam,
+  M_Countries,
+  M_Region,
+  M_State,
+  M_City,
+  M_Supervisor,
+  M_Merchandiser,
+  State,
+  M_Retailer,
+} from "src/providers/constants";
 import { iNavigation } from "src/providers/iNavigation";
 import { AjaxService } from "src/providers/ajax.service";
 import { BusinessunitModel } from "src/app/businessunit/businessunit.component";
@@ -24,6 +36,18 @@ import { ApplicationStorage } from "src/providers/ApplicationStorage";
   styleUrls: ["./availabilityreport.component.sass"],
 })
 export class AvailabilityreportComponent implements OnInit {
+  length = 100;
+  pageSize = 10;
+  pageSizeOptions: number[] = [5, 10, 25, 100];
+
+  setPageSizeOptions(setPageSizeOptionsInput: string) {
+    if (setPageSizeOptionsInput) {
+      this.pageSizeOptions = setPageSizeOptionsInput
+        .split(",")
+        .map((str) => +str);
+    }
+  }
+
   selectedClass: string = "Assigned";
   public TodayJourneyPlanViewModel: Array<AvailabilityReportCategoryViewModel>;
   public ChildModel: Array<AvailabilityReportBrandViewModel>;
@@ -37,9 +61,8 @@ export class AvailabilityreportComponent implements OnInit {
   searchQuery: string = " 1=1 ";
   sortBy: string = "";
   pageIndex: number = 1;
-  pageSize: number = 15;
   TotalCount: number = 0;
-  MasterData: any = {};
+  MasterData: MasterDataModal;
   TotalPageCount: number = 0;
   AdvanceSearch: AdvanceFilter;
   AutodropdownCollection: any = {
@@ -58,6 +81,7 @@ export class AvailabilityreportComponent implements OnInit {
     private http: AjaxService,
     private local: ApplicationStorage
   ) {
+    this.MasterData = new MasterDataModal();
     let PageName = this.commonService.GetCurrentPageName();
     this.HeaderName = "Availability Report";
     this.ResetAdvanceFilter();
@@ -69,6 +93,7 @@ export class AvailabilityreportComponent implements OnInit {
   ResetAdvanceFilter() {
     this.AdvanceSearch = {
       Region: "",
+      Country: "",
       SubChannel: "",
       CustomerCode: "",
       CustomerName: "",
@@ -175,9 +200,9 @@ export class AvailabilityreportComponent implements OnInit {
 
   ngOnInit() {
     this.LoadData();
-    let LocalMasterData = this.local.getMaster();
+    let LocalMasterData = this.local.GetMasterDataValues(M_Region, null);
     if (IsValidType(LocalMasterData)) {
-      this.MasterData = LocalMasterData;
+      this.MasterData.M_Region = LocalMasterData;
     }
   }
   LoadData() {
@@ -263,6 +288,69 @@ export class AvailabilityreportComponent implements OnInit {
       );
     }
   }
+
+  LoadNextField() {
+    let currentType = $(event.currentTarget).attr("name");
+    if (IsValidType(currentType)) {
+      let NextFieldValue = null;
+      switch (currentType) {
+        case M_Countries:
+          NextFieldValue = this.local.GetMasterDataValues(
+            M_Region,
+            this.AdvanceSearch.Country
+          );
+          if (IsValidType(NextFieldValue)) {
+            this.MasterData.M_Region = NextFieldValue;
+          }
+          break;
+
+        case M_Region:
+          NextFieldValue = this.local.GetMasterDataValues(
+            M_State,
+            this.AdvanceSearch.Region
+          );
+          if (IsValidType(NextFieldValue)) {
+            this.MasterData.M_State = NextFieldValue;
+          }
+          break;
+
+        case M_State:
+          NextFieldValue = this.local.GetMasterDataValues(
+            M_City,
+            this.AdvanceSearch.State
+          );
+          if (IsValidType(NextFieldValue)) {
+            this.MasterData.M_City = NextFieldValue;
+          }
+          break;
+
+        case M_City:
+          NextFieldValue = this.local.GetMasterDataValues(
+            M_Retailer,
+            this.AdvanceSearch.City
+          );
+          if (IsValidType(NextFieldValue)) {
+            this.MasterData.M_Retailer = NextFieldValue;
+          }
+          break;
+
+        case M_Supervisor:
+          NextFieldValue = this.local.GetMasterDataValues(
+            M_Merchandiser,
+            this.AdvanceSearch.Supervisor
+          );
+          if (IsValidType(NextFieldValue)) {
+            this.MasterData.M_Merchandiser = NextFieldValue;
+          }
+          break;
+
+        case M_Merchandiser:
+          break;
+      }
+    } else {
+      this.commonService.ShowToast("Invalid selection.");
+    }
+  }
 }
 
 export class AvailabilityReportCategoryViewModel {
@@ -291,7 +379,8 @@ export class AvailabilityReportSKUViewModel {
   AvailabilityPercentage: string;
 }
 
-interface AdvanceFilter {
+export interface AdvanceFilter {
+  Country: string;
   Region: string;
   SubChannel: string;
   CustomerCode: string;
@@ -303,4 +392,14 @@ interface AdvanceFilter {
   Beat: string;
   Supervisor: string;
   Marchandisor: string;
+}
+
+export class MasterDataModal {
+  M_Countries: Array<any> = [];
+  M_State: Array<any> = [];
+  M_Region: Array<any> = [];
+  M_City: Array<any> = [];
+  M_Merchandiser: Array<any> = [];
+  M_Retailer: Array<any> = [];
+  M_Supervisor: Array<any> = [];
 }

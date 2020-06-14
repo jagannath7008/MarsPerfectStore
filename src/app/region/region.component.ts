@@ -202,29 +202,43 @@ export class RegionComponent implements OnInit {
     this.entity.ParentGid = "";
     this.EnableFilter = true;
   }
+
   Edit(editEntity: any) {
     this.Open();
     this.entity = editEntity;
   }
-  Save() {
-    console.log(this.entity);
-    this.http
-      .post("Webportal/SaveLocation", JSON.stringify(this.entity))
-      .then((response) => {
-        if (this.commonService.IsValidResponse(response)) {
-          this.commonService.ShowToast("Region details saved successfully.");
-          this.Close();
 
-          let Data = response.content.data;
-          if (Data != null && Data != "") {
-            this.IsEmptyRow = false;
-            this.TableResultSet = Data;
-            this.commonService.ShowToast("Data retrieve successfully.");
-          }
-        } else {
-          this.commonService.ShowToast("Unable to save data.");
-        }
-      });
+  Save() {
+    if (IsValidType(this.entity)) {
+      if (
+        this.entity.ParentGid !== null &&
+        this.entity.ParentGid !== "" &&
+        this.entity.ParentName !== null &&
+        this.entity.ParentName !== ""
+      ) {
+        this.Close();
+        this.http
+          .post("Webportal/SaveLocation", JSON.stringify(this.entity))
+          .then((response) => {
+            if (this.commonService.IsValidResponse(response)) {
+              let Data = response.content.data;
+              if (Data != null && Data != "") {
+                this.IsEmptyRow = false;
+                this.TableResultSet = Data;
+                this.commonService.ShowToast(
+                  "Region details saved successfully."
+                );
+              } else {
+                this.commonService.ShowToast("Fail to saved.");
+              }
+            } else {
+              this.commonService.ShowToast("Unable to save data.");
+            }
+          });
+      } else {
+        this.commonService.ShowToast("Please select Region name and Country.");
+      }
+    }
   }
 
   Remove(editEntity: any) {

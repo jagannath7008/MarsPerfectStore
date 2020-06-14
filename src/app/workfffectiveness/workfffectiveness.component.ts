@@ -7,7 +7,18 @@ import {
 import { ApplicationStorage } from "src/providers/ApplicationStorage";
 import { AjaxService } from "src/providers/ajax.service";
 import { NgbCalendar, NgbDateStruct } from "@ng-bootstrap/ng-bootstrap";
-import { ZerothIndex } from "./../../providers/constants";
+import * as $ from "jquery";
+import {
+  ZerothIndex,
+  M_Countries,
+  M_Region,
+  M_State,
+  M_City,
+  M_Retailer,
+  M_Merchandiser,
+  M_Supervisor,
+} from "./../../providers/constants";
+import { MasterDataModal } from "../availabilityreport/availabilityreport.component";
 
 @Component({
   selector: "app-workfffectiveness",
@@ -17,7 +28,7 @@ import { ZerothIndex } from "./../../providers/constants";
 export class WorkfffectivenessComponent implements OnInit {
   AttendenceReportData: Array<AttendenceReportByDate> = [];
   WorkEffectiveness: Array<WorkEffectivenessModal>;
-  MasterData: any;
+  MasterData: MasterDataModal;
   CalculatedDetail: any = [];
   selectedDate: any;
   datePickerConfig: any = {};
@@ -37,14 +48,15 @@ export class WorkfffectivenessComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    this.MasterData = new MasterDataModal();
     this.selectToday();
     this.Region = "";
     this.State = "";
     this.City = "";
     this.SO = "";
-    let LocalMasterData = this.local.getMaster();
+    let LocalMasterData = this.local.GetMasterDataValues(M_Region, null);
     if (IsValidType(LocalMasterData)) {
-      this.MasterData = LocalMasterData;
+      this.MasterData.M_Region = LocalMasterData;
     }
     this.InitData();
     this.LoadFilteredResult();
@@ -70,12 +82,12 @@ export class WorkfffectivenessComponent implements OnInit {
 
   LoadFilteredResult() {
     let SOCode = "";
-    let SupervisorDetail = this.MasterData.Supervisor.filter(
-      (x) => x.Gid === this.SO
-    );
-    if (SupervisorDetail.length > 0) {
-      SOCode = SupervisorDetail[ZerothIndex].Code;
-    }
+    // let SupervisorDetail = this.MasterData.Supervisor.filter(
+    //   (x) => x.Gid === this.SO
+    // );
+    // if (SupervisorDetail.length > 0) {
+    //   SOCode = SupervisorDetail[ZerothIndex].Code;
+    // }
     let filterDate =
       this.model.year.toString() +
       this.BuildDayAndMonth(this.model.month) +
@@ -286,6 +298,60 @@ export class WorkfffectivenessComponent implements OnInit {
       this.commonService.ShowToast(
         "Incorrect value passed to export to excel."
       );
+    }
+  }
+
+  LoadNextField() {
+    let currentType = $(event.currentTarget).attr("name");
+    if (IsValidType(currentType)) {
+      let NextFieldValue = null;
+      switch (currentType) {
+        case M_Countries:
+          NextFieldValue = this.local.GetMasterDataValues(M_Region, "Country");
+          if (IsValidType(NextFieldValue)) {
+            this.MasterData.M_Region = NextFieldValue;
+          }
+          break;
+
+        case M_Region:
+          NextFieldValue = this.local.GetMasterDataValues(M_State, this.Region);
+          if (IsValidType(NextFieldValue)) {
+            this.MasterData.M_State = NextFieldValue;
+          }
+          break;
+
+        case M_State:
+          NextFieldValue = this.local.GetMasterDataValues(M_City, this.State);
+          if (IsValidType(NextFieldValue)) {
+            this.MasterData.M_City = NextFieldValue;
+          }
+          break;
+
+        case M_City:
+          NextFieldValue = this.local.GetMasterDataValues(
+            M_Retailer,
+            this.City
+          );
+          if (IsValidType(NextFieldValue)) {
+            this.MasterData.M_Retailer = NextFieldValue;
+          }
+          break;
+
+        case M_Supervisor:
+          NextFieldValue = this.local.GetMasterDataValues(
+            M_Merchandiser,
+            this.SO
+          );
+          if (IsValidType(NextFieldValue)) {
+            this.MasterData.M_Merchandiser = NextFieldValue;
+          }
+          break;
+
+        case M_Merchandiser:
+          break;
+      }
+    } else {
+      this.commonService.ShowToast("Invalid selection.");
     }
   }
 }

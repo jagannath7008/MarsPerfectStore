@@ -6,7 +6,7 @@ import { FormControl } from "@angular/forms";
 import {
   CommonService,
   IsValidType,
-  ExportToExcel
+  ExportToExcel,
 } from "../../providers/common-service/common.service";
 import * as $ from "jquery";
 import { JourneyPlan, State, PostParam } from "../../providers/constants";
@@ -18,7 +18,7 @@ import { ApplicationStorage } from "src/providers/ApplicationStorage";
 @Component({
   selector: "app-state",
   templateUrl: "./state.component.html",
-  styleUrls: ["./state.component.scss"]
+  styleUrls: ["./state.component.scss"],
 })
 export class StateComponent implements OnInit {
   entity: any = new StateModel();
@@ -94,7 +94,14 @@ export class StateComponent implements OnInit {
     }
   }
 
-  SubmitSearchCriateria() {}
+  SubmitSearchCriateria() {
+    this.searchQuery = "1=1 ";
+    if (this.AdvanceSearch.Region !== "")
+      this.searchQuery += ` And j.Name='${this.AdvanceSearch.Region}' `;
+    if (this.AdvanceSearch.State !== "")
+      this.searchQuery += ` And j.Name='${this.AdvanceSearch.State}' `;
+    this.LoadData();
+  }
 
   LoadData() {
     let MSData = JSON.parse(PostParam);
@@ -104,7 +111,8 @@ export class StateComponent implements OnInit {
     MSData.content.pageSize = this.pageSize;
     MSData.content.locType = this.TypeEnum;
 
-    this.http.post("Webportal/FetchLocations", MSData).then(response => {
+    this.Close();
+    this.http.post("Webportal/FetchLocations", MSData).then((response) => {
       this.TableResultSet = [];
       if (this.commonService.IsValidResponse(response)) {
         let Data = response.content.data;
@@ -119,6 +127,7 @@ export class StateComponent implements OnInit {
                 (this.TotalPageCount + 1).toString()
               );
             }
+            this.ClearFilter();
             this.IsEmptyRow = false;
             this.TableResultSet = Record;
           }
@@ -139,19 +148,19 @@ export class StateComponent implements OnInit {
         app: "MerchandiserApp",
         action: "WebLogin",
         requestId: "0",
-        deviceId: "web"
+        deviceId: "web",
       },
       content: {
         deviceId: "web",
         deviceType: "web",
         deviceOS: "Windows",
         deviceVersion: "web",
-        deviceInfo: "web"
-      }
+        deviceInfo: "web",
+      },
     };
     input.content.searchString = "";
     input.content.locType = "REG";
-    this.http.post("Webportal/FetchLocations", input).then(response => {
+    this.http.post("Webportal/FetchLocations", input).then((response) => {
       this.TableResultSet = [];
       if (this.commonService.IsValidResponse(response)) {
         let Data = response.content.data;
@@ -162,21 +171,39 @@ export class StateComponent implements OnInit {
     });
   }
 
+  ClearFilter() {
+    this.AdvanceSearch = {
+      Region: "",
+      SubChannel: "",
+      CustomerCode: "",
+      CustomerName: "",
+      State: "",
+      ChainName: "",
+      City: "",
+      Address: "",
+      Beat: "",
+      Supervisor: "",
+      Marchandisor: "",
+    };
+  }
+
   ngOnInit() {
     this.BindingHeader = [
       { column: "Name", displayheader: "State Name", width: 10 },
       { column: "ParentName", displayheader: "Region Name", width: 10 },
       { column: "ParentGid", type: "hidden" },
-      { column: "Gid", type: "hidden" }
+      { column: "Gid", type: "hidden" },
     ];
 
-    this.BindParent();
-    this.LoadData();
-    this.LoadTableData();
+    this.ClearFilter();
     let LocalMasterData = this.local.getMaster();
     if (IsValidType(LocalMasterData)) {
       this.MasterData = LocalMasterData;
     }
+
+    this.BindParent();
+    this.LoadData();
+    this.LoadTableData();
   }
 
   Close() {
@@ -185,7 +212,8 @@ export class StateComponent implements OnInit {
   }
 
   ResetFilter() {
-    this.searchQuery = "";
+    this.searchQuery = " 1=1 ";
+    this.ClearFilter();
     this.LoadData();
   }
 
@@ -212,7 +240,7 @@ export class StateComponent implements OnInit {
     console.log(this.entity);
     this.http
       .post("Webportal/SaveLocation", JSON.stringify(this.entity))
-      .then(response => {
+      .then((response) => {
         if (this.commonService.IsValidResponse(response)) {
           this.commonService.ShowToast("State details saved successfully.");
           this.Close();
@@ -236,7 +264,7 @@ export class StateComponent implements OnInit {
     this.entity = editEntity;
     this.http
       .post("Webportal/RemoveLocation", JSON.stringify(this.entity))
-      .then(response => {
+      .then((response) => {
         if (this.commonService.IsValidResponse(response)) {
           this.commonService.ShowToast("Regopm removed successfully.");
           this.Close();
@@ -254,8 +282,10 @@ export class StateComponent implements OnInit {
   }
 
   ExportMe() {
-    if(!ExportToExcel('state-table', 'state')){
-      this.commonService.ShowToast("Incorrect value passed to export to excel.");
+    if (!ExportToExcel("state-table", "state")) {
+      this.commonService.ShowToast(
+        "Incorrect value passed to export to excel."
+      );
     }
   }
 }

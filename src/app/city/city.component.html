@@ -172,7 +172,7 @@
             <tr *ngFor="let item of TableResultSet;let odd = odd; let even = even;"
               [ngClass]="{odd: odd%2 !== 0 && IsStriped, even: even }">
               <ng-container *ngFor="let col of BindingHeader">
-                <td *ngIf="col.type !== 'hidden'" class="">
+                <td *ngIf="col.type !== 'hidden'">
                   <div [attr.name]="col.column">
                     <span role="view">{{item[col.column]}}</span>
                     <input role="edit" name="ItemName" type="text" class="d-none" [attr.value]="item[col.column]" />
