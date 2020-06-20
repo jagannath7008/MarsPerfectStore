@@ -13,7 +13,6 @@ import { JourneyPlan, Region, PostParam } from "../../providers/constants";
 import { iNavigation } from "../../providers/iNavigation";
 import { AjaxService } from "src/providers/ajax.service";
 import { ApplicationStorage } from "src/providers/ApplicationStorage";
-import { AdvanceFilter } from "../customerreports/customerreports.component";
 
 @Component({
   selector: "app-region",

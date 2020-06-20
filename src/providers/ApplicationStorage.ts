@@ -1,5 +1,14 @@
 import { Injectable } from "@angular/core";
 import { CommonService, IsValidType } from "./common-service/common.service";
+import {
+  ZerothIndex,
+  M_Merchandiser,
+  M_Supervisor,
+  M_Region,
+  M_State,
+  M_City,
+} from "./constants";
+import { AdvanceFilterModal } from "src/app/availabilityreport/availabilityreport.component";
 
 @Injectable()
 export class ApplicationStorage {
@@ -127,23 +136,109 @@ export class ApplicationStorage {
     return flag;
   }
 
+  public GetAdvanceFilterValue(AdvanceSearch: AdvanceFilterModal) {
+    if (IsValidType(AdvanceSearch)) {
+      let MasterData = this.getMaster();
+      if (IsValidType(AdvanceSearch.Marchandisor)) {
+        let Data = MasterData[M_Merchandiser].filter(
+          (x) => x.Gid === AdvanceSearch.Marchandisor
+        );
+        if (Data.length > 0) {
+          AdvanceSearch.Marchandisor = Data[ZerothIndex].Name;
+        }
+      }
+
+      if (IsValidType(AdvanceSearch.Supervisor)) {
+        let Data = MasterData[M_Supervisor].filter(
+          (x) => x.Gid === AdvanceSearch.Supervisor
+        );
+        if (Data.length > 0) {
+          AdvanceSearch.Supervisor = Data[ZerothIndex].Name;
+        }
+      }
+
+      if (IsValidType(AdvanceSearch.Region)) {
+        let Data = MasterData[M_Region].filter(
+          (x) => x.Gid === AdvanceSearch.Region
+        );
+        if (Data.length > 0) {
+          AdvanceSearch.Region = Data[ZerothIndex].Name;
+        }
+      }
+
+      if (IsValidType(AdvanceSearch.State)) {
+        let Data = MasterData[M_State].filter(
+          (x) => x.Gid === AdvanceSearch.State
+        );
+        if (Data.length > 0) {
+          AdvanceSearch.State = Data[ZerothIndex].Name;
+        }
+      }
+
+      if (IsValidType(AdvanceSearch.City)) {
+        let Data = MasterData[M_City].filter(
+          (x) => x.Gid === AdvanceSearch.City
+        );
+        if (Data.length > 0) {
+          AdvanceSearch.City = Data[ZerothIndex].Name;
+        }
+      }
+
+      if (IsValidType(AdvanceSearch.ChainName)) {
+        let Data = MasterData["ChainName"].filter(
+          (x) => x.Gid === AdvanceSearch.ChainName
+        );
+        if (Data.length > 0) {
+          AdvanceSearch.ChainName = Data[ZerothIndex].Name;
+        }
+      }
+    }
+  }
+
   public GetMasterDataValues(
     TableName: string = "",
-    Gid: string = ""
+    Gid: string = "",
+    Name: string = ""
   ): Array<any> {
     let ResponseData = new Array<any>();
     if (TableName !== "") {
       let MasterData = this.getMaster();
       if (IsValidType(TableName)) {
-        if (IsValidType(Gid)) {
-          ResponseData = MasterData[TableName].filter(
-            (x) => x.ParentGid == Gid
+        if (TableName === "Merchandiser") {
+          let CurrentSupervisor = MasterData.Supervisor.filter(
+            (x) => x.Gid == Gid
           );
+          if (CurrentSupervisor.length > 0) {
+            ResponseData = MasterData.Merchandiser.filter(
+              (x) => x.Code == CurrentSupervisor[ZerothIndex]["Code"]
+            );
+          }
         } else {
-          ResponseData = MasterData[TableName];
+          if (Name !== null && Name !== "") {
+            ResponseData = MasterData[TableName].filter((x) => x.State == Name);
+          } else if (IsValidType(Gid)) {
+            ResponseData = MasterData[TableName].filter(
+              (x) => x.ParentGid == Gid
+            );
+          } else {
+            ResponseData = MasterData[TableName];
+          }
         }
       }
     }
     return ResponseData;
+  }
+
+  public GetObjectByGid(TableName: string, Gid: string) {
+    let CurrentObject = null;
+    if (TableName !== null && TableName !== "" && Gid !== null && Gid !== "") {
+      let MasterData = this.getMaster();
+      if (IsValidType(MasterData)) {
+        CurrentObject = MasterData[TableName].filter((x) => x.Gid === Gid);
+        if (CurrentObject.length > 0) CurrentObject = CurrentObject[0];
+        else CurrentObject = null;
+      }
+    }
+    return CurrentObject;
   }
 }

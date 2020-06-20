@@ -76,12 +76,12 @@
                       <select
                         name="Supervisor"
                         class="form-control"
-                        [(ngModel)]="AdvanceSearch.M_Supervisor"
+                        [(ngModel)]="AdvanceSearch.Supervisor"
                         (change)="LoadNextField()"
                       >
                         <option value="">Select Supervisor</option>
                         <option
-                          *ngFor="let c of MasterData.Retailer"
+                          *ngFor="let c of MasterData.M_Supervisor"
                           [attr.value]="c.Gid"
                           >{{ c.Name }}</option
                         >
@@ -92,46 +92,16 @@
                       <select
                         name="Merchandiser"
                         class="form-control"
-                        [(ngModel)]="AdvanceSearch.M_Marchandisor"
+                        [(ngModel)]="AdvanceSearch.Marchandisor"
                         (change)="LoadNextField()"
                       >
                         <option value="">Select Marchandisor</option>
                         <option
-                          *ngFor="let c of MasterData.Merchandiser"
+                          *ngFor="let c of MasterData.M_Merchandiser"
                           [attr.value]="c.Gid"
                           >{{ c.Name }}</option
                         >
                       </select>
-                    </div>
-                  </div>
-                  <div class="col-md-12 row">
-                    <div class="form-group col-md-4">
-                      <label for="ChainName">Chain Name</label>
-                      <select
-                        name="ChainName"
-                        class="form-control"
-                        [(ngModel)]="AdvanceSearch.ChainName"
-                      >
-                        <option value="">Select Chain Name</option>
-                      </select>
-                    </div>
-                    <div class="form-group col-md-4">
-                      <label for="CustomerName">Customer Name</label>
-                      <input
-                        class="form-control"
-                        name="CustomerName"
-                        [(ngModel)]="AdvanceSearch.CustomerName"
-                        placeholder="Customer name"
-                      />
-                    </div>
-                    <div class="form-group col-md-4">
-                      <label for="Address">Customer Code</label>
-                      <input
-                        class="form-control plain-input"
-                        [(ngModel)]="AdvanceSearch.CustomerCode"
-                        name="CustomerCode"
-                        placeholder="Customer Code"
-                      />
                     </div>
                   </div>
                 </div>
@@ -255,10 +225,10 @@
                     <a class="round" (click)="PreviousPage()">&#8249;</a>
                     <a class="round" (click)="NextPage()">&#8250;</a>
                   </div>
-                  <div class="ml-2 d-inline-block p-text mr-4">
+                  <!-- <div class="ml-2 d-inline-block p-text mr-4">
                     Showing page:
                     <b>{{ this.pageIndex }} of {{ TotalPageCount }}</b>
-                  </div>
+                  </div> -->
                 </div>
               </td>
             </tr>

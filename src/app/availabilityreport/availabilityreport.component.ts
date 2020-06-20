@@ -1,11 +1,6 @@
 import { Component, OnInit, Input, ViewChild } from "@angular/core";
-import { Observable } from "rxjs/internal/Observable";
 import * as _ from "lodash";
-import { DatePipe } from "@angular/common";
-import { IGrid } from "src/providers/Generic/Interface/IGrid";
 import { FormBuilder } from "@angular/forms";
-import { FormGroup } from "@angular/forms";
-import { FormControl } from "@angular/forms";
 import {
   CommonService,
   IsValidType,
@@ -13,8 +8,6 @@ import {
 } from "src/providers/common-service/common.service";
 import * as $ from "jquery";
 import {
-  JourneyPlan,
-  Employee,
   PostParam,
   M_Countries,
   M_Region,
@@ -22,8 +15,8 @@ import {
   M_City,
   M_Supervisor,
   M_Merchandiser,
-  State,
   M_Retailer,
+  ZerothIndex,
 } from "src/providers/constants";
 import { iNavigation } from "src/providers/iNavigation";
 import { AjaxService } from "src/providers/ajax.service";
@@ -33,7 +26,7 @@ import { ApplicationStorage } from "src/providers/ApplicationStorage";
 @Component({
   selector: "app-availabilityreport",
   templateUrl: "./availabilityreport.component.html",
-  styleUrls: ["./availabilityreport.component.sass"],
+  styleUrls: ["./availabilityreport.component.scss"],
 })
 export class AvailabilityreportComponent implements OnInit {
   length = 100;
@@ -60,11 +53,14 @@ export class AvailabilityreportComponent implements OnInit {
   TotalHeaders: number = 5;
   searchQuery: string = " 1=1 ";
   sortBy: string = "";
+  OOSDetail: any;
   pageIndex: number = 1;
+  IsshowOosData: boolean = false;
+  GridData: any;
   TotalCount: number = 0;
   MasterData: MasterDataModal;
   TotalPageCount: number = 0;
-  AdvanceSearch: AdvanceFilter;
+  AdvanceSearch: AdvanceFilterModal;
   AutodropdownCollection: any = {
     Region: { data: [], placeholder: "Region" },
     SubChannel: { data: [], placeholder: "SubChannel" },
@@ -91,24 +87,12 @@ export class AvailabilityreportComponent implements OnInit {
   icon: string = "assets/images/view.png";
 
   ResetAdvanceFilter() {
-    this.AdvanceSearch = {
-      Region: "",
-      Country: "",
-      SubChannel: "",
-      CustomerCode: "",
-      CustomerName: "",
-      State: "",
-      ChainName: "",
-      City: "",
-      Address: "",
-      Beat: "",
-      Supervisor: "",
-      Marchandisor: "",
-    };
+    this.AdvanceSearch = new AdvanceFilterModal();
   }
 
   SubmitSearchCriateria() {
     let searchQuery = "1=1 ";
+    this.local.GetAdvanceFilterValue(this.AdvanceSearch);
 
     if (IsValidType(this.AdvanceSearch.Marchandisor)) {
       searchQuery +=
@@ -146,20 +130,7 @@ export class AvailabilityreportComponent implements OnInit {
       searchQuery += " And ChainName = '" + this.AdvanceSearch.ChainName + "'";
     }
 
-    if (this.AutodropdownCollection !== null) {
-      let keys = Object.keys(this.AutodropdownCollection);
-      let Value = null;
-      let index = 0;
-      while (index < keys.length) {
-        Value = this.commonService.ReadAutoCompleteObject($("#" + keys[index]));
-        if (Value !== null && Value["data"] !== "") {
-          searchQuery += ` And ${keys[index]} like '${Value.data}'`;
-        }
-        index++;
-      }
-    }
-
-    alert(searchQuery);
+    this.LoadData();
   }
 
   FilterLocaldata() {
@@ -207,47 +178,167 @@ export class AvailabilityreportComponent implements OnInit {
   }
   LoadData() {
     let MSData = JSON.parse(PostParam);
-    MSData.content.searchString = this.searchQuery;
-    MSData.content.sortBy = this.sortBy;
-    MSData.content.pageIndex = this.pageIndex;
-    MSData.content.pageSize = this.pageSize;
-
+    this.EnableFilter = false;
     this.http
-      .post("Webportal/FetchAvailabilityReport", MSData)
+      .post(
+        "Webportal/FetchAvailabilityReport",
+        JSON.stringify(this.AdvanceSearch)
+      )
       .then((response) => {
         this.TableResultSet = [];
         if (this.commonService.IsValidResponse(response)) {
           let Data = response.content.data;
+          let CurrentBrandItem = null;
+          let CurrentSKUItem = null;
           if (Data != null && Data != "") {
-            let Data = JSON.parse(response.content.data);
-            // console.log(Data);
-            // console.log(Data[0]["Record"]);
-            if (
-              IsValidType(Data[0]["Record"]) &&
-              IsValidType(Data[0]["Count"])
-            ) {
-              let Record = Data[0]["Record"];
-              this.TotalCount = Data[0]["Count"][0].TotalCount;
-              this.TotalPageCount = this.TotalCount / this.pageSize;
-              if (this.TotalCount % this.pageSize > 0) {
-                this.TotalPageCount = parseInt(
-                  (this.TotalPageCount + 1).toString()
+            let ServerData = JSON.parse(response.content.data);
+            if (IsValidType(ServerData)) {
+              let AvailableGridData = ServerData.Table;
+              let AvailableItemData = null;
+              if (IsValidType(AvailableGridData)) {
+                let SegmentItems = this.FilterGroupBy(
+                  AvailableGridData,
+                  "segmentName"
                 );
+
+                AvailableItemData = this.GenerateBindData(SegmentItems);
+                if (AvailableItemData.length > 0) {
+                  this.GridData = AvailableItemData;
+                }
+
+                if (IsValidType(SegmentItems)) {
+                  let SubCatagoryItems = null;
+                  let Keys = Object.keys(SegmentItems);
+                  let index = 0;
+                  while (index < Keys.length) {
+                    let SubCatagoryItems = null;
+                    SubCatagoryItems = SegmentItems[Keys[index]];
+                    let BrandItems = this.FilterGroupBy(
+                      SubCatagoryItems,
+                      "BrandName"
+                    );
+
+                    CurrentBrandItem = null;
+                    AvailableItemData = this.GenerateBindData(BrandItems);
+                    if (AvailableItemData.length > 0) {
+                      CurrentBrandItem = this.GridData.filter(
+                        (x) => x.Catagory === Keys[index]
+                      );
+                      if (CurrentBrandItem.length > 0) {
+                        CurrentBrandItem[ZerothIndex][
+                          "BrandItem"
+                        ] = AvailableItemData;
+                      }
+                    }
+
+                    if (IsValidType(BrandItems)) {
+                      let SubCatagoryItems = null;
+                      let innerKeys = Object.keys(BrandItems);
+                      let innerIndex = 0;
+                      while (innerIndex < innerKeys.length) {
+                        SubCatagoryItems = null;
+                        SubCatagoryItems = BrandItems[innerKeys[innerIndex]];
+                        let ParentSKUItems = this.FilterGroupBy(
+                          SubCatagoryItems,
+                          "ParentSKU"
+                        );
+                        AvailableItemData = this.GenerateBindData(
+                          ParentSKUItems
+                        );
+
+                        CurrentSKUItem = null;
+                        if (AvailableItemData.length > 0) {
+                          CurrentSKUItem = CurrentBrandItem[ZerothIndex][
+                            "BrandItem"
+                          ].filter((x) => x.Catagory === innerKeys[innerIndex]);
+                          if (CurrentSKUItem.length > 0) {
+                            CurrentSKUItem[ZerothIndex][
+                              "SKUItem"
+                            ] = AvailableItemData;
+                          }
+                        }
+                        innerIndex++;
+                      }
+                    }
+                    index++;
+                  }
+                }
               }
-              this.IsEmptyRow = false;
-              this.TodayJourneyPlanViewModel = Record;
             }
+            this.IsEmptyRow = false;
             this.commonService.ShowToast("Data retrieve successfully.");
           } else {
-            this.commonService.ShowToast("Unable to get data.");
+            this.GridData = [];
           }
+        } else {
+          this.commonService.ShowToast("Unable to get data.");
         }
       });
   }
+
+  GenerateBindData(Data: any) {
+    let BindingData = [];
+    if (IsValidType(Data)) {
+      let Keys = Object.keys(Data);
+      let index = 0;
+      let Total = 0;
+      let ItemDataName = null;
+      let OosItems = [];
+      while (index < Keys.length) {
+        ItemDataName = Data[Keys[index]];
+        OosItems = ItemDataName.filter((x) => x.IsAvailable === 0);
+        Total = ItemDataName.length;
+        BindingData.push({
+          Catagory: Keys[index],
+          TotalNoOfStore: Total,
+          AvailableStore: Total - OosItems.length,
+          OOS: OosItems,
+          OOSLength: OosItems.length,
+          AvailablePercentage: (
+            ((Total - OosItems.length) / Total) *
+            100
+          ).toFixed(2),
+        });
+        index++;
+      }
+    }
+    return BindingData;
+  }
+
   NextPage() {
     if (this.pageIndex + 1 <= this.TotalPageCount) {
       this.pageIndex = this.pageIndex + 1;
       this.LoadData();
+    }
+  }
+
+  ExpandCollapseChild() {
+    let $e = $(event.currentTarget)
+      .closest("div")
+      .find('div[name="content-table"]');
+
+    if ($e !== null) {
+      if ($e.length > 0) {
+        $($e[0]).toggleClass("d-none");
+      }
+    }
+  }
+
+  FilterGroupBy(xs, key) {
+    return xs.reduce(function (rv, x) {
+      (rv[x[key]] = rv[x[key]] || []).push(x);
+      return rv;
+    }, {});
+  }
+
+  ViewOOSDetail() {
+    let catagory = $(event.currentTarget).attr("Catagory");
+    if (IsValidType(catagory)) {
+      this.OOSDetail = this.GridData.filter((x) => x.Catagory === catagory);
+      if (this.OOSDetail.length > 0) {
+        this.OOSDetail = this.OOSDetail[0].availabilityReports;
+      }
+      this.IsshowOosData = true;
     }
   }
 
@@ -289,6 +380,11 @@ export class AvailabilityreportComponent implements OnInit {
     }
   }
 
+  ClosepopUp() {
+    this.IsshowOosData = false;
+    this.OOSDetail = [];
+  }
+
   LoadNextField() {
     let currentType = $(event.currentTarget).attr("name");
     if (IsValidType(currentType)) {
@@ -312,6 +408,11 @@ export class AvailabilityreportComponent implements OnInit {
           if (IsValidType(NextFieldValue)) {
             this.MasterData.M_State = NextFieldValue;
           }
+
+          this.MasterData.M_Supervisor = this.local.GetMasterDataValues(
+            M_Supervisor,
+            ""
+          );
           break;
 
         case M_State:
@@ -379,19 +480,23 @@ export class AvailabilityReportSKUViewModel {
   AvailabilityPercentage: string;
 }
 
-export interface AdvanceFilter {
-  Country: string;
-  Region: string;
-  SubChannel: string;
-  CustomerCode: string;
-  CustomerName: string;
-  State: string;
-  ChainName: string;
-  City: string;
-  Address: string;
-  Beat: string;
-  Supervisor: string;
-  Marchandisor: string;
+export class AdvanceFilterModal {
+  Country: string = "";
+  Region: string = "";
+  SubChannel: string = "";
+  CustomerCode: string = "";
+  CustomerName: string = "";
+  State: string = "";
+  ChainName: string = "";
+  City: string = "";
+  Address: string = "";
+  Beat: string = "";
+  Supervisor: string = "";
+  Marchandisor: string = "";
+  PageIndex: number = 0;
+  PageSize: number = 0;
+  SortBy: string = "";
+  SearchString: string = "";
 }
 
 export class MasterDataModal {

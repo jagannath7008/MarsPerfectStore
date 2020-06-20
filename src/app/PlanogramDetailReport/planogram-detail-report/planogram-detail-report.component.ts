@@ -2,22 +2,33 @@ import { Component, OnInit } from "@angular/core";
 import { IGrid } from "src/providers/Generic/Interface/IGrid";
 import {
   CommonService,
-  IsValidType
+  IsValidType,
 } from "src/providers/common-service/common.service";
-import { JourneyPlan, Employee } from "src/providers/constants";
+import {
+  M_Countries,
+  M_Region,
+  M_State,
+  M_City,
+  M_Retailer,
+  M_Supervisor,
+  M_Merchandiser,
+} from "src/providers/constants";
 import { iNavigation } from "src/providers/iNavigation";
 import { FormBuilder } from "@angular/forms";
-import { FormGroup } from "@angular/forms";
-import { FormControl } from "@angular/forms";
 import * as $ from "jquery";
 
 import { AjaxService } from "src/providers/ajax.service";
 import { PostParam } from "src/providers/constants";
+import {
+  MasterDataModal,
+  AdvanceFilterModal,
+} from "src/app/availabilityreport/availabilityreport.component";
+import { ApplicationStorage } from "src/providers/ApplicationStorage";
 
 @Component({
   selector: "app-planogram-detail-report",
   templateUrl: "./planogram-detail-report.component.html",
-  styleUrls: ["./planogram-detail-report.component.scss"]
+  styleUrls: ["./planogram-detail-report.component.scss"],
 })
 export class PlanogramDetailReportComponent implements OnInit {
   BindingHeader: Array<IGrid>;
@@ -25,6 +36,7 @@ export class PlanogramDetailReportComponent implements OnInit {
   searchQuery: string = " 1=1 ";
   sortBy: string = "";
   pageIndex: number = 1;
+  StateName: string = "";
   pageSize: number = 15;
   TotalCount: number = 0;
   TotalPageCount: number = 0;
@@ -34,7 +46,8 @@ export class PlanogramDetailReportComponent implements OnInit {
   BindTypeImages: Array<PlanogramTypeImages>;
   EnableFilter: boolean = false;
   EnableImagePopup: boolean = false;
-  AdvanceSearch: AdvanceFilter;
+  MasterData: MasterDataModal;
+  AdvanceSearch: AdvanceFilterModal;
   ServerBaseUrl: string;
   AutodropdownCollection: any = {
     Region: { data: [], placeholder: "Region" },
@@ -43,14 +56,16 @@ export class PlanogramDetailReportComponent implements OnInit {
     State: { data: [], placeholder: "State" },
     ChainName: { data: [], placeholder: "ChainName" },
     Marchandisor: { data: [], placeholder: "Marchandisor" },
-    City: { data: [], placeholder: "City" }
+    City: { data: [], placeholder: "City" },
   };
   constructor(
     private fb: FormBuilder,
     private commonService: CommonService,
     private nav: iNavigation,
-    private http: AjaxService
+    private http: AjaxService,
+    private local: ApplicationStorage
   ) {
+    this.MasterData = new MasterDataModal();
     let PageName = this.commonService.GetCurrentPageName();
     this.ServerBaseUrl = this.http.GetImageBaseUrl();
     this.HeaderName = "Planogram Detail";
@@ -58,19 +73,7 @@ export class PlanogramDetailReportComponent implements OnInit {
   }
 
   ResetAdvanceFilter() {
-    this.AdvanceSearch = {
-      Region: "",
-      SubChannel: "",
-      CustomerCode: "",
-      CustomerName: "",
-      State: "",
-      ChainName: "",
-      City: "",
-      Address: "",
-      Beat: "",
-      Supervisor: "",
-      Marchandisor: ""
-    };
+    this.AdvanceSearch = new AdvanceFilterModal();
   }
   SubmitSearchCriateria() {
     let searchQuery = "1=1 ";
@@ -111,20 +114,13 @@ export class PlanogramDetailReportComponent implements OnInit {
       searchQuery += " And ChainName = '" + this.AdvanceSearch.ChainName + "'";
     }
 
-    if (this.AutodropdownCollection !== null) {
-      let keys = Object.keys(this.AutodropdownCollection);
-      let Value = null;
-      let index = 0;
-      while (index < keys.length) {
-        Value = this.commonService.ReadAutoCompleteObject($("#" + keys[index]));
-        if (Value !== null && Value["data"] !== "") {
-          searchQuery += ` And ${keys[index]} like '${Value.data}'`;
-        }
-        index++;
-      }
-    }
+    alert(searchQuery);
   }
   ngOnInit() {
+    let LocalMasterData = this.local.GetMasterDataValues(M_Region, null);
+    if (IsValidType(LocalMasterData)) {
+      this.MasterData.M_Region = LocalMasterData;
+    }
     this.BindingHeader = [
       { column: "storeName", displayheader: "Store Name", width: 10 },
       { column: "MainAisleSuggested", displayheader: "MA Suggested" },
@@ -133,7 +129,7 @@ export class PlanogramDetailReportComponent implements OnInit {
       { column: "SecondaryVisibilityExecuted", displayheader: "SV Executed" },
       { column: "TransactionZoneSuggested", displayheader: "TZ Suggested" },
       { column: "TransactionZoneExecuted", displayheader: "TZ Executed" },
-      { column: "Gid", type: "hidden" }
+      { column: "Gid", type: "hidden" },
     ];
 
     this.LoadData();
@@ -156,7 +152,7 @@ export class PlanogramDetailReportComponent implements OnInit {
         "p.City",
         "p.Region",
         "p.State",
-        "p.Country"
+        "p.Country",
       ];
       this.searchQuery = " 1=1 ";
       let searchStmt = "";
@@ -205,7 +201,7 @@ export class PlanogramDetailReportComponent implements OnInit {
             Type: Imagelist[i].Type,
             ImageTypes: Imagelist[i].ImageTypes,
             SuggestedImages: Imagelist[i].SuggestedImages,
-            SubType: Imagelist[i].SubType
+            SubType: Imagelist[i].SubType,
           });
         }
       }
@@ -237,7 +233,7 @@ export class PlanogramDetailReportComponent implements OnInit {
 
     this.http
       .post("Webportal/FetchPlanogramDetailReport", PlanoGramData)
-      .then(response => {
+      .then((response) => {
         this.TableResultSet = [];
         if (this.commonService.IsValidResponse(response)) {
           let Data = response.content.data;
@@ -266,33 +262,6 @@ export class PlanogramDetailReportComponent implements OnInit {
           }
         }
       });
-
-    // this.BindSuggestedImages=[
-    // {Gid:"1234",Type:"MainAisle",SubType:"Suggested",ImageTypes:"MainAisleSuggested",SuggestedImages:"assets/images/Image5.jpg"},
-    // {Gid:"1234",Type:"MainAisle",SubType:"Suggested",ImageTypes:"MainAisleSuggested",SuggestedImages:"assets/images/Image6.jpg"},
-    // {Gid:"1234",Type:"MainAisle",SubType:"Suggested",ImageTypes:"MainAisleSuggested",SuggestedImages:"assets/images/Image6.jpg"},
-    // {Gid:"1234",Type:"MainAisle",SubType:"Suggested",ImageTypes:"MainAisleSuggested",SuggestedImages:"assets/images/Image6.jpg"},
-    // {Gid:"1234",Type:"MainAisle",SubType:"Suggested",ImageTypes:"MainAisleSuggested",SuggestedImages:"assets/images/Image6.jpg"},
-    // {Gid:"1234",Type:"MainAisle",SubType:"Suggested",ImageTypes:"MainAisleSuggested",SuggestedImages:"assets/images/Image6.jpg"},
-    // {Gid:"1234",Type:"MainAisle",SubType:"Suggested",ImageTypes:"MainAisleSuggested",SuggestedImages:"assets/images/Image6.jpg"},
-
-    // {Gid:"2345",Type:"MainAisle",SubType:"Suggested",ImageTypes:"MainAisleSuggested",SuggestedImages:"assets/images/Image7.jpg"},
-    // {Gid:"2345",Type:"MainAisle",SubType:"Suggested",ImageTypes:"MainAisleSuggested",SuggestedImages:"assets/images/Image8.jpg"},
-    // {Gid:"1234",Type:"MainAisle",SubType:"Executed",ImageTypes:"MainAisleExecuted",SuggestedImages:"assets/images/Image1.jpg"},
-    // {Gid:"1234",Type:"MainAisle",SubType:"Executed",ImageTypes:"MainAisleExecuted",SuggestedImages:"assets/images/Image2.jpg"},
-    // {Gid:"2345",Type:"MainAisle",SubType:"Executed",ImageTypes:"MainAisleExecuted",SuggestedImages:"assets/images/Image3.jpg"},
-    // {Gid:"2345",Type:"MainAisle",SubType:"Executed",ImageTypes:"MainAisleExecuted",SuggestedImages:"assets/images/Image4.jpg"}
-    // ];
-
-    //   this.TableResultSet=[
-    //     {Gid:"1234",storeName:"Pankaj",StoreCode:"0001",BusinessUnitCode:"Mars",UserCode:"U1",UserName:"User1"
-    //     ,BusinessUnitName:"MarsDetail",DateExecuted:"2020-02-09"
-    //     ,SuggestedImagesList:this.BindSuggestedImages},
-
-    //     {Gid:"2345",storeName:"Rahul",StoreCode:"0002",BusinessUnitCode:"Mars",UserCode:"U2",UserName:"User2"
-    //     ,BusinessUnitName:"MarsDetail"
-    //     ,DateExecuted:"2020-02-09",SuggestedImagesList:this.BindSuggestedImages}
-    //       ];
   }
 
   NextPage() {
@@ -306,6 +275,78 @@ export class PlanogramDetailReportComponent implements OnInit {
     if (this.pageIndex > 1) {
       this.pageIndex = this.pageIndex - 1;
       this.LoadData();
+    }
+  }
+
+  LoadNextField() {
+    let currentType = $(event.currentTarget).attr("name");
+    if (IsValidType(currentType)) {
+      let NextFieldValue = null;
+      switch (currentType) {
+        case M_Countries:
+          NextFieldValue = this.local.GetMasterDataValues(M_Region, "Country");
+          if (IsValidType(NextFieldValue)) {
+            this.MasterData.M_Region = NextFieldValue;
+          }
+          break;
+
+        case M_Region:
+          NextFieldValue = this.local.GetMasterDataValues(
+            M_State,
+            this.AdvanceSearch.Region
+          );
+          if (IsValidType(NextFieldValue)) {
+            this.MasterData.M_State = NextFieldValue;
+          }
+          break;
+
+        case M_State:
+          this.StateName = $(event.currentTarget)
+            .find("option:selected")
+            .text();
+          NextFieldValue = this.local.GetMasterDataValues(
+            M_City,
+            this.AdvanceSearch.State
+          );
+          if (IsValidType(NextFieldValue)) {
+            this.MasterData.M_City = NextFieldValue;
+          }
+
+          NextFieldValue = this.local.GetMasterDataValues(
+            M_Supervisor,
+            null,
+            this.StateName
+          );
+          if (IsValidType(NextFieldValue)) {
+            this.MasterData.M_Supervisor = NextFieldValue;
+          }
+          break;
+
+        case M_City:
+          NextFieldValue = this.local.GetMasterDataValues(
+            M_Retailer,
+            this.AdvanceSearch.City
+          );
+          if (IsValidType(NextFieldValue)) {
+            this.MasterData.M_Retailer = NextFieldValue;
+          }
+          break;
+
+        case M_Supervisor:
+          NextFieldValue = this.local.GetMasterDataValues(
+            M_Merchandiser,
+            this.AdvanceSearch.Supervisor
+          );
+          if (IsValidType(NextFieldValue)) {
+            this.MasterData.M_Merchandiser = NextFieldValue;
+          }
+          break;
+
+        case M_Merchandiser:
+          break;
+      }
+    } else {
+      this.commonService.ShowToast("Invalid selection.");
     }
   }
 }
@@ -337,18 +378,4 @@ export class PlanogramTypeImages {
   ImageTypes: string;
   SuggestedImages: string;
   SubType: string;
-}
-
-interface AdvanceFilter {
-  Region: string;
-  SubChannel: string;
-  CustomerCode: string;
-  CustomerName: string;
-  State: string;
-  ChainName: string;
-  City: string;
-  Address: string;
-  Beat: string;
-  Supervisor: string;
-  Marchandisor: string;
 }

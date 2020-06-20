@@ -6,22 +6,23 @@ import { FormControl } from "@angular/forms";
 import {
   CommonService,
   IsValidType,
-  ExportToExcel
+  ExportToExcel,
 } from "./../../providers/common-service/common.service";
 import * as $ from "jquery";
 import {
   JourneyPlan,
   RetailerDetail,
-  PostParam
+  PostParam,
 } from "./../../providers/constants";
 import { iNavigation } from "./../../providers/iNavigation";
 import { AjaxService } from "src/providers/ajax.service";
 import { ApplicationStorage } from "src/providers/ApplicationStorage";
+import { AdvanceFilterModal } from "../availabilityreport/availabilityreport.component";
 
 @Component({
   selector: "app-customerreports",
   templateUrl: "./customerreports.component.html",
-  styleUrls: ["./customerreports.component.scss"]
+  styleUrls: ["./customerreports.component.scss"],
 })
 export class CustomerreportsComponent implements OnInit {
   TableResultSet: Array<RetailerModal>;
@@ -36,7 +37,7 @@ export class CustomerreportsComponent implements OnInit {
   pageSize: number = 15;
   TotalCount: number = 0;
   TotalPageCount: number = 0;
-  AdvanceSearch: AdvanceFilter;
+  AdvanceSearch: AdvanceFilterModal;
   MasterData: any = {};
   AutodropdownCollection: any = {
     Region: { data: [], placeholder: "Region" },
@@ -45,7 +46,7 @@ export class CustomerreportsComponent implements OnInit {
     State: { data: [], placeholder: "State" },
     ChainName: { data: [], placeholder: "ChainName" },
     Marchandisor: { data: [], placeholder: "Marchandisor" },
-    City: { data: [], placeholder: "City" }
+    City: { data: [], placeholder: "City" },
   };
   constructor(
     private fb: FormBuilder,
@@ -65,19 +66,7 @@ export class CustomerreportsComponent implements OnInit {
   }
 
   ResetAdvanceFilter() {
-    this.AdvanceSearch = {
-      Region: "",
-      SubChannel: "",
-      CustomerCode: "",
-      CustomerName: "",
-      State: "",
-      ChainName: "",
-      City: "",
-      Address: "",
-      Beat: "",
-      Supervisor: "",
-      Marchandisor: ""
-    };
+    this.AdvanceSearch = new AdvanceFilterModal();
   }
 
   SubmitSearchCriateria() {
@@ -153,7 +142,7 @@ export class CustomerreportsComponent implements OnInit {
         "p.City",
         "p.Region",
         "p.State",
-        "p.Country"
+        "p.Country",
       ];
       this.searchQuery = " 1=1 ";
       let searchStmt = "";
@@ -181,7 +170,7 @@ export class CustomerreportsComponent implements OnInit {
     MSData.content.pageSize = this.pageSize;
 
     this.EnableFilter = false;
-    this.http.post("Webportal/FetchRetailers", MSData).then(response => {
+    this.http.post("Webportal/FetchRetailers", MSData).then((response) => {
       this.TableResultSet = [];
       if (this.commonService.IsValidResponse(response)) {
         let Data = response.content.data;
@@ -235,7 +224,7 @@ export class CustomerreportsComponent implements OnInit {
       { column: "Region", displayheader: "Region" },
       { column: "Address", displayheader: "Address" },
       { column: "KYCProgress", displayheader: "KYC Progress" },
-      { column: "Gid", type: "hidden" }
+      { column: "Gid", type: "hidden" },
     ];
     this.LoadData();
     this.LoadTableData();
@@ -277,8 +266,10 @@ export class CustomerreportsComponent implements OnInit {
   DeleteRecord() {}
 
   ExportMe() {
-    if(!ExportToExcel('customerreport-table', 'customerreport')){
-      this.commonService.ShowToast("Incorrect value passed to export to excel.");
+    if (!ExportToExcel("customerreport-table", "customerreport")) {
+      this.commonService.ShowToast(
+        "Incorrect value passed to export to excel."
+      );
     }
   }
 }
@@ -307,18 +298,4 @@ export class RetailerModal {
   Phone: String;
   HouseNo: String;
   Street: String;
-}
-
-export interface AdvanceFilter {
-  Region: string;
-  SubChannel: string;
-  CustomerCode: string;
-  CustomerName: string;
-  State: string;
-  ChainName: string;
-  City: string;
-  Address: string;
-  Beat: string;
-  Supervisor: string;
-  Marchandisor: string;
 }

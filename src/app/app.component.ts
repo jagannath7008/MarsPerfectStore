@@ -173,8 +173,12 @@ export class AppComponent {
       Retailer: [],
       Supervisor: [],
     };
-    if (IsValidType(MasterData["LocationTable"])) {
+    if (
+      IsValidType(MasterData["LocationTable"]) &&
+      IsValidType(MasterData["SupervisorAndMarchandiser"])
+    ) {
       let Data = MasterData["LocationTable"];
+      let RoleData = MasterData["SupervisorAndMarchandiser"];
       let index = 0;
       while (index < Data.length) {
         if (Data[index]["TypeEnum"] === "COU") {
@@ -204,14 +208,16 @@ export class AppComponent {
           ) {
             FinalData.City.push(Data[index]);
           }
-        } else if (Data[index]["TypeEnum"] === "Merchandiser") {
-          if (
-            FinalData.Merchandiser.filter((x) => x.Gid === Data[index].Gid)
-              .length === 0
-          ) {
-            FinalData.Merchandiser.push(Data[index]);
-          }
-        } else if (Data[index]["TypeEnum"] === "Retailer") {
+        }
+        // else if (Data[index]["TypeEnum"] === "Merchandiser") {
+        //   if (
+        //     FinalData.Merchandiser.filter((x) => x.Gid === Data[index].Gid)
+        //       .length === 0
+        //   ) {
+        //     FinalData.Merchandiser.push(Data[index]);
+        //   }
+        // }
+        else if (Data[index]["TypeEnum"] === "Retailer") {
           if (
             FinalData.Retailer.filter((x) => x.Gid === Data[index].Gid)
               .length === 0
@@ -228,6 +234,7 @@ export class AppComponent {
         }
         index++;
       }
+      FinalData.Merchandiser = RoleData;
     }
     return FinalData;
   }

@@ -12,8 +12,8 @@ import * as $ from "jquery";
 import { JourneyPlan, City, PostParam } from "../../providers/constants";
 import { iNavigation } from "../../providers/iNavigation";
 import { AjaxService } from "src/providers/ajax.service";
-import { AdvanceFilter } from "../customerreports/customerreports.component";
 import { ApplicationStorage } from "src/providers/ApplicationStorage";
+import { AdvanceFilterModal } from "../availabilityreport/availabilityreport.component";
 
 @Component({
   selector: "app-city",
@@ -37,7 +37,7 @@ export class CityComponent implements OnInit {
   TotalCount: number = 0;
   TotalPageCount: number = 0;
   MasterData: any = {};
-  AdvanceSearch: AdvanceFilter;
+  AdvanceSearch: AdvanceFilterModal;
   AdvanceFilterObject: FormGroup;
   AddCityModal: boolean = false;
   constructor(
@@ -162,19 +162,7 @@ export class CityComponent implements OnInit {
   }
 
   ClearFilter() {
-    this.AdvanceSearch = {
-      Region: "",
-      SubChannel: "",
-      CustomerCode: "",
-      CustomerName: "",
-      State: "",
-      ChainName: "",
-      City: "",
-      Address: "",
-      Beat: "",
-      Supervisor: "",
-      Marchandisor: "",
-    };
+    this.AdvanceSearch = new AdvanceFilterModal();
   }
 
   ngOnInit() {

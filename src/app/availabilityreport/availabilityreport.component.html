@@ -76,62 +76,32 @@
                       <select
                         name="Supervisor"
                         class="form-control"
-                        [(ngModel)]="AdvanceSearch.M_Supervisor"
+                        [(ngModel)]="AdvanceSearch.Supervisor"
                         (change)="LoadNextField()"
                       >
                         <option value="">Select Supervisor</option>
                         <option
-                          *ngFor="let c of MasterData.Retailer"
+                          *ngFor="let c of MasterData.M_Supervisor"
                           [attr.value]="c.Gid"
                           >{{ c.Name }}</option
                         >
                       </select>
                     </div>
                     <div class="form-group col-md-4">
-                      <label for="Marchandisor">Marchandisor</label>
+                      <label for="Merchandiser">Merchandiser</label>
                       <select
                         name="Merchandiser"
                         class="form-control"
-                        [(ngModel)]="AdvanceSearch.M_Marchandisor"
+                        [(ngModel)]="AdvanceSearch.Marchandisor"
                         (change)="LoadNextField()"
                       >
-                        <option value="">Select Marchandisor</option>
+                        <option value="">Select Merchandiser</option>
                         <option
-                          *ngFor="let c of MasterData.Merchandiser"
+                          *ngFor="let c of MasterData.M_Merchandiser"
                           [attr.value]="c.Gid"
                           >{{ c.Name }}</option
                         >
                       </select>
-                    </div>
-                  </div>
-                  <div class="col-md-12 row">
-                    <div class="form-group col-md-4">
-                      <label for="ChainName">Chain Name</label>
-                      <select
-                        name="ChainName"
-                        class="form-control"
-                        [(ngModel)]="AdvanceSearch.ChainName"
-                      >
-                        <option value="">Select Chain Name</option>
-                      </select>
-                    </div>
-                    <div class="form-group col-md-4">
-                      <label for="CustomerName">Customer Name</label>
-                      <input
-                        class="form-control"
-                        name="CustomerName"
-                        [(ngModel)]="AdvanceSearch.CustomerName"
-                        placeholder="Customer name"
-                      />
-                    </div>
-                    <div class="form-group col-md-4">
-                      <label for="Address">Customer Code</label>
-                      <input
-                        class="form-control plain-input"
-                        [(ngModel)]="AdvanceSearch.CustomerCode"
-                        name="CustomerCode"
-                        placeholder="Customer Code"
-                      />
                     </div>
                   </div>
                 </div>
@@ -200,15 +170,18 @@
       <div id="dynamic-grid-table" class="table-responsive border">
         <table class="table table-striped" id="avability-table">
           <thead>
-            <tr>
+            <tr style="background-color: #6f6f6f;">
               <th>
-                Category
+                Catagory
               </th>
               <th>
                 TotalNoStore
               </th>
               <th>
                 AvailableIn
+              </th>
+              <th>
+                OOS
               </th>
               <th>
                 % Availability
@@ -218,48 +191,45 @@
               </th>
             </tr>
           </thead>
-          <tbody>
-            <ng-container
-              *ngIf="
-                TodayJourneyPlanViewModel == null ||
-                TodayJourneyPlanViewModel.length == 0
-              "
-            >
-              <tr class="cls_norecord">
-                No record found
-              </tr>
-            </ng-container>
-            <ng-container
-              *ngFor="let row of TodayJourneyPlanViewModel; let i = index"
-            >
-              <tr>
-                <td>
-                  <span>{{ row.CategoryCode }}</span>
-                </td>
-                <td>
-                  <span>{{ row.TotalNoOfStores }}</span>
-                </td>
-                <td>
-                  <span>{{ row.AvailabileIn }}</span>
-                </td>
-                <td>
-                  <span>{{ row.AvailabilityPercentage }}</span>
-                </td>
-                <td>
-                  <span>
-                    <a (click)="ActiveRow[i] = !ActiveRow[i]">
-                      <img src="{{ icon }}" (click)="toggleIcon($event)" />
+          <tbody class="cls_new_grid_style">
+            <ng-container *ngFor="let GCRow of GridData">
+              <div class="table-content">
+                <tr>
+                  <td>
+                    <span>{{ GCRow.Catagory }}</span>
+                  </td>
+                  <td>
+                    <span>{{ GCRow.TotalNoOfStore }}</span>
+                  </td>
+                  <td>
+                    <span>{{ GCRow.AvailableStore }}</span>
+                  </td>
+                  <td>
+                    <a
+                      class="link-oos"
+                      [attr.catagory]="GCRow.Catagory"
+                      (click)="ViewOOSDetail()"
+                      >{{ GCRow.OOSLength }}</a
+                    >
+                  </td>
+                  <td>
+                    <span>{{ GCRow.AvailablePercentage }}</span>
+                  </td>
+                  <td>
+                    <a class="link-oos" (click)="ExpandCollapseChild()">
+                      <i class="fa fa-plus"></i>
                     </a>
-                  </span>
-                </td>
-              </tr>
-              <tr *ngIf="ActiveRow[i]">
-                <td colspan="8" cellpadding="5">
-                  <table style="width: 100%; margin-left: 0%;" class="table">
+                  </td>
+                </tr>
+                <div
+                  name="content-table"
+                  class="inner-table table-responsive border first-container d-none"
+                >
+                  <table class="table table-striped" id="avability-table">
                     <thead>
                       <tr style="background-color: #6f6f6f;">
                         <th>
-                          Brand
+                          Catagory
                         </th>
                         <th>
                           TotalNoStore
@@ -268,61 +238,61 @@
                           AvailableIn
                         </th>
                         <th>
+                          OOS
+                        </th>
+                        <th>
                           % Availability
+                        </th>
+                        <th>
+                          Action
                         </th>
                       </tr>
                     </thead>
                     <tbody class="cls_new_grid_style">
-                      <ng-container
-                        *ngIf="
-                          row.lstAvailabilityReportBrandViewModel == null ||
-                          row.lstAvailabilityReportBrandViewModel.length == 0
-                        "
-                      >
-                        <tr class="cls_norecord">
-                          No record found
-                        </tr>
-                      </ng-container>
-                      <ng-container
-                        *ngFor="
-                          let ChildRow of row.lstAvailabilityReportBrandViewModel;
-                          let j = index
-                        "
-                      >
-                        <tr>
-                          <td>
-                            <span>{{ ChildRow.BrandCode }}</span>
-                          </td>
-                          <td>
-                            <span>{{ ChildRow.TotalNoOfStores }}</span>
-                          </td>
-                          <td>
-                            <span>{{ ChildRow.AvailabileIn }}</span>
-                          </td>
-                          <td>
-                            <span>{{ ChildRow.AvailabilityPercentage }}</span>
-                          </td>
-                          <td>
-                            <span>
-                              <a (click)="ActiveRowGC[j] = !ActiveRowGC[j]">
-                                <img
-                                  src="{{ icon }}"
-                                  (click)="toggleIcon($event)"
-                                />
+                      <ng-container *ngFor="let brand of GCRow.BrandItem">
+                        <div class="table-content">
+                          <tr>
+                            <td>
+                              <span>{{ brand.Catagory }}</span>
+                            </td>
+                            <td>
+                              <span>{{ brand.TotalNoOfStore }}</span>
+                            </td>
+                            <td>
+                              <span>{{ brand.AvailableStore }}</span>
+                            </td>
+                            <td>
+                              <a
+                                class="link-oos"
+                                [attr.catagory]="brand.Catagory"
+                                (click)="ViewOOSDetail()"
+                                >{{ brand.OOSLength }}</a
+                              >
+                            </td>
+                            <td>
+                              <span>{{ brand.AvailablePercentage }}</span>
+                            </td>
+                            <td>
+                              <a
+                                class="link-oos"
+                                (click)="ExpandCollapseChild()"
+                              >
+                                <i class="fa fa-plus"></i>
                               </a>
-                            </span>
-                          </td>
-                        </tr>
-                        <tr *ngIf="ActiveRowGC[j]">
-                          <td colspan="8" cellpadding="5">
+                            </td>
+                          </tr>
+                          <div
+                            name="content-table"
+                            class="inner-table table-responsive border inner-container d-none"
+                          >
                             <table
-                              style="width: 100%; margin-left: 0%;"
-                              class="table"
+                              class="table table-striped"
+                              id="avability-table"
                             >
                               <thead>
                                 <tr style="background-color: #6f6f6f;">
                                   <th>
-                                    ParentSKU
+                                    Catagory
                                   </th>
                                   <th>
                                     TotalNoStore
@@ -331,59 +301,51 @@
                                     AvailableIn
                                   </th>
                                   <th>
+                                    OOS
+                                  </th>
+                                  <th>
                                     % Availability
                                   </th>
                                 </tr>
                               </thead>
                               <tbody class="cls_new_grid_style">
-                                <ng-container
-                                  *ngIf="
-                                    ChildRow.lstAvailabilityReportSKUViewModel ==
-                                      null ||
-                                    ChildRow.lstAvailabilityReportSKUViewModel
-                                      .length == 0
-                                  "
-                                >
-                                  <tr class="cls_norecord">
-                                    No record found
-                                  </tr>
-                                </ng-container>
-                                <ng-container
-                                  *ngFor="
-                                    let GCRow of ChildRow.lstAvailabilityReportSKUViewModel
-                                  "
-                                >
+                                <ng-container *ngFor="let sku of brand.SKUItem">
                                   <tr>
                                     <td>
-                                      <span>{{ GCRow.ItemCode }}</span>
+                                      <span>{{ sku.Catagory }}</span>
                                     </td>
                                     <td>
-                                      <span>{{ GCRow.TotalNoOfStores }}</span>
+                                      <span>{{ sku.TotalNoOfStore }}</span>
                                     </td>
                                     <td>
-                                      <span>{{ GCRow.AvailabileIn }}</span>
+                                      <span>{{ sku.AvailableStore }}</span>
                                     </td>
                                     <td>
-                                      <span>{{
-                                        GCRow.AvailabilityPercentage
-                                      }}</span>
+                                      <a
+                                        class="link-oos"
+                                        [attr.catagory]="sku.Catagory"
+                                        (click)="ViewOOSDetail()"
+                                        >{{ sku.OOSLength }}</a
+                                      >
+                                    </td>
+                                    <td>
+                                      <span>{{ sku.AvailablePercentage }}</span>
                                     </td>
                                   </tr>
                                 </ng-container>
                               </tbody>
                             </table>
-                          </td>
-                        </tr>
+                          </div>
+                        </div>
                       </ng-container>
                     </tbody>
                   </table>
-                </td>
-              </tr>
+                </div>
+              </div>
             </ng-container>
           </tbody>
-
           <tfoot>
-            <tr>
+            <!-- <tr>
               <td colspan="50">
                 <mat-paginator
                   [length]="TotalPageCount"
@@ -392,22 +354,80 @@
                   (page)="pageEvent = $event"
                 >
                 </mat-paginator>
-
-                <!-- 
-                <div class="d-flex flex-row-reverse">
-                  <div class="d-inline-block font-weight-bold">
-                    <a class="round" (click)="PreviousPage()">&#8249;</a>
-                    <a class="round" (click)="NextPage()">&#8250;</a>
-                  </div>
-                  <div class="ml-2 d-inline-block p-text mr-4">
-                    Showing page:
-                    <b>{{ this.pageIndex }} of {{ TotalPageCount }}</b>
-                  </div>
-                </div> -->
               </td>
-            </tr>
+            </tr> -->
           </tfoot>
         </table>
+      </div>
+
+      <div *ngIf="IsshowOosData" class="pp-container">
+        <div class="fade-screen">
+          <div class="fade-content">
+            <table class="table table-striped" id="avability-table">
+              <thead>
+                <tr style="background-color: #6f6f6f;">
+                  <th>
+                    Catagory
+                  </th>
+                  <th>
+                    BrandName
+                  </th>
+                  <th>
+                    ParentSKU
+                  </th>
+                  <th>
+                    State
+                  </th>
+                  <th>
+                    City
+                  </th>
+                </tr>
+              </thead>
+              <tbody class="cls_new_grid_style">
+                <ng-container *ngFor="let item of OOSDetail">
+                  <tr>
+                    <td>
+                      <span>{{ item.SegmentName }}</span>
+                    </td>
+                    <td>
+                      <span>{{ item.BrandName }}</span>
+                    </td>
+                    <td>
+                      <span>{{ item.ParentSKU }}</span>
+                    </td>
+                    <td>
+                      <span>{{ item.State }}</span>
+                    </td>
+                    <td>
+                      <span>{{ item.City }}</span>
+                    </td>
+                  </tr>
+                </ng-container>
+              </tbody>
+              <tfoot>
+                <!-- <tr>
+              <td colspan="50">
+                <mat-paginator
+                  [length]="TotalPageCount"
+                  [pageSize]="pageSize"
+                  [pageSizeOptions]="pageSizeOptions"
+                  (page)="pageEvent = $event"
+                >
+                </mat-paginator>
+              </td>
+            </tr> -->
+              </tfoot>
+            </table>
+            <div class="footer">
+              <a
+                class="btn btn-sm btn-outline-dark big-icon"
+                (click)="ClosepopUp()"
+              >
+                <i class="fas fa-times-circle"></i>
+              </a>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>

@@ -1,0 +1,57 @@
+.fade-screen {
+  position: fixed;
+  left: 0px;
+  right: 0px;
+  top: 0px;
+  bottom: 0px;
+  margin: auto;
+  background-color: rgba(175, 106, 106, 0.82);
+}
+
+.fade-content {
+  height: 75%;
+  overflow-y: auto;
+  padding: 30px 10px;
+  background: #fff;
+  margin: 80px;
+}
+
+.link-oos {
+  color: darkblue;
+  text-decoration: underline;
+  font-weight: bold;
+}
+
+.link-oos:hover {
+  cursor: pointer;
+}
+
+.footer {
+  position: absolute;
+  top: 45px;
+  right: 45px;
+  color: #fff;
+}
+
+.big-icon {
+  font-size: 34px;
+  border: none !important;
+}
+
+.inner-table {
+  margin: 1rem;
+}
+
+.table-content {
+  display: contents;
+}
+
+.first-container {
+  width: 134%;
+  display: inline-block;
+}
+
+.inner-container {
+  width: 158%;
+  display: inline-block;
+}

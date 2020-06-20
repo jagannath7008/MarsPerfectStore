@@ -25,7 +25,7 @@ import { AjaxService } from "src/providers/ajax.service";
 import { ApplicationStorage } from "src/providers/ApplicationStorage";
 import {
   MasterDataModal,
-  AdvanceFilter,
+  AdvanceFilterModal,
 } from "../availabilityreport/availabilityreport.component";
 
 @Component({
@@ -47,7 +47,7 @@ export class KycreportComponent implements OnInit {
   TotalCount: number = 0;
   MasterData: MasterDataModal;
   TotalPageCount: number = 0;
-  AdvanceSearch: AdvanceFilter;
+  AdvanceSearch: AdvanceFilterModal;
   AutodropdownCollection: any = {
     Region: { data: [], placeholder: "Region" },
     SubChannel: { data: [], placeholder: "SubChannel" },
@@ -74,75 +74,45 @@ export class KycreportComponent implements OnInit {
   icon: string = "assets/images/view.png";
 
   ResetAdvanceFilter() {
-    this.AdvanceSearch = {
-      Region: "",
-      SubChannel: "",
-      CustomerCode: "",
-      CustomerName: "",
-      State: "",
-      ChainName: "",
-      City: "",
-      Address: "",
-      Beat: "",
-      Supervisor: "",
-      Marchandisor: "",
-      Country: "",
-    };
+    this.AdvanceSearch = new AdvanceFilterModal();
   }
 
   SubmitSearchCriateria() {
     let searchQuery = "1=1 ";
-
-    if (IsValidType(this.AdvanceSearch.Marchandisor)) {
-      searchQuery +=
-        " And Marchandisor = '" + this.AdvanceSearch.Marchandisor + "'";
+    let RegionData = this.local.GetObjectByGid(
+      M_Region,
+      this.AdvanceSearch.Region
+    );
+    if (RegionData !== null) {
+      this.AdvanceSearch.Region = RegionData.Name;
+    }
+    let StateData = this.local.GetObjectByGid(
+      M_State,
+      this.AdvanceSearch.State
+    );
+    if (StateData !== null) {
+      this.AdvanceSearch.State = StateData.Name;
+    }
+    let CityData = this.local.GetObjectByGid(M_City, this.AdvanceSearch.City);
+    if (CityData !== null) {
+      this.AdvanceSearch.City = CityData.Name;
+    }
+    let SOData = this.local.GetObjectByGid(
+      M_Supervisor,
+      this.AdvanceSearch.Supervisor
+    );
+    if (SOData !== null) {
+      this.AdvanceSearch.Supervisor = SOData.Name;
     }
 
-    if (IsValidType(this.AdvanceSearch.Supervisor)) {
-      searchQuery +=
-        " And Supervisor = '" + this.AdvanceSearch.Supervisor + "'";
+    let Marchandiser = this.local.GetObjectByGid(
+      M_Merchandiser,
+      this.AdvanceSearch.Marchandisor
+    );
+    if (Marchandiser !== null) {
+      this.AdvanceSearch.Marchandisor = Marchandiser.Name;
     }
-
-    if (IsValidType(this.AdvanceSearch.Region)) {
-      searchQuery += " And Region = '" + this.AdvanceSearch.Region + "'";
-    }
-
-    if (this.AdvanceSearch.CustomerName) {
-      searchQuery +=
-        " And CustomerName = '" + this.AdvanceSearch.CustomerName + "'";
-    }
-
-    if (this.AdvanceSearch.CustomerCode) {
-      searchQuery +=
-        " And CustomerCode = '" + this.AdvanceSearch.CustomerCode + "'";
-    }
-
-    if (this.AdvanceSearch.State) {
-      searchQuery += " And State = '" + this.AdvanceSearch.State + "'";
-    }
-
-    if (this.AdvanceSearch.City) {
-      searchQuery += " And City = '" + this.AdvanceSearch.City + "'";
-    }
-
-    if (this.AdvanceSearch.ChainName) {
-      searchQuery += " And ChainName = '" + this.AdvanceSearch.ChainName + "'";
-    }
-
-    if (this.AutodropdownCollection !== null) {
-      let keys = Object.keys(this.AutodropdownCollection);
-      let Value = null;
-      let index = 0;
-      while (index < keys.length) {
-        Value = this.commonService.ReadAutoCompleteObject($("#" + keys[index]));
-        if (Value !== null && Value["data"] !== "") {
-          searchQuery += ` And ${keys[index]} like '${Value.data}'`;
-        }
-        index++;
-      }
-    }
-
-    alert(searchQuery);
+    this.LoadData();
   }
 
   FilterLocaldata() {
@@ -196,11 +166,12 @@ export class KycreportComponent implements OnInit {
     MSData.content.pageIndex = this.pageIndex;
     MSData.content.pageSize = this.pageSize;
 
+    this.EnableFilter = false;
     this.http
       .post("Webportal/FetchKYCReport", {
-        Region: "",
-        City: "",
-        SOName: "",
+        Region: this.AdvanceSearch.Region,
+        City: this.AdvanceSearch.City,
+        SOName: this.AdvanceSearch.Supervisor,
         MerchandiserName: "",
       })
       .then((response) => {
@@ -279,12 +250,18 @@ export class KycreportComponent implements OnInit {
           break;
 
         case M_State:
+          let StateName = $(event.currentTarget).find("option:selected").text();
           NextFieldValue = this.local.GetMasterDataValues(
             M_City,
             this.AdvanceSearch.State
           );
           if (IsValidType(NextFieldValue)) {
             this.MasterData.M_City = NextFieldValue;
+          }
+
+          NextFieldValue = this.local.GetMasterDataValues(M_Supervisor, "");
+          if (IsValidType(NextFieldValue)) {
+            this.MasterData.M_Supervisor = NextFieldValue;
           }
           break;
 

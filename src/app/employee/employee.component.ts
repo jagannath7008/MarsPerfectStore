@@ -13,7 +13,6 @@ import { JourneyPlan, Employee, PostParam } from "../../providers/constants";
 import { iNavigation } from "../../providers/iNavigation";
 import { AjaxService } from "src/providers/ajax.service";
 import { BusinessunitModel } from "../businessunit/businessunit.component";
-import { AdvanceFilter } from "../customerreports/customerreports.component";
 import { ApplicationStorage } from "src/providers/ApplicationStorage";
 
 @Component({

@@ -88,7 +88,7 @@
             (change)="LoadNextField()"
           >
             <option value="">All City</option>
-            <option *ngFor="let c of MasterData.M_City" [attr.value]="c.Name">{{
+            <option *ngFor="let c of MasterData.M_City" [attr.value]="c.Gid">{{
               c.Name
             }}</option>
           </select>
@@ -121,7 +121,7 @@
 
   <div class="col-12 p-0 mt-2 mb-2">
     <button class="btn btn-outline-info" (click)="ResetResult()">Reset</button>
-    <button class="ml-2 btn btn-primary" (click)="LoadFilteredResult()">
+    <button class="ml-2 btn btn-primary" (click)="SubmitSearchCriateria()">
       Filter
     </button>
   </div>

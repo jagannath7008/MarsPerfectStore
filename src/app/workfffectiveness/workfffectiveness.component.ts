@@ -81,13 +81,7 @@ export class WorkfffectivenessComponent implements OnInit {
   }
 
   LoadFilteredResult() {
-    let SOCode = "";
-    // let SupervisorDetail = this.MasterData.Supervisor.filter(
-    //   (x) => x.Gid === this.SO
-    // );
-    // if (SupervisorDetail.length > 0) {
-    //   SOCode = SupervisorDetail[ZerothIndex].Code;
-    // }
+    let SOCode = this.SO;
     let filterDate =
       this.model.year.toString() +
       this.BuildDayAndMonth(this.model.month) +
@@ -301,6 +295,27 @@ export class WorkfffectivenessComponent implements OnInit {
     }
   }
 
+  SubmitSearchCriateria() {
+    let searchQuery = "1=1 ";
+    let RegionData = this.local.GetObjectByGid(M_Region, this.Region);
+    if (RegionData !== null) {
+      this.Region = RegionData.Name;
+    }
+    let StateData = this.local.GetObjectByGid(M_State, this.State);
+    if (StateData !== null) {
+      this.State = StateData.Name;
+    }
+    let CityData = this.local.GetObjectByGid(M_City, this.City);
+    if (CityData !== null) {
+      this.City = CityData.Name;
+    }
+    let SOData = this.local.GetObjectByGid(M_Supervisor, this.SO);
+    if (SOData !== null) {
+      this.SO = SOData.Code;
+    }
+    this.LoadFilteredResult();
+  }
+
   LoadNextField() {
     let currentType = $(event.currentTarget).attr("name");
     if (IsValidType(currentType)) {
@@ -318,12 +333,27 @@ export class WorkfffectivenessComponent implements OnInit {
           if (IsValidType(NextFieldValue)) {
             this.MasterData.M_State = NextFieldValue;
           }
+
+          this.MasterData.M_Supervisor = this.local.GetMasterDataValues(
+            M_Supervisor,
+            ""
+          );
           break;
 
         case M_State:
+          let StateName = $(event.currentTarget).find("option:selected").text();
           NextFieldValue = this.local.GetMasterDataValues(M_City, this.State);
           if (IsValidType(NextFieldValue)) {
             this.MasterData.M_City = NextFieldValue;
+          }
+
+          NextFieldValue = this.local.GetMasterDataValues(
+            M_Supervisor,
+            null,
+            StateName
+          );
+          if (IsValidType(NextFieldValue)) {
+            this.MasterData.M_Supervisor = NextFieldValue;
           }
           break;
 
