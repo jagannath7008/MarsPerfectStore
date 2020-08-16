@@ -459,60 +459,65 @@
       <div *ngIf="IsshowOosData" class="pp-container">
         <div class="fade-screen">
           <div class="fade-content">
-            <div class="table table-striped" id="avability-table">
-              <div>
-                <div class="d-table">
-                  <div class="d-col">
-                    Outlet Code
-                  </div>
-                  <div class="d-col">
-                    Outlet Name
-                  </div>
-                  <div class="d-col">
-                    Sub Channel
-                  </div>
-                  <div class="d-col">
-                    Chain Name
-                  </div>
-                  <div class="d-col">
-                    City
-                  </div>
-                  <div class="d-col">
-                    Merchandiser Name
-                  </div>
-                  <div class="d-col">
-                    Last Visit Date
-                  </div>
-                </div>
-              </div>
-              <div class="cls_new_grid_style">
-                <ng-container *ngFor="let item of OOSDetail">
-                  <div class="d-body">
-                    <div class="d-col">
-                      <span>{{ item.OutletCode }}</span>
-                    </div>
-                    <div class="d-col">
-                      <span>{{ item.OutletName }}</span>
-                    </div>
-                    <div class="d-col">
-                      <span>{{ item.SubChannel }}</span>
-                    </div>
-                    <div class="d-col">
-                      <span>{{ item.ChainName }}</span>
-                    </div>
-                    <div class="d-col">
-                      <span>{{ item.City }}</span>
-                    </div>
-                    <div class="d-col">
-                      <span>{{ item.MerchandiserName }}</span>
-                    </div>
-                    <div class="d-col">
-                      <span>{{ item.VisitDate }}</span>
-                    </div>
-                  </div>
-                </ng-container>
-              </div>
+            <div class="col-12 text-right">
+              <a (click)="ExportMe()" class="export-btn">
+                <i class="far fa-file-excel"></i>
+              </a>
             </div>
+            <table class="table table-striped" id="oos-avability-table">
+              <thead>
+                <tr>
+                  <th>
+                    Outlet Code
+                  </th>
+                  <th>
+                    Outlet Name
+                  </th>
+                  <th>
+                    Sub Channel
+                  </th>
+                  <th>
+                    Chain Name
+                  </th>
+                  <th>
+                    City
+                  </th>
+                  <th>
+                    Merchandiser Name
+                  </th>
+                  <th>
+                    Last Visit Date
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <ng-container *ngFor="let item of OOSDetail">
+                  <tr>
+                    <td>
+                      <span>{{ item.OutletCode }}</span>
+                    </td>
+                    <td>
+                      <span>{{ item.OutletName }}</span>
+                    </td>
+                    <td>
+                      <span>{{ item.SubChannel }}</span>
+                    </td>
+                    <td>
+                      <span>{{ item.ChainName }}</span>
+                    </td>
+                    <td>
+                      <span>{{ item.City }}</span>
+                    </td>
+                    <td>
+                      <span>{{ item.MerchandiserName }}</span>
+                    </td>
+                    <td>
+                      <span>{{ item.VisitDate }}</span>
+                    </td>
+                  </tr>
+                </ng-container>
+              </tbody>
+            </table>
             <div class="footer">
               <a
                 class="btn btn-sm btn-outline-dark big-icon"

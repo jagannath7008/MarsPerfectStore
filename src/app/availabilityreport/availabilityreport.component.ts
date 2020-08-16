@@ -372,10 +372,10 @@ export class AvailabilityreportComponent implements OnInit {
     SegmentName: string,
     BrandName: string,
     ParentSKUName: string
-  ): number {
+  ): Array<any> {
     let UniqueVisitedStore = 0;
+    let UniqueStore = [];
     if (this.StoreVisitedTable !== null && this.StoreVisitedTable.length > 0) {
-      let UniqueStore = [];
       let index = 0;
       let Items = [];
       Items = this.StoreVisitedTable;
@@ -402,9 +402,9 @@ export class AvailabilityreportComponent implements OnInit {
           UniqueStore.push(Items[index]);
         index++;
       }
-      UniqueVisitedStore = UniqueStore.length;
+      //UniqueVisitedStore = UniqueStore.length;
     }
-    return UniqueVisitedStore;
+    return UniqueStore;
   }
 
   GenerateBindData(Key: string, Data: any, MSLData: any, Type: string) {
@@ -417,6 +417,8 @@ export class AvailabilityreportComponent implements OnInit {
       let UniqueMSLData = null;
       let OosItems = [];
       let OOSCount = 0;
+      let TotalVisitedStore = 0;
+      let UniqueVisitedStoreList = [];
 
       while (index < Keys.length) {
         ItemDataName = this.GetUniqueItem(Key, Data[Keys[index]]);
@@ -424,8 +426,6 @@ export class AvailabilityreportComponent implements OnInit {
         // OosItems = this.GetOutOfStockItems(UniqueMSLData, ItemDataName);
         OosItems = ItemDataName.filter((x) => x.IsAvailable === 0);
         ItemDataName = ItemDataName.filter((x) => x.IsAvailable === 1);
-        Total = UniqueMSLData.length;
-        OOSCount = UniqueMSLData.length - ItemDataName.length;
 
         if (Type === "Segment") {
           this.CurrentSegmentName = Keys[index];
@@ -442,17 +442,35 @@ export class AvailabilityreportComponent implements OnInit {
           this.CurrentParentSKU = Keys[index];
         }
 
+        UniqueVisitedStoreList = this.GetUniqueStoreVisited(
+          this.CurrentSegmentName,
+          this.CurrentBrandName,
+          this.CurrentParentSKU
+        );
+
+        Total = UniqueMSLData.length;
+        OOSCount = UniqueVisitedStoreList.length - ItemDataName.length;
+        TotalVisitedStore = UniqueVisitedStoreList.length;
+
+        if (ItemDataName !== null && ItemDataName.length > 0) {
+          var filteredArray = UniqueVisitedStoreList.filter(function (oos) {
+            return (
+              ItemDataName.filter(function (avlstore) {
+                return avlstore.RetailerGid == oos.RetailerGid;
+              }).length == 0
+            );
+          });
+
+          if (filteredArray.length > 0) UniqueVisitedStoreList = filteredArray;
+        }
+
         BindingData.push({
           Catagory: Keys[index],
           TotalNoOfStore: this.TotalStore,
           TotalMSLData: UniqueMSLData,
-          VisitedRetailer: this.GetUniqueStoreVisited(
-            this.CurrentSegmentName,
-            this.CurrentBrandName,
-            this.CurrentParentSKU
-          ),
+          VisitedRetailer: TotalVisitedStore,
           AvailableStore: ItemDataName.length,
-          OOS: OosItems,
+          OOS: UniqueVisitedStoreList,
           OOSLength: OOSCount > 0 ? OOSCount : 0,
           AvailablePercentage:
             Total > 0 ? ((ItemDataName.length / Total) * 100).toFixed(2) : 0,
@@ -544,7 +562,7 @@ export class AvailabilityreportComponent implements OnInit {
   }
 
   ExportMe() {
-    if (!ExportToExcel("avability-table", "avability")) {
+    if (!ExportToExcel("oos-avability-table", "avability")) {
       this.commonService.ShowToast(
         "Incorrect value passed to export to excel."
       );

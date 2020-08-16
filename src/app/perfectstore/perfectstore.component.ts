@@ -21,6 +21,7 @@ export class PerfectstoreComponent implements OnInit {
   IsEmptyRow: boolean = false;
   HeaderName: string = "";
   MasterData: MasterDataModal;
+  EnableFilter: boolean = false;
   searchQuery: string = " 1=1 ";
   AdvanceSearch: AdvanceFilterModal;
   constructor(
@@ -72,6 +73,14 @@ export class PerfectstoreComponent implements OnInit {
     }
     return UniqueItems;
   }
+
+  FilterLocaldata() {}
+
+  ResetFilter() {}
+
+  GetAdvanceFilter() {}
+
+  ExportMe() {}
 
   SubmitSearchCriateria() {
     let searchQuery = "1=1 ";
