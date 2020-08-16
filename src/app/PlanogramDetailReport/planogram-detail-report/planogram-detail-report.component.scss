@@ -58,3 +58,43 @@
     }
   }
   
+  .fade-screen {
+    position: fixed;
+    left: 0px;
+    right: 0px;
+    top: 0px;
+    bottom: 0px;
+    margin: auto;
+    background-color: rgba(175, 106, 106, 0.82);
+    z-index: 999999;
+  }
+  
+  .fade-content {
+    height: 75%;
+    overflow-y: auto;
+    padding: 30px 10px;
+    background: #fff;
+    margin: 80px;
+  }
+
+ .img-box {
+    border-bottom: 1px solid #d9d9d9;
+    display: block;
+    padding: 33px;
+}
+
+.img-file {
+  width: 100%;
+}
+
+.footer {
+  position: absolute;
+  top: 45px;
+  right: 45px;
+  color: #fff;
+}
+
+.big-icon {
+  font-size: 34px;
+  border: none !important;
+}

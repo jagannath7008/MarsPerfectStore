@@ -52,7 +52,8 @@ import { IncentivetargetdetailComponent } from './incentivetargetdetail/incentiv
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MatPaginatorModule } from '@angular/material/paginator'
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { PerfectstoreComponent } from './perfectstore/perfectstore.component'
 
 @NgModule({
   declarations: [
@@ -90,7 +91,8 @@ import { MatPaginatorModule } from '@angular/material/paginator'
     IncentivetargetheaderComponent,
     PromotiondetailComponent,
     SpecialvisibilitydetailComponent,
-    IncentivetargetdetailComponent
+    IncentivetargetdetailComponent,
+    PerfectstoreComponent
   ],
   imports: [
     NgMultiSelectDropDownModule.forRoot(),

@@ -55,3 +55,22 @@
   width: 158%;
   display: inline-block;
 }
+
+.d-col {
+  flex-grow: 1 !important;
+  flex-basis: 25% !important;
+}
+
+.d-table {
+  background-color: #5b5479;
+  display: flex !important;
+  padding: 10px 10px;
+  color: #eee;
+}
+
+.d-body {
+  display: flex !important;
+  border: 1px solid #d9d9d9;
+  margin-top: 6px;
+  padding: 6px 0px;
+}

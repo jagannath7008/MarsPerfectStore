@@ -103,6 +103,40 @@
                         >
                       </select>
                     </div>
+                    <div class="form-group col-md-4">
+                      <label for="ChainName">Chain Name</label>
+                      <select
+                        name="ChainName"
+                        class="form-control"
+                        [(ngModel)]="AdvanceSearch.ChainName"
+                        (change)="LoadNextField()"
+                      >
+                        <option value="">Select Chain Name</option>
+                        <option
+                          *ngFor="let c of MasterData.M_ChainName"
+                          [attr.value]="c.Gid"
+                          >{{ c.ChainName }}</option
+                        >
+                      </select>
+                    </div>
+                  </div>
+                  <div class="col-md-12 row">
+                    <div class="form-group col-md-4">
+                      <label for="CustomerName">Customer Name</label>
+                      <select
+                        name="CustomerName"
+                        class="form-control"
+                        [(ngModel)]="AdvanceSearch.CustomerName"
+                        (change)="LoadNextField()"
+                      >
+                        <option value="">Select Customer Name</option>
+                        <option
+                          *ngFor="let c of MasterData.M_CustomerName"
+                          [attr.value]="c.Gid"
+                          >{{ c.CustomerName }}</option
+                        >
+                      </select>
+                    </div>
                   </div>
                 </div>
               </td>
@@ -172,13 +206,19 @@
           <thead>
             <tr style="background-color: #6f6f6f;">
               <th>
-                Catagory
+                Category
               </th>
               <th>
-                TotalNoStore
+                Retailer Universe
               </th>
               <th>
-                AvailableIn
+                No. MSL Retailer
+              </th>
+              <th>
+                Visited retailer
+              </th>
+              <th>
+                Available In
               </th>
               <th>
                 OOS
@@ -202,13 +242,19 @@
                     <span>{{ GCRow.TotalNoOfStore }}</span>
                   </td>
                   <td>
+                    <span>{{ GCRow.TotalMSLData.length }}</span>
+                  </td>
+                  <td>
+                    <span>{{ GCRow.VisitedRetailer }}</span>
+                  </td>
+                  <td>
                     <span>{{ GCRow.AvailableStore }}</span>
                   </td>
                   <td>
                     <a
                       class="link-oos"
                       [attr.catagory]="GCRow.Catagory"
-                      (click)="ViewOOSDetail()"
+                      (click)="ViewOOSDetail(GCRow.Catagory, '', -1)"
                       >{{ GCRow.OOSLength }}</a
                     >
                   </td>
@@ -216,8 +262,14 @@
                     <span>{{ GCRow.AvailablePercentage }}</span>
                   </td>
                   <td>
-                    <a class="link-oos" (click)="ExpandCollapseChild()">
-                      <i class="fa fa-plus"></i>
+                    <a
+                      *ngIf="GCRow.TotalMSLData.length > 0"
+                      class="link-oos"
+                      name="plus-sign"
+                      (click)="ExpandCollapseChild()"
+                    >
+                      <i name="plus" class="fa fa-plus"></i>
+                      <i name="minus" class="d-none fa fa-minus"></i>
                     </a>
                   </td>
                 </tr>
@@ -229,10 +281,16 @@
                     <thead>
                       <tr style="background-color: #6f6f6f;">
                         <th>
-                          Catagory
+                          Brand
                         </th>
                         <th>
-                          TotalNoStore
+                          Retailer Universe
+                        </th>
+                        <th>
+                          No. MSL Retailer
+                        </th>
+                        <th>
+                          Visited retailer
                         </th>
                         <th>
                           AvailableIn
@@ -259,13 +317,25 @@
                               <span>{{ brand.TotalNoOfStore }}</span>
                             </td>
                             <td>
+                              <span>{{ brand.TotalMSLData.length }}</span>
+                            </td>
+                            <td>
+                              <span>{{ brand.VisitedRetailer }}</span>
+                            </td>
+                            <td>
                               <span>{{ brand.AvailableStore }}</span>
                             </td>
                             <td>
                               <a
                                 class="link-oos"
                                 [attr.catagory]="brand.Catagory"
-                                (click)="ViewOOSDetail()"
+                                (click)="
+                                  ViewOOSDetail(
+                                    GCRow.Catagory,
+                                    brand.Catagory,
+                                    -1
+                                  )
+                                "
                                 >{{ brand.OOSLength }}</a
                               >
                             </td>
@@ -274,10 +344,13 @@
                             </td>
                             <td>
                               <a
+                                *ngIf="brand.TotalMSLData.length > 0"
                                 class="link-oos"
+                                name="plus-sign"
                                 (click)="ExpandCollapseChild()"
                               >
-                                <i class="fa fa-plus"></i>
+                                <i name="plus" class="fa fa-plus"></i>
+                                <i name="minus" class="d-none fa fa-minus"></i>
                               </a>
                             </td>
                           </tr>
@@ -292,10 +365,16 @@
                               <thead>
                                 <tr style="background-color: #6f6f6f;">
                                   <th>
-                                    Catagory
+                                    Parent SKU
                                   </th>
                                   <th>
-                                    TotalNoStore
+                                    Retailer Universe
+                                  </th>
+                                  <th>
+                                    No. MSL Retailer
+                                  </th>
+                                  <th>
+                                    Visited retailer
                                   </th>
                                   <th>
                                     AvailableIn
@@ -309,13 +388,24 @@
                                 </tr>
                               </thead>
                               <tbody class="cls_new_grid_style">
-                                <ng-container *ngFor="let sku of brand.SKUItem">
-                                  <tr>
+                                <ng-container
+                                  *ngFor="
+                                    let sku of brand.SKUItem;
+                                    let index = index
+                                  "
+                                >
+                                  <tr [attr.rowIndex]="index">
                                     <td>
                                       <span>{{ sku.Catagory }}</span>
                                     </td>
                                     <td>
                                       <span>{{ sku.TotalNoOfStore }}</span>
+                                    </td>
+                                    <td>
+                                      <span>{{ sku.TotalMSLData.length }}</span>
+                                    </td>
+                                    <td>
+                                      <span>{{ sku.VisitedRetailer }}</span>
                                     </td>
                                     <td>
                                       <span>{{ sku.AvailableStore }}</span>
@@ -324,7 +414,13 @@
                                       <a
                                         class="link-oos"
                                         [attr.catagory]="sku.Catagory"
-                                        (click)="ViewOOSDetail()"
+                                        (click)="
+                                          ViewOOSDetail(
+                                            GCRow.Catagory,
+                                            brand.Catagory,
+                                            index
+                                          )
+                                        "
                                         >{{ sku.OOSLength }}</a
                                       >
                                     </td>
@@ -363,61 +459,60 @@
       <div *ngIf="IsshowOosData" class="pp-container">
         <div class="fade-screen">
           <div class="fade-content">
-            <table class="table table-striped" id="avability-table">
-              <thead>
-                <tr style="background-color: #6f6f6f;">
-                  <th>
-                    Catagory
-                  </th>
-                  <th>
-                    BrandName
-                  </th>
-                  <th>
-                    ParentSKU
-                  </th>
-                  <th>
-                    State
-                  </th>
-                  <th>
+            <div class="table table-striped" id="avability-table">
+              <div>
+                <div class="d-table">
+                  <div class="d-col">
+                    Outlet Code
+                  </div>
+                  <div class="d-col">
+                    Outlet Name
+                  </div>
+                  <div class="d-col">
+                    Sub Channel
+                  </div>
+                  <div class="d-col">
+                    Chain Name
+                  </div>
+                  <div class="d-col">
                     City
-                  </th>
-                </tr>
-              </thead>
-              <tbody class="cls_new_grid_style">
+                  </div>
+                  <div class="d-col">
+                    Merchandiser Name
+                  </div>
+                  <div class="d-col">
+                    Last Visit Date
+                  </div>
+                </div>
+              </div>
+              <div class="cls_new_grid_style">
                 <ng-container *ngFor="let item of OOSDetail">
-                  <tr>
-                    <td>
-                      <span>{{ item.SegmentName }}</span>
-                    </td>
-                    <td>
-                      <span>{{ item.BrandName }}</span>
-                    </td>
-                    <td>
-                      <span>{{ item.ParentSKU }}</span>
-                    </td>
-                    <td>
-                      <span>{{ item.State }}</span>
-                    </td>
-                    <td>
+                  <div class="d-body">
+                    <div class="d-col">
+                      <span>{{ item.OutletCode }}</span>
+                    </div>
+                    <div class="d-col">
+                      <span>{{ item.OutletName }}</span>
+                    </div>
+                    <div class="d-col">
+                      <span>{{ item.SubChannel }}</span>
+                    </div>
+                    <div class="d-col">
+                      <span>{{ item.ChainName }}</span>
+                    </div>
+                    <div class="d-col">
                       <span>{{ item.City }}</span>
-                    </td>
-                  </tr>
+                    </div>
+                    <div class="d-col">
+                      <span>{{ item.MerchandiserName }}</span>
+                    </div>
+                    <div class="d-col">
+                      <span>{{ item.VisitDate }}</span>
+                    </div>
+                  </div>
                 </ng-container>
-              </tbody>
-              <tfoot>
-                <!-- <tr>
-              <td colspan="50">
-                <mat-paginator
-                  [length]="TotalPageCount"
-                  [pageSize]="pageSize"
-                  [pageSizeOptions]="pageSizeOptions"
-                  (page)="pageEvent = $event"
-                >
-                </mat-paginator>
-              </td>
-            </tr> -->
-              </tfoot>
-            </table>
+              </div>
+            </div>
             <div class="footer">
               <a
                 class="btn btn-sm btn-outline-dark big-icon"

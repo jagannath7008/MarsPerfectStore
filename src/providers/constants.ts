@@ -33,6 +33,7 @@ export const SpecialVisibilityDetail = "specialvisibilitydetail";
 export const IncentiveTargetHeader = "incentivetargetheader";
 export const IncentiveTargetDetail = "incentivetargetdetail";
 export const KYCReport = "kycreport";
+export const PerfectStore = "perfectstore";
 
 //---------------- Master fields names ------------------------------
 
@@ -43,6 +44,8 @@ export const M_City = "City";
 export const M_Merchandiser = "Merchandiser";
 export const M_Retailer = "Retailer";
 export const M_Supervisor = "Supervisor";
+export const M_ChainName = "ChainName";
+export const M_CustomerName = "CustomerName";
 
 export const PageName: Array<RouteDescription> = [
   { title: Login, display: "Login" },

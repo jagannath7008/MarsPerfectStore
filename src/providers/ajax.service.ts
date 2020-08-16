@@ -13,6 +13,7 @@ import { ApplicationStorage } from "./ApplicationStorage";
 const TokenName = "x-request-token";
 const NoAuth: boolean = true;
 const UseIP = "173.225.111.13";
+//const UseIP = "3.7.152.76";
 const UseLocal = "localhost:9300/api/";
 @Injectable()
 export class AjaxService {

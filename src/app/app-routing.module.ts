@@ -31,6 +31,7 @@ import {
   SpecialVisibilityDetail,
   IncentiveTargetHeader,
   IncentiveTargetDetail,
+  PerfectStore,
 } from "src/providers/constants";
 import { LoginComponent } from "./login/login.component";
 import { DashboardComponent } from "./dashboard/dashboard.component";
@@ -63,6 +64,7 @@ import { SpecialvisibilityheaderComponent } from "./specialvisibilityheader/spec
 import { SpecialvisibilitydetailComponent } from "./specialvisibilitydetail/specialvisibilitydetail.component";
 import { IncentivetargetheaderComponent } from "./incentivetargetheader/incentivetargetheader.component";
 import { IncentivetargetdetailComponent } from "./incentivetargetdetail/incentivetargetdetail.component";
+import { PerfectstoreComponent } from "./perfectstore/perfectstore.component";
 
 const routes: Routes = [
   { path: "", component: LoginComponent },
@@ -112,6 +114,7 @@ const routes: Routes = [
   },
   { path: IncentiveTargetHeader, component: IncentivetargetheaderComponent },
   { path: IncentiveTargetDetail, component: IncentivetargetdetailComponent },
+  { path: PerfectStore, component: PerfectstoreComponent },
 ];
 
 @NgModule({

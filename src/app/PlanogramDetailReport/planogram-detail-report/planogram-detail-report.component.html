@@ -4,6 +4,28 @@
     <h4>{{ HeaderName | uppercase }}</h4>
   </div>
 
+  <div *ngIf="IsshowOosData" class="pp-container">
+    <div class="fade-screen">
+      <div class="fade-content">
+        <div class="img-box" *ngFor="let images of ShowCaseImages">
+          <img
+            [src]="ServerBaseUrl + '\\' + images.SuggestedImages"
+            class="img-file"
+            alt="User"
+          />
+        </div>
+        <div class="footer">
+          <a
+            class="btn btn-sm btn-outline-dark big-icon"
+            (click)="ClosepopUp()"
+          >
+            <i class="fas fa-times-circle"></i>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <div *ngIf="EnableFilter" class="ipopup">
     <div class="ipopup__content">
       <div class="ipopup__header">
@@ -120,7 +142,7 @@
                         >
                       </select>
                     </div>
-                    <div class="form-group col-md-4">
+                    <!-- <div class="form-group col-md-4">
                       <label for="CustomerName">Customer Name</label>
                       <input
                         class="form-control"
@@ -128,16 +150,7 @@
                         [(ngModel)]="AdvanceSearch.CustomerName"
                         placeholder="Customer name"
                       />
-                    </div>
-                    <div class="form-group col-md-4">
-                      <label for="Address">Customer Code</label>
-                      <input
-                        class="form-control plain-input"
-                        [(ngModel)]="AdvanceSearch.CustomerCode"
-                        name="CustomerCode"
-                        placeholder="Customer Code"
-                      />
-                    </div>
+                    </div> -->
                   </div>
                 </div>
               </td>
@@ -341,8 +354,9 @@
                     <div
                       style="overflow-y: auto; height: 57px; width: 60px;"
                       *ngIf="col.column !== 'storeName'"
+                      (click)="ShowImages(item.lstPlanogramSuggestedImages)"
                     >
-                      <div
+                      <div name="image-showcase"
                         *ngFor="let images of item.lstPlanogramSuggestedImages"
                       >
                         <div

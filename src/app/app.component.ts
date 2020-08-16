@@ -30,6 +30,7 @@ import {
   SpecialVisibilityHeader,
   IncentiveTargetDetail,
   IncentiveTargetHeader,
+  PerfectStore,
 } from "src/providers/constants";
 import {
   CommonService,
@@ -140,6 +141,8 @@ export class AppComponent {
                 break;
               case "/" + IncentiveTargetDetail:
                 break;
+              case "/" + PerfectStore:
+                break;
               default:
                 this.commonService.EnableAuthBase();
                 this.IsLogin = true;
@@ -172,6 +175,8 @@ export class AppComponent {
       Merchandiser: [],
       Retailer: [],
       Supervisor: [],
+      ChainName: [],
+      CustomerName: [],
     };
     if (
       IsValidType(MasterData["LocationTable"]) &&
@@ -179,6 +184,8 @@ export class AppComponent {
     ) {
       let Data = MasterData["LocationTable"];
       let RoleData = MasterData["SupervisorAndMarchandiser"];
+      let Customers = MasterData["Customer"];
+      let ChainName = MasterData["ChainName"];
       let index = 0;
       while (index < Data.length) {
         if (Data[index]["TypeEnum"] === "COU") {
@@ -235,6 +242,8 @@ export class AppComponent {
         index++;
       }
       FinalData.Merchandiser = RoleData;
+      FinalData.ChainName = ChainName;
+      FinalData.CustomerName = Customers;
     }
     return FinalData;
   }

@@ -37,9 +37,11 @@ export class PlanogramDetailReportComponent implements OnInit {
   sortBy: string = "";
   pageIndex: number = 1;
   StateName: string = "";
+  IsshowOosData: boolean = false;
+  ShowCaseImages: any;
   pageSize: number = 15;
   TotalCount: number = 0;
-  TotalPageCount: number = 0;
+  TotalPageCount: number = 1;
   HeaderName: string = "Page Name";
   TableResultSet: any[];
   BindSuggestedImages: Array<PlanogramSuggestedImages>;
@@ -77,6 +79,7 @@ export class PlanogramDetailReportComponent implements OnInit {
   }
   SubmitSearchCriateria() {
     let searchQuery = "1=1 ";
+    this.local.GetAdvanceFilterValue(this.AdvanceSearch);
 
     if (IsValidType(this.AdvanceSearch.Marchandisor)) {
       searchQuery +=
@@ -114,7 +117,8 @@ export class PlanogramDetailReportComponent implements OnInit {
       searchQuery += " And ChainName = '" + this.AdvanceSearch.ChainName + "'";
     }
 
-    alert(searchQuery);
+    this.searchQuery = searchQuery;
+    this.LoadData();
   }
   ngOnInit() {
     let LocalMasterData = this.local.GetMasterDataValues(M_Region, null);
@@ -278,6 +282,16 @@ export class PlanogramDetailReportComponent implements OnInit {
     }
   }
 
+  ClosepopUp() {
+    this.IsshowOosData = false;
+    this.ShowCaseImages = [];
+  }
+
+  ShowImages(Item: any) {
+    this.ShowCaseImages = Item;
+    this.IsshowOosData = true;
+  }
+
   LoadNextField() {
     let currentType = $(event.currentTarget).attr("name");
     if (IsValidType(currentType)) {
@@ -298,6 +312,11 @@ export class PlanogramDetailReportComponent implements OnInit {
           if (IsValidType(NextFieldValue)) {
             this.MasterData.M_State = NextFieldValue;
           }
+
+          this.MasterData.M_Supervisor = this.local.GetMasterDataValues(
+            M_Supervisor,
+            ""
+          );
           break;
 
         case M_State:

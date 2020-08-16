@@ -205,20 +205,24 @@ export class ApplicationStorage {
       let MasterData = this.getMaster();
       if (IsValidType(TableName)) {
         if (TableName === "Merchandiser") {
-          let CurrentSupervisor = MasterData.Supervisor.filter(
-            (x) => x.Gid == Gid
+          let CurrentSupervisor = this.GetUniqueItems(
+            MasterData.Supervisor.filter((x) => x.Gid == Gid)
           );
           if (CurrentSupervisor.length > 0) {
-            ResponseData = MasterData.Merchandiser.filter(
-              (x) => x.Code == CurrentSupervisor[ZerothIndex]["Code"]
+            ResponseData = this.GetUniqueItems(
+              MasterData.Merchandiser.filter(
+                (x) => x.Code == CurrentSupervisor[ZerothIndex]["Code"]
+              )
             );
           }
         } else {
           if (Name !== null && Name !== "") {
-            ResponseData = MasterData[TableName].filter((x) => x.State == Name);
+            ResponseData = this.GetUniqueItems(
+              MasterData[TableName].filter((x) => x.Name == Name)
+            );
           } else if (IsValidType(Gid)) {
-            ResponseData = MasterData[TableName].filter(
-              (x) => x.ParentGid == Gid
+            ResponseData = this.GetUniqueItems(
+              MasterData[TableName].filter((x) => x.ParentGid == Gid)
             );
           } else {
             ResponseData = MasterData[TableName];
@@ -227,6 +231,59 @@ export class ApplicationStorage {
       }
     }
     return ResponseData;
+  }
+
+  private GetUniqueItems(Data: Array<any>): Array<any> {
+    let FilteredData = [];
+    if (IsValidType(Data)) {
+      let index = 0;
+      while (index < Data.length) {
+        if (
+          FilteredData.filter((x) => x.Gid === Data[index].Gid).length === 0
+        ) {
+          FilteredData.push(Data[index]);
+        }
+        index++;
+      }
+    }
+    return FilteredData;
+  }
+
+  public GetChainOrCustomer(
+    IsChain: boolean,
+    CityGid: string = "",
+    ChainName: string = ""
+  ) {
+    let ChainNameData = [];
+    if (IsValidType(CityGid)) {
+      let MasterData = this.getMaster();
+      let FilteredData = MasterData.City.filter((x) => x.Gid === CityGid);
+      if (FilteredData.length > 0) {
+        if (IsChain) {
+          ChainNameData = MasterData.ChainName.filter(
+            (x) => x.City === FilteredData[ZerothIndex].Name
+          );
+        } else {
+          ChainNameData = MasterData.CustomerName.filter(
+            (x) => x.City === FilteredData[ZerothIndex].Name
+          );
+        }
+      }
+    }
+    if (ChainName !== "") {
+      let MasterData = this.getMaster();
+      ChainNameData = MasterData.CustomerName.filter(
+        (x) => x.ChainName === ChainName
+      );
+    } else {
+      let MasterData = this.getMaster();
+      if (IsChain) {
+        ChainNameData = MasterData.ChainName;
+      } else {
+        ChainNameData = MasterData.CustomerName;
+      }
+    }
+    return ChainNameData;
   }
 
   public GetObjectByGid(TableName: string, Gid: string) {

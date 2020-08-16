@@ -168,12 +168,7 @@ export class KycreportComponent implements OnInit {
 
     this.EnableFilter = false;
     this.http
-      .post("Webportal/FetchKYCReport", {
-        Region: this.AdvanceSearch.Region,
-        City: this.AdvanceSearch.City,
-        SOName: this.AdvanceSearch.Supervisor,
-        MerchandiserName: "",
-      })
+      .post("Webportal/FetchKYCReport", this.AdvanceSearch)
       .then((response) => {
         this.TableResultSet = [];
         if (this.commonService.IsValidResponse(response)) {
