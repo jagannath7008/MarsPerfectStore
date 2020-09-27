@@ -53,7 +53,19 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatPaginatorModule } from '@angular/material/paginator';
-import { PerfectstoreComponent } from './perfectstore/perfectstore.component'
+import { PerfectstoreComponent } from './perfectstore/perfectstore.component';
+import { AttendanceAndCallComplianceDumpComponent } from './attendance-and-call-compliance-dump/attendance-and-call-compliance-dump.component';
+import { KycDumpComponent } from './kyc-dump/kyc-dump.component';
+import { PromotionRunningStatusDumpComponent } from './promotion-running-status-dump/promotion-running-status-dump.component';
+import { IncentiveEarningDumpComponent } from './incentive-earning-dump/incentive-earning-dump.component';
+import { DandEDumpComponent } from './dand-edump/dand-edump.component';
+import { AvailabilityDumpComponent } from './availability-dump/availability-dump.component';
+import { RowdataComponent } from './rowdata/rowdata.component';
+import { KamchainmapComponent } from './kamchainmap/kamchainmap.component';
+import { UploadbudgetplanComponent } from './uploadbudgetplan/uploadbudgetplan.component';
+import { ApprovalbudgetplanComponent } from './approvalbudgetplan/approvalbudgetplan.component';
+import { MonthpromoandcommComponent } from './monthpromoandcomm/monthpromoandcomm.component';
+import { PromotionsComponent } from './promotions/promotions.component'
 
 @NgModule({
   declarations: [
@@ -92,7 +104,19 @@ import { PerfectstoreComponent } from './perfectstore/perfectstore.component'
     PromotiondetailComponent,
     SpecialvisibilitydetailComponent,
     IncentivetargetdetailComponent,
-    PerfectstoreComponent
+    PerfectstoreComponent,
+    AttendanceAndCallComplianceDumpComponent,
+    KycDumpComponent,
+    PromotionRunningStatusDumpComponent,
+    IncentiveEarningDumpComponent,
+    DandEDumpComponent,
+    AvailabilityDumpComponent,
+    RowdataComponent,
+    KamchainmapComponent,
+    UploadbudgetplanComponent,
+    ApprovalbudgetplanComponent,
+    MonthpromoandcommComponent,
+    PromotionsComponent
   ],
   imports: [
     NgMultiSelectDropDownModule.forRoot(),

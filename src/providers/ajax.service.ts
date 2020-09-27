@@ -14,7 +14,7 @@ const TokenName = "x-request-token";
 const NoAuth: boolean = true;
 //const UseIP = "173.225.111.13";
 const UseIP = "3.7.152.76";
-const UseLocal = "localhost:9300/api/";
+const UseLocal = "http://localhost:44326/api/"; //"localhost:9300/api/";
 @Injectable()
 export class AjaxService {
   baseUrl: string = "";
@@ -274,6 +274,10 @@ export class AjaxService {
         );
       }
     });
+  }
+
+  getExcel(Url: string) {
+    window.location.href = this.BaseUrl() + Url;
   }
 
   upload(Url: string, Param: any): Promise<any> {

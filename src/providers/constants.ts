@@ -34,6 +34,19 @@ export const IncentiveTargetHeader = "incentivetargetheader";
 export const IncentiveTargetDetail = "incentivetargetdetail";
 export const KYCReport = "kycreport";
 export const PerfectStore = "perfectstore";
+export const RowDataDump = "rowdatadump";
+export const KamchainMap = "kamchainmap";
+export const UploadBudgetPlan = "uploadbudgeplan";
+export const ApprovalBudgetPlan = "approvalbudgetplan";
+export const MonthPromoAndComm = "monthpromoandcomm";
+export const Promotions = "promotions";
+
+export const AttendanceAndCallCompliance = "attendanceandcallcompliance";
+export const KYCDump = "kycdump";
+export const AvailabilityDump = "availabilitydump";
+export const PromotionRunning = "promotionrunningdump";
+export const IncentiveEarningDump = "incentiveearningdump";
+export const DAndEDump = "dandedump";
 
 //---------------- Master fields names ------------------------------
 

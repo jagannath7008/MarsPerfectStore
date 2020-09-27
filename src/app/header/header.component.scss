@@ -37,8 +37,8 @@ li {
   list-style: none;
 }
 
-a{
-text-decoration: none;
+a {
+  text-decoration: none;
 }
 
 .top-header {
@@ -81,7 +81,7 @@ text-decoration: none;
 
 .header-left {
   float: left;
-  width: 50%;
+  width: 30%;
   padding: 8px 0;
 }
 
@@ -98,11 +98,11 @@ text-decoration: none;
   border-bottom: 1px solid #eaeaea;
 }
 
-.navbar-toggler{
+.navbar-toggler {
   float: right;
 }
 
-.dropdown-menu{
+.dropdown-menu {
   position: absolute;
   background: #fafafa;
   border: 1px solid #eaeaea;
@@ -114,34 +114,35 @@ text-decoration: none;
   margin: 0;
 }
 
-.dropdown-item{
+.dropdown-item {
   font-size: 14px;
   padding: 10px 5px !important;
   border-bottom: 1px solid #eaeaea;
 }
 
-.dropdown-item:hover{
-background-color: #00d6b8;
-color: #000000;
+.dropdown-item:hover {
+  background-color: #00d6b8;
+  color: #000000;
 }
 
-.nav-link{
+.nav-link {
   padding: 1.5rem 0 !important;
   margin: 0 !important;
 }
-.nav-link a{
+.nav-link a {
   color: #000000 !important;
   padding: 1.5rem;
 }
-.nav-link:hover{
+.nav-link:hover {
   background-color: #00d6b8;
 }
 
-.ddm-last{
+.ddm-last {
   left: -90%;
   width: 210px;
 }
 
-.nav-pad15{
-  padding-left: 1.5rem !important; padding-right: 1.5rem !important;
+.nav-pad15 {
+  padding-left: 1.5rem !important;
+  padding-right: 1.5rem !important;
 }

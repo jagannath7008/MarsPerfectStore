@@ -31,6 +31,18 @@ import {
   IncentiveTargetDetail,
   IncentiveTargetHeader,
   PerfectStore,
+  DAndEDump,
+  IncentiveEarningDump,
+  PromotionRunning,
+  AvailabilityDump,
+  KYCDump,
+  AttendanceAndCallCompliance,
+  RowDataDump,
+  KamchainMap,
+  UploadBudgetPlan,
+  ApprovalBudgetPlan,
+  MonthPromoAndComm,
+  Promotions,
 } from "src/providers/constants";
 import {
   CommonService,
@@ -143,6 +155,28 @@ export class AppComponent {
                 break;
               case "/" + PerfectStore:
                 break;
+              case "/" + AttendanceAndCallCompliance:
+                break;
+              case "/" + KYCDump:
+                break;
+              case "/" + AvailabilityDump:
+                break;
+              case "/" + PromotionRunning:
+                break;
+              case "/" + IncentiveEarningDump:
+                break;
+              case "/" + DAndEDump:
+                break;
+              case "/" + KamchainMap:
+                break;
+                case "/" + UploadBudgetPlan:
+                  break;
+                  case "/" + ApprovalBudgetPlan:
+                    break;
+                    case "/" + MonthPromoAndComm:
+                      break;
+                      case "/" + Promotions:
+                        break;
               default:
                 this.commonService.EnableAuthBase();
                 this.IsLogin = true;

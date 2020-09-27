@@ -33,9 +33,65 @@
               >Dashboard <span class="sr-only">(current)</span></a
             >
           </li>
+
           <li class="nav-item text-center">
             <i class="far fa-file-alt"></i>
-            <a class="dropdown show nav-link pt-0 mt-2">
+            <a class="dropdown show-sec nav-link pt-0 mt-2">
+              <a
+                class="dropdown-toggle text-muted"
+                href="#"
+                role="button"
+                id="dropdownAdminLink"
+                data-toggle="dropdown"
+                aria-haspopup="true"
+                aria-expanded="false"
+              >
+                New Header
+              </a>
+              <div
+                class="dropdown-menu m-with"
+                aria-labelledby="dropdownAdminLink"
+              >
+                <a
+                  class="dropdown-item"
+                  [routerLink]="['/kamchainmap']"
+                  href="javascript:void(0)"
+                  >KAM Chain Map</a
+                >
+                <a
+                  class="dropdown-item"
+                  [routerLink]="['/uploadbudgeplan']"
+                  href="javascript:void(0)"
+                >
+                  Upload Budget Plan</a
+                >
+                <a
+                  class="dropdown-item"
+                  [routerLink]="['/approvalbudgetplan']"
+                  href="javascript:void(0)"
+                >
+                  Approval Budget Plan</a
+                >
+                <a
+                  class="dropdown-item"
+                  [routerLink]="['/monthpromoandcomm']"
+                  href="javascript:void(0)"
+                >
+                  Month Promo & Comm.</a
+                >
+                <a
+                  class="dropdown-item"
+                  [routerLink]="['/promotions']"
+                  href="javascript:void(0)"
+                  >Promotions</a
+                >
+              </div>
+            </a>
+          </li>
+
+          <li class="nav-item text-center">
+            <i class="far fa-file-alt"></i>
+            <a class="dropdown show-sec nav-link pt-0 mt-2">
               <a
                 class="dropdown-toggle text-muted"
                 href="#"
@@ -100,7 +156,7 @@
 
           <li class="nav-item text-center">
             <i class="far fa-user-circle"></i>
-            <a class="dropdown show nav-link pt-0 mt-2">
+            <a class="dropdown show-sec nav-link pt-0 mt-2">
               <a
                 class="dropdown-toggle text-muted"
                 href="#"
@@ -152,7 +208,7 @@
 
           <li class="nav-item text-center">
             <i class="fas fa-table"></i>
-            <a class="dropdown show nav-link pt-0 mt-2">
+            <a class="dropdown show-sec nav-link pt-0 mt-2">
               <a
                 class="dropdown-toggle text-muted"
                 href="#"
@@ -238,6 +294,70 @@
                   href="javascript:void(0)"
                   >SKU Portfolio</a
                 >
+              </div>
+            </a>
+          </li>
+
+          <li class="nav-item text-center">
+            <i class="fas fa-table"></i>
+            <a class="dropdown show-sec nav-link pt-0 mt-2">
+              <a
+                class="dropdown-toggle text-muted"
+                href="#"
+                role="button"
+                id="dropdownDumpLink"
+                data-toggle="dropdown"
+                aria-haspopup="true"
+                aria-expanded="false"
+              >
+                Raw Data Bump
+              </a>
+              <div
+                class="dropdown-menu m-with-50"
+                aria-labelledby="dropdownDumpLink"
+              >
+                <a
+                  class="dropdown-item"
+                  [routerLink]="['/rowdatadump']"
+                  href="javascript:void(0)"
+                  >Download Raw Data</a
+                >
+                <!-- <a
+                  class="dropdown-item"
+                  [routerLink]="['/attendanceandcallcompliance']"
+                  href="javascript:void(0)"
+                  >Attendance and call compliance</a
+                >
+                <a
+                  class="dropdown-item"
+                  [routerLink]="['/kycdump']"
+                  href="javascript:void(0)"
+                  >KYC Report</a
+                >
+                <a
+                  class="dropdown-item"
+                  [routerLink]="['/availabilitydump']"
+                  href="javascript:void(0)"
+                  >Availability Report</a
+                >
+                <a
+                  class="dropdown-item"
+                  [routerLink]="['/promotionrunningdump']"
+                  href="javascript:void(0)"
+                  >Promotion Running Status</a
+                >
+                <a
+                  class="dropdown-item"
+                  [routerLink]="['/incentiveearningdump']"
+                  href="javascript:void(0)"
+                  >Incentive Earning Report</a
+                >
+                <a
+                  class="dropdown-item"
+                  [routerLink]="['/dandedump']"
+                  href="javascript:void(0)"
+                  >D&E Report</a
+                > -->
               </div>
             </a>
           </li>

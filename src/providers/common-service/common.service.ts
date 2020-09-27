@@ -8,7 +8,7 @@ const AllowedKey = [8, 9, 46];
 const AuthenticationBase = "MarsAuthDEV";
 const OperationBase = "MarsAuthDEV"; //"MarsMerchandiser";
 @Injectable({
-  providedIn: "root"
+  providedIn: "root",
 })
 export class CommonService {
   LoaderEnableByAjax: boolean = false;
@@ -262,7 +262,7 @@ export class CommonService {
     if (typeof purchaseFormGroup["controls"] !== "undefined") {
       if (Array.isArray(purchaseFormGroup.controls)) {
         let ControlData: any = purchaseFormGroup.controls;
-        let ValidArrayData = ControlData.filter(x => x.touched === true);
+        let ValidArrayData = ControlData.filter((x) => x.touched === true);
         let ValuedArrayData = [];
         let index = 0;
         while (index < ValidArrayData.length) {
@@ -339,9 +339,7 @@ export class CommonService {
       let index = 0;
       while (index < $li.length) {
         $($li[index]).removeClass("active");
-        $($li[index])
-          .find("a")
-          .removeClass("active");
+        $($li[index]).find("a").removeClass("active");
         $($li[index])
           .find('li[type="action"]')
           .removeClass("active active-list");
@@ -364,10 +362,7 @@ export class CommonService {
       $elem.closest("li").addClass("active active-list");
       $elem.closest('li[name="item-header"]').addClass("active");
 
-      $elem
-        .closest('li[name="item-header"]')
-        .children("a")
-        .addClass("active");
+      $elem.closest('li[name="item-header"]').children("a").addClass("active");
 
       $elem.closest('div[name="submenues"]').css({ display: "block" });
     }
@@ -418,7 +413,7 @@ export class CommonService {
     let $Toast = document.getElementById("toast");
     if ($Toast !== null && $Toast !== undefined) {
       $("#toastmessage").text(Message);
-      $Toast.classList.add("show");
+      $Toast.classList.add("show-sec");
       setTimeout(() => {
         this.HideToast();
       }, TimeSpan * 998);
@@ -428,7 +423,7 @@ export class CommonService {
   HideToast() {
     let $Toast = document.getElementById("toast");
     if ($Toast !== null && $Toast !== undefined) {
-      $Toast.classList.remove("show");
+      $Toast.classList.remove("show-sec");
     }
   }
 
@@ -510,7 +505,7 @@ export class CommonService {
   /* -----------------------  Map dynamic table information --------------------------- */
   GetPageActionDetail(PageName: string): MappedActionPage {
     let mappedActionPage: MappedActionPage = null;
-    let CurrentPageDetail = this.PageDetail.filter(x => x.Page === PageName);
+    let CurrentPageDetail = this.PageDetail.filter((x) => x.Page === PageName);
     if (CurrentPageDetail.length > 0) {
       mappedActionPage = CurrentPageDetail[0];
     }

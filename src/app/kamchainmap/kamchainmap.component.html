@@ -1,0 +1,64 @@
+<div class="page-card pb-4">
+    <app-pagebreadcrumb></app-pagebreadcrumb>
+    <h4 class="card-title">
+      <b class="text-uppercase">kam chain map</b>
+    </h4>
+  
+    <div class="col-md-12 mt-3 filter mb-3">
+      <div class="filter-cell">
+        <div class="col-6 row">
+          <div class="col-4 p-0 title-header">
+            Region
+          </div>
+          <div class="col-8 p-0">
+            <select
+              name="Region"
+              class="form-control"
+              [(ngModel)]="Region"
+              (change)="LoadNextField()"
+            >
+              <option value="">All Region</option>
+              <option
+                *ngFor="let c of MasterData.M_Region"
+                [attr.value]="c.Gid"
+                >{{ c.Name }}</option
+              >
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+  
+    <div class="col-12 p-0 mt-2 mb-2">
+      <button class="btn btn-outline-info" (click)="ResetResult()">Reset</button>
+      <button class="ml-2 btn btn-primary" (click)="SubmitSearchCriateria()">
+        Filter
+      </button>
+    </div>
+  
+    <div class="card">
+      <div class="col-md-12 p-0">
+        <div class="table-responsive">
+          <table class="table table-striped table-bordered table-hover">
+            <thead>
+              <tr>
+                <th Width="10%">IsActive</th>
+                <th>Chain Name</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let chain of KamchainData">
+                <td>
+                <h3>{{ chain.IsCheck }}</h3>
+                </td>
+                <td>
+                <h3>{{ chain.ChainName }}</h3>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+  

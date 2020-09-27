@@ -32,6 +32,18 @@ import {
   IncentiveTargetHeader,
   IncentiveTargetDetail,
   PerfectStore,
+  AttendanceAndCallCompliance,
+  KYCDump,
+  AvailabilityDump,
+  PromotionRunning,
+  IncentiveEarningDump,
+  DAndEDump,
+  RowDataDump,
+  Promotions,
+  MonthPromoAndComm,
+  ApprovalBudgetPlan,
+  UploadBudgetPlan,
+  KamchainMap,
 } from "src/providers/constants";
 import { LoginComponent } from "./login/login.component";
 import { DashboardComponent } from "./dashboard/dashboard.component";
@@ -65,6 +77,18 @@ import { SpecialvisibilitydetailComponent } from "./specialvisibilitydetail/spec
 import { IncentivetargetheaderComponent } from "./incentivetargetheader/incentivetargetheader.component";
 import { IncentivetargetdetailComponent } from "./incentivetargetdetail/incentivetargetdetail.component";
 import { PerfectstoreComponent } from "./perfectstore/perfectstore.component";
+import { AttendanceAndCallComplianceDumpComponent } from "./attendance-and-call-compliance-dump/attendance-and-call-compliance-dump.component";
+import { KycDumpComponent } from "./kyc-dump/kyc-dump.component";
+import { PromotionRunningStatusDumpComponent } from "./promotion-running-status-dump/promotion-running-status-dump.component";
+import { IncentiveEarningDumpComponent } from "./incentive-earning-dump/incentive-earning-dump.component";
+import { DandEDumpComponent } from "./dand-edump/dand-edump.component";
+import { AvailabilityDumpComponent } from "./availability-dump/availability-dump.component";
+import { RowdataComponent } from "./rowdata/rowdata.component";
+import { KamchainmapComponent } from './kamchainmap/kamchainmap.component';
+import { UploadbudgetplanComponent } from './uploadbudgetplan/uploadbudgetplan.component';
+import { ApprovalbudgetplanComponent } from './approvalbudgetplan/approvalbudgetplan.component';
+import { MonthpromoandcommComponent } from './monthpromoandcomm/monthpromoandcomm.component';
+import { PromotionsComponent } from './promotions/promotions.component';
 
 const routes: Routes = [
   { path: "", component: LoginComponent },
@@ -115,6 +139,23 @@ const routes: Routes = [
   { path: IncentiveTargetHeader, component: IncentivetargetheaderComponent },
   { path: IncentiveTargetDetail, component: IncentivetargetdetailComponent },
   { path: PerfectStore, component: PerfectstoreComponent },
+
+  {
+    path: AttendanceAndCallCompliance,
+    component: AttendanceAndCallComplianceDumpComponent,
+  },
+  { path: KYCDump, component: KycDumpComponent },
+  { path: PromotionRunning, component: PromotionRunningStatusDumpComponent },
+  { path: IncentiveEarningDump, component: IncentiveEarningDumpComponent },
+  { path: DAndEDump, component: DandEDumpComponent },
+  { path: AvailabilityDump, component: AvailabilityDumpComponent },
+  { path: RowDataDump, component: RowdataComponent },
+
+  { path: KamchainMap, component: KamchainmapComponent },
+  { path: UploadBudgetPlan, component: UploadbudgetplanComponent },
+  { path: ApprovalBudgetPlan, component: ApprovalbudgetplanComponent },
+  { path: MonthPromoAndComm, component: MonthpromoandcommComponent },
+  { path: Promotions, component: PromotionsComponent },
 ];
 
 @NgModule({

@@ -224,6 +224,7 @@ export class StateComponent implements OnInit {
     this.Open();
     this.entity = editEntity;
   }
+
   Save() {
     console.log(this.entity);
     this.http
