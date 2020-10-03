@@ -1,1 +1,190 @@
-<p>monthpromoandcomm works!</p>
+<div class="page-card pb-4">
+    <app-pagebreadcrumb></app-pagebreadcrumb>
+    <h4 class="card-title">
+      <b class="text-uppercase"></b>
+      <input type="file" id="uploadexcel" (change)="readExcelData($event)" class="d-none" />
+    </h4>
+
+    <div class="card mt-4">
+      <div class="card-body">        
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>CHAIN NAME</th>
+                    <th>PLANNED</th>
+                    <th>UTILIZED</th>
+                    <th>AVAILABLE</th>
+                    <th>% UTILIZED</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Telangana</td>
+                    <td>12000</td>
+                    <td>6000</td>
+                    <td>6000</td>
+                    <td>50%</td>
+                </tr>
+                <tr>
+                    <td>Telangana</td>
+                    <td>12000</td>
+                    <td>6000</td>
+                    <td>6000</td>
+                    <td>50%</td>
+                </tr>
+                <tr>
+                    <td>Telangana</td>
+                    <td>12000</td>
+                    <td>6000</td>
+                    <td>6000</td>
+                    <td>50%</td>
+                </tr>
+            </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="card mt-4">
+        <div class="card-body">
+            <form class="pt-2" (keydown.enter)="$event.preventDefault()">
+                <div class="pt-2">
+                    <div class="col-md-12 row">
+                        <div class="form-group col-md-3">
+                            <label for="chain">Select Chain</label>
+                            <select name="chain" class="form-control">
+                            <option value="">All Region</option>
+                            </select>
+                        </div>
+                        <div class="form-group col-md-3">
+                            <label for="State">Select Store</label>
+                            <select name="State" class="form-control">
+                                <option value="">All State</option>
+                            </select>
+                        </div>
+                        <div class="form-group col-md-3">
+                            <label for="City">Promotion Type</label>
+                            <select name="promotiontype" class="form-control">
+                                <option value="">All State</option>
+                            </select>
+                        </div>
+                        <div class="form-group col-md-3">
+                            <label for="State">Select Store</label>
+                            <select name="State" class="form-control">
+                                <option value="">All State</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-12 row">
+                        <div class="form-group col-md-3">
+                            <label for="chain">Select Chain</label>
+                            <select name="chain" class="form-control">
+                            <option value="">All Region</option>
+                            </select>
+                        </div>
+                        <div class="form-group col-md-3">
+                            <label for="State">Select Store</label>
+                            <select name="State" class="form-control">
+                                <option value="">All State</option>
+                            </select>
+                        </div>
+                        <div class="form-group col-md-3">
+                            <label for="City">Promotion Type</label>
+                            <select name="promotiontype" class="form-control">
+                                <option value="">All State</option>
+                            </select>
+                        </div>
+                        <div class="form-group col-md-3">
+                            <label for="chain">Select Chain</label>
+                            <select name="chain" class="form-control">
+                            <option value="">All Region</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-12 row">
+                        <div class="form-group col-md-3">
+                            <label for="City">Promotion Type</label>
+                            <select name="promotiontype" class="form-control">
+                                <option value="">All State</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6 form-group row">
+                        <div class="col-md-4">Your Total Budget Available</div>
+                        <div class="col-md-2">150000</div>
+                    </div>
+
+                    <div class="col-md-12 row">
+                        <div class="col-md-4">Your Total Budget Available</div>
+                        <div class="col-md-2">
+                            <button class="form-control">Use My Template</button>
+                        </div>
+                        <div class="col-md-2">
+                            <button class="form-control">Attach Picture</button>
+                        </div>
+                    </div>
+
+                    <div class="mt-4">To: storeManager@abrl.com</div>
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="form-group">
+                                <textarea (keypress)="allowEnter($event)" name="email-msg" class="form-control w-100" rows="8"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="card mt-4">
+        <div>
+            UPLOADED FILE (Validation on Budget Available)
+        </div>
+        <div class="card-body">        
+          <table class="table">
+              <thead>
+                  <tr>
+                      <th>Region</th>
+                      <th>KAM</th>
+                      <th>ASM</th>
+                      <th>SO</th>
+                      <th>City</th>
+                      <th>Branch</th>
+                      <th>Chain Code/Name</th>
+                      <th>Store Code/Name</th>
+                      <th>Product Name</th>
+                      <th>Discount/PC</th>
+                      <th>%Off/PC</th>
+                      <th>Expected Qty</th>
+                      <th>Promotion Desc</th>
+                      <th>Start Date</th>
+                      <th>End Date</th>
+                      <th>Email Msg</th>
+                  </tr>
+              </thead>
+              <tbody>
+                  <tr>
+                      <td>Telangana</td>
+                      <td>12000</td>
+                      <td>6000</td>
+                      <td>6000</td>
+                      <td>50%</td>
+                      <td>Telangana</td>
+                      <td>12000</td>
+                      <td>6000</td>
+                      <td>6000</td>
+                      <td>50%</td>
+                      <td>Telangana</td>
+                      <td>12000</td>
+                      <td>6000</td>
+                      <td>6000</td>
+                      <td>50%</td>
+                      <td>50%</td>
+                  </tr>
+              </tbody>
+          </table>
+        </div>
+      </div>
+  </div>
+  

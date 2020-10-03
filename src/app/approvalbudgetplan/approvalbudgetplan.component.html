@@ -1,1 +1,126 @@
-<p>approvalbudgetplan works!</p>
+<div class="page-card pb-4">
+    <app-pagebreadcrumb></app-pagebreadcrumb>
+    <h4 class="card-title">
+      <b class="text-uppercase"></b>
+      <input type="file" id="uploadexcel" (change)="readExcelData($event)" class="d-none" />
+    </h4>
+
+    <div class="card">
+        <div class="card-body">
+            <ul class="nav">
+                <li class="nav-item">
+                  <a class="nav-link active" href="#">Approve</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="#">Reject</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="#">Change</a>
+                </li>
+              </ul>
+        </div>
+    </div>
+  
+    <div class="card mt-4">
+      <div class="card-body">        
+        <ng-container *ngIf="isDataAvailable">
+            <table class="table">
+                <thead>
+                  <tr>
+                    <th>Chain Name</th>
+                    <th>FY Plan</th>
+                    <th>JAN</th>
+                    <th>FEB</th>
+                    <th>MAR</th>
+                    <th>APR</th>
+                    <th>MAY</th>
+                    <th>JUN</th>
+                    <th>JUL Name</th>
+                    <th>AUG</th>
+                    <th>SEP</th>
+                    <th>OCT</th>
+                    <th>NOV</th>
+                    <th>Action</th>
+                    <th>Reject/Change</th>
+                    <th>Remarks</th>
+                  </tr>
+                </thead>
+                <tbody>
+                      <tr>
+                        <td>Telangana</td>
+                        <td>None</td>
+                        <td>23,453</td>
+                        <td>45,893</td>
+                        <td>65,553</td>
+                        <td>55,553</td>
+                        <td>45,753</td>
+                        <td>23,993</td>
+                        <td>23,473</td>
+                        <td>65,553</td>
+                        <td>55,553</td>
+                        <td>65,553</td>
+                        <td>55,553</td>
+                        <td>
+                            <a href="javascript:void(0)">Approve</a> /
+                            <a href="javascript:void(0)">Reject</a> /
+                            <a href="javascript:void(0)">Change</a>
+                        </td>
+                        <td>NA</td>
+                        <td>NA</td>
+                      </tr>
+                      <tr>
+                        <td>Telangana</td>
+                        <td>None</td>
+                        <td>23,453</td>
+                        <td>45,893</td>
+                        <td>65,553</td>
+                        <td>55,553</td>
+                        <td>45,753</td>
+                        <td>23,993</td>
+                        <td>23,473</td>
+                        <td>65,553</td>
+                        <td>55,553</td>
+                        <td>65,553</td>
+                        <td>55,553</td>
+                        <td>
+                            <a href="javascript:void(0)">Approve</a> /
+                            <a href="javascript:void(0)">Reject</a> /
+                            <a href="javascript:void(0)">Change</a>
+                        </td>
+                        <td>NA</td>
+                        <td>NA</td>
+                      </tr>
+                      <tr>
+                        <td>Telangana</td>
+                        <td>None</td>
+                        <td>23,453</td>
+                        <td>45,893</td>
+                        <td>65,553</td>
+                        <td>55,553</td>
+                        <td>45,753</td>
+                        <td>23,993</td>
+                        <td>23,473</td>
+                        <td>65,553</td>
+                        <td>55,553</td>
+                        <td>65,553</td>
+                        <td>55,553</td>
+                        <td>
+                          <a href="javascript:void(0)">Approve</a> /
+                          <a href="javascript:void(0)">Reject</a> /
+                          <a href="javascript:void(0)">Change</a>
+                        </td>
+                        <td>NA</td>
+                        <td>NA</td>
+                      </tr>
+                </tbody>
+              </table>
+        </ng-container>
+        <ng-container *ngIf="!isDataAvailable">
+          <div>
+            Table is empty
+          </div>
+        </ng-container>         
+      </div>
+    </div>
+  </div>
+  

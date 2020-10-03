@@ -1,11 +1,12 @@
 import { Component, OnInit } from "@angular/core";
 import { AjaxService } from "src/providers/ajax.service";
-import { CommonService } from "src/providers/common-service/common.service";
+import { CommonService, IsValidType } from "src/providers/common-service/common.service";
 import { ApplicationStorage } from "src/providers/ApplicationStorage";
 import { WorkBook, read, utils, write, readFile } from "xlsx";
 import { saveAs } from "file-saver";
 import * as $ from "jquery";
 import { Dictionary } from "src/providers/Generic/Code/Dictionary";
+import { ZerothIndex } from 'src/providers/constants';
 
 @Component({
   selector: 'app-uploadbudgetplan',
@@ -25,6 +26,9 @@ export class UploadbudgetplanComponent implements OnInit {
   IsResultGenerated: boolean = false;
   ScriptFileName: string = "";
   DynamicTableResult: Array<any>;
+  ExcelTableHeader: Array<any>;
+  ExcelTableData: Array<any>;
+
   constructor(
     private http: AjaxService,
     private common: CommonService,
@@ -40,6 +44,8 @@ export class UploadbudgetplanComponent implements OnInit {
     return buf;
   }
   ngOnInit() {
+    this.ExcelTableHeader = [];
+    this.ExcelTableData = [];
   }
 
   fireBrowserFile() {
@@ -76,13 +82,18 @@ export class UploadbudgetplanComponent implements OnInit {
   readExcelData(e: any) {
     this.file = e.target.files[0];
     if (this.file !== undefined && this.file !== null) {
-      this.convertToJson().then(data => {
+      this.convertToJson(false).then(data => {
         if (this.common.IsValid(data)) {
           this.recordToUpload = data;
           this.fileSize = (this.file.size / 1024).toFixed(2);
           this.fileName = this.file.name;
           this.noOfRecords = this.recordToUpload.length;
           this.isFileReady = true;
+          let excelData = data.mapTable[ZerothIndex];
+          if(IsValidType(excelData)) {
+            this.ExcelTableHeader = excelData.value.Keys;
+            this.ExcelTableData = excelData.value.Data;
+          }
         } else {
           this.cleanFileHandler();
           this.common.ShowToast("Excel data is not valid.");
@@ -100,8 +111,8 @@ export class UploadbudgetplanComponent implements OnInit {
     event.stopPropagation();
     event.preventDefault();
   }
-  
-  convertToJson(): Promise<any> {
+
+  convertToJson(onlyHeader: boolean = true): Promise<any> {
     return new Promise((resolve, reject) => {
       let reader = new FileReader();
       let workbookkk;
@@ -145,7 +156,7 @@ export class UploadbudgetplanComponent implements OnInit {
             }
             let SheetData = {
               Keys: ColumnDetail,
-              Data: "" //JSON.stringify(XL_row_object)
+              Data: onlyHeader ? null : XL_row_object
             };
             TempDictionary.insert(sheetName, SheetData);
           }
