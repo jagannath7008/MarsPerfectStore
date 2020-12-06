@@ -20,4 +20,6 @@ export class MonthpromoandcommComponent implements OnInit {
         $(this).val(s+"\n");
     }
   }
+
+  readExcelData(elem: any){}
 }

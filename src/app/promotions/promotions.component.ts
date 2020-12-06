@@ -16,6 +16,7 @@ import { ZerothIndex } from 'src/providers/constants';
 })
 export class PromotionsComponent implements OnInit {
   wbout = [];
+  
   table = [];
   file: File;
   fileSize: string;

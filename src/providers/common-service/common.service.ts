@@ -5,8 +5,8 @@ import { MappedActionPage } from "./../MappedActionPage";
 import * as XLSX from "xlsx";
 
 const AllowedKey = [8, 9, 46];
-const AuthenticationBase = "MarsAuthDEV";
-const OperationBase = "MarsAuthDEV"; //"MarsMerchandiser";
+const AuthenticationBase = "marsauth";
+const OperationBase = "marsauth"; //"MarsMerchandiser";
 @Injectable({
   providedIn: "root",
 })

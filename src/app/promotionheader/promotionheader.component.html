@@ -4,6 +4,67 @@
     <h4>{{HeaderName | uppercase}}</h4>
   </div>
 
+  <div *ngIf="EnableUploadPopup" class="ipopup">
+    <div class="ipopup__content w-50">
+      <div class="ipopup__header pt-3">
+        <header>Upload data modal</header>
+      </div>
+
+      <input type="file" id="uploadexcel" (change)="readExcelData($event)" class="d-none" />
+      <form class="pt-2" (keydown.enter)="$event.preventDefault()">
+        <table class="mt-2">
+          <tbody>
+            <tr>
+              <td>
+                <div class="pt-2 mt-4">
+                  <div class="col-md-12 row">
+                    <div class="form-group text-right col-md-3">
+                      <label for="Region">Header Code</label>
+                    </div>
+                    <div class="form-group col-md-8">
+                      <input name="Code" class="form-control" placeholder="Promotion header code"
+                        [(ngModel)]="excelUploadModal.Code">
+                    </div>
+                  </div>
+                  <div class="col-md-12 row">
+                    <div class="form-group text-right col-md-3">
+                      <label for="Region">Header Name</label>
+                    </div>
+                    <div class="form-group col-md-8">
+                      <input name="Name" class="form-control" placeholder="Promotion header Name"
+                        [(ngModel)]="excelUploadModal.Name">
+                    </div>
+                  </div>
+                  <div class="col-md-12 row">
+                    <div class="form-group text-right col-md-3">
+                      <label for="Region">Is Published</label>
+                    </div>
+                    <div class="form-group col-md-8">
+                      <input type="checkbox" class="" name="IsPublished" [(ngModel)]="excelUploadModal.IsPublished">
+                      <a href="javascript:void()" class="float-right text-dark anc-upload" (click)="fireBrowserFile()">
+                        <i class="far fa-file-excel"></i>
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+          <tfoot class="border-top">
+            <div class="row mt-3">
+              <div class="col col-md-3">
+                <button class="btn btn-outline-dark form-control" (click)="CloseUploadPopup()">Close</button>
+              </div>
+              <div class="col col-md-3">
+                <button class="btn btn-primary form-control" (click)="SubmitUploadData()">Submit</button>
+              </div>              
+            </div>
+          </tfoot>
+        </table>
+      </form>
+    </div>
+  </div>
+
   <div *ngIf="EnablePopup" class="ipopup">
     <div class="ipopup__content">
       <div class="ipopup__header">
@@ -60,10 +121,12 @@
         </div>
       </div>
       <div class="col-md-6 d-inline-block text-right no-padding">
-        <button type="submit" (click)="ResetFilter()" class="btn btn-outline-info mr-1">
+        <button type="submit" (click)="ResetFilter()" class="btn btn-outline-info">
           <i class="fas fa-sync"></i>&ensp;Reset</button>
-        <button type="button" (click)="GetPopup()" class="btn btn-success"><i class="fa fa-filter"></i>&ensp;Add
+        <button type="button" (click)="GetPopup()" class="ml-2 btn btn-success"><i class="fa fa-filter"></i>&ensp;Add
           new</button>
+          <button type="button" (click)="GetUploadPopup()" class="ml-2 btn btn-outline-dark"><i class="fa fa-upload"></i>&ensp;
+            Upload Data</button>
       </div>
     </div>
 

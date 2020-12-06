@@ -13,4 +13,5 @@ export class ApprovalbudgetplanComponent implements OnInit {
   ngOnInit() {
   }
 
+  readExcelData(elem: any){}
 }

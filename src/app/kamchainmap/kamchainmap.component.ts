@@ -7,6 +7,8 @@ import { Component, OnInit } from '@angular/core';
 })
 export class KamchainmapComponent implements OnInit {
   KamchainData: Array<any>;
+  Region: any;
+  MasterData: any;
 
   constructor() { }
 
@@ -14,4 +16,9 @@ export class KamchainmapComponent implements OnInit {
     this.KamchainData = [];
   }
 
+  ResetResult(){}
+
+  SubmitSearchCriateria(){}
+
+  LoadNextField(){}
 }

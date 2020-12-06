@@ -66,6 +66,7 @@ import { UploadbudgetplanComponent } from './uploadbudgetplan/uploadbudgetplan.c
 import { ApprovalbudgetplanComponent } from './approvalbudgetplan/approvalbudgetplan.component';
 import { MonthpromoandcommComponent } from './monthpromoandcomm/monthpromoandcomm.component';
 import { PromotionsComponent } from './promotions/promotions.component'
+import { ExcelReader } from 'src/providers/excelReader';
 
 @NgModule({
   declarations: [
@@ -141,7 +142,8 @@ import { PromotionsComponent } from './promotions/promotions.component'
     AjaxService,
     ApplicationStorage,
     PageCache,
-    iNavigation
+    iNavigation,
+    ExcelReader
   ],
   bootstrap: [AppComponent]
 })
