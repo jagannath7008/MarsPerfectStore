@@ -6,18 +6,25 @@
     </h4>
 
     <div class="card">
-        <div class="card-body">
-            <ul class="nav">
-                <li class="nav-item">
-                  <a class="nav-link active" href="#">Approve</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link" href="#">Reject</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link" href="#">Change</a>
-                </li>
-              </ul>
+        <div class="card-body row">
+          <div class="col-md-6">
+            <button class="btn btn-dark">
+                    Pending for approval <span class="badge badge-primary"></span>
+            </button>
+          </div>
+          <div class="col-md-6">
+            <ul class="nav float-right">
+              <li class="nav-item">
+                <a class="nav-link active" href="#">Approved</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#">Rejected</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#">Changed</a>
+              </li>
+            </ul>
+          </div>
         </div>
     </div>
   
@@ -27,26 +34,32 @@
             <table class="table">
                 <thead>
                   <tr>
+                    <th>
+                      <input type="checkbox">
+                    </th>
                     <th>Chain Name</th>
                     <th>FY Plan</th>
-                    <th>JAN</th>
+                    <th>JAN-21</th>
                     <th>FEB</th>
                     <th>MAR</th>
                     <th>APR</th>
                     <th>MAY</th>
                     <th>JUN</th>
-                    <th>JUL Name</th>
+                    <th>JUL</th>
                     <th>AUG</th>
                     <th>SEP</th>
                     <th>OCT</th>
                     <th>NOV</th>
-                    <th>Action</th>
+                    <th>DEC</th>
                     <th>Reject/Change</th>
                     <th>Remarks</th>
                   </tr>
                 </thead>
                 <tbody>
                       <tr>
+                        <td>
+                          <input type="checkbox">
+                        </td>
                         <td>Telangana</td>
                         <td>None</td>
                         <td>23,453</td>
@@ -60,15 +73,14 @@
                         <td>55,553</td>
                         <td>65,553</td>
                         <td>55,553</td>
-                        <td>
-                            <a href="javascript:void(0)">Approve</a> /
-                            <a href="javascript:void(0)">Reject</a> /
-                            <a href="javascript:void(0)">Change</a>
-                        </td>
+                        <td>55,553</td>
                         <td>NA</td>
                         <td>NA</td>
                       </tr>
                       <tr>
+                        <td>
+                          <input type="checkbox">
+                        </td>
                         <td>Telangana</td>
                         <td>None</td>
                         <td>23,453</td>
@@ -82,15 +94,14 @@
                         <td>55,553</td>
                         <td>65,553</td>
                         <td>55,553</td>
-                        <td>
-                            <a href="javascript:void(0)">Approve</a> /
-                            <a href="javascript:void(0)">Reject</a> /
-                            <a href="javascript:void(0)">Change</a>
-                        </td>
+                        <td>55,553</td>
                         <td>NA</td>
                         <td>NA</td>
                       </tr>
                       <tr>
+                        <td>
+                          <input type="checkbox">
+                        </td>
                         <td>Telangana</td>
                         <td>None</td>
                         <td>23,453</td>
@@ -104,15 +115,30 @@
                         <td>55,553</td>
                         <td>65,553</td>
                         <td>55,553</td>
-                        <td>
-                          <a href="javascript:void(0)">Approve</a> /
-                          <a href="javascript:void(0)">Reject</a> /
-                          <a href="javascript:void(0)">Change</a>
-                        </td>
+                        <td>55,553</td>
                         <td>NA</td>
                         <td>NA</td>
                       </tr>
                 </tbody>
+                <tfoot>
+                  <tr>
+                    <td colspan="17">
+                      <div class="pt-4 d-block text-center">
+                        <div class="d-inline">
+                          <div class="mr-1 d-inline">
+                            <button class="btn btn-success">Approve</button>
+                          </div>
+                          <div class="mr-1 ml-1  d-inline">
+                            <button class="btn btn-danger">Reject</button>
+                          </div>
+                          <div class="ml-1 d-inline">
+                            <button class="btn btn-warning">Change</button>
+                          </div>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>                  
+                </tfoot>
               </table>
         </ng-container>
         <ng-container *ngIf="!isDataAvailable">
