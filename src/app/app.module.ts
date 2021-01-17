@@ -67,6 +67,8 @@ import { ApprovalbudgetplanComponent } from './approvalbudgetplan/approvalbudget
 import { MonthpromoandcommComponent } from './monthpromoandcomm/monthpromoandcomm.component';
 import { PromotionsComponent } from './promotions/promotions.component'
 import { ExcelReader } from 'src/providers/excelReader';
+import { TargetComponent } from './target/target.component';
+import { TraderspendsComponent } from './traderspends/traderspends.component';
 
 @NgModule({
   declarations: [
@@ -117,7 +119,9 @@ import { ExcelReader } from 'src/providers/excelReader';
     UploadbudgetplanComponent,
     ApprovalbudgetplanComponent,
     MonthpromoandcommComponent,
-    PromotionsComponent
+    PromotionsComponent,
+    TargetComponent,
+    TraderspendsComponent
   ],
   imports: [
     NgMultiSelectDropDownModule.forRoot(),

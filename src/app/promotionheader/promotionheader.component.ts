@@ -63,6 +63,7 @@ export class PromotionheaderComponent implements OnInit {
   }
 
   InitPage() {
+    this.excelUploadModal = new ExcelUploadModal();
     this.EnablePopup = false;
     this.EnableUploadPopup = false;
     this.IsReportPresent = false;
@@ -125,15 +126,30 @@ export class PromotionheaderComponent implements OnInit {
   }
 
   SubmitUploadData() {
-    this.EnableUploadPopup = false;
-    this.http.post('Webportal/ImportBulkData', this.excelUploadModal).then(response => {
-      if(IsValidResponse(response)) {
-        this.SearchData.PageIndex = 1;
-        this.SearchData.SearchString = "1=1";
-        this.LoadData();
-        this.commonService.ShowToast('Data uploaded successfully.');
+    let flag = false;
+    if(this.excelUploadModal === undefined) {
+      this.commonService.ShowToast('Header code and name is required field.');
+    } else {
+      if(this.excelUploadModal.Code === undefined || this.excelUploadModal.Code === "")
+        flag = true;
+
+      if(this.excelUploadModal.Name === undefined || this.excelUploadModal.Name === "")
+        flag = true;
+
+      if(!flag) {
+        this.EnableUploadPopup = false;
+        this.http.post('Webportal/ImportBulkData', this.excelUploadModal).then(response => {
+          if(IsValidResponse(response)) {
+            this.SearchData.PageIndex = 1;
+            this.SearchData.SearchString = "1=1";
+            this.LoadData();
+            this.commonService.ShowToast('Data uploaded successfully.');
+          }
+        });
+      } else {
+        this.commonService.ShowToast('Header code and name is required field.');
       }
-    });
+    }
   }
 
   ResetFilter() {}
@@ -158,12 +174,12 @@ export class PromotionheaderComponent implements OnInit {
     let Data = this.excel.readExcelData(e).then(data => {
       if(IsValidType(data)) {
         if(this.excelUploadModal.Code.trim() === '') {
-          this.commonService.ShowToast('Code is mandatory.');
+          this.commonService.ShowToast('Header code is mandatory.');
           return null;
         }
 
         if(this.excelUploadModal.Name.trim() === '') {
-          this.commonService.ShowToast('Name is mandatory.');
+          this.commonService.ShowToast('Headr name is mandatory.');
           return null;
         }
 
@@ -236,6 +252,72 @@ export class IntcentiveTargetDetailModal {
   Value: string = "";
 }
 
+export class TargetModal {
+  Id: number;
+  TargetYear: number;
+  ChainCode: string;
+  ChainName: string;
+  DirectIn: string;
+  Jan: number = 0;
+  Feb: number = 0;
+  Mar: number = 0;
+  Apr: number = 0;
+  May: number = 0;
+  Jun: number = 0;
+  Jul: number = 0;
+  Aug: number = 0;
+  Sep: number = 0;
+  Oct: number = 0;
+  Nov: number = 0;
+  Dec: number = 0;
+  Status: string;
+  Remakrs: string;
+  SS: number;
+  CT: number;
+  MT: number;
+  SCT: number;
+  SMT: number;
+  ContactGid: string = "";
+  CHContactGid: string;
+  Gid: string;
+}
+
+export class TraderSpendsModal {
+  Id: number;
+  TargetYear: number;
+  ChainCode: string;
+  ChainName: string;
+  DirectIn: string;
+  Promotions: string;
+  Visibility: string;
+  FixedVisibility: string;
+  RDSoffInvoiceMargin: string;
+  MTCustomeroffInvoiceMargin: string;
+  DE: string;
+  SS: number;
+  CT: number;
+  MT: number;
+  SCT: number;
+  SMT: number;
+  Gid: string;
+}
+
+export class ROI {
+  Id: number;
+  SkuCode: string;
+  SkuName: string;
+  ChainCode: string;
+  ChainName: string;
+  BaseLineOfftake: number;
+  MAC: string;
+  SS: number;
+  CT: number;
+  MT: number;
+  SCT: number;
+  SMT: number;
+  Gid: string;
+}
+
 export class ExcelUploadModal {
   Code: string = '';
   Name: string = '';
@@ -244,4 +326,7 @@ export class ExcelUploadModal {
   promotionDetail: Array<PromotionDetailModal> = [];
   specialVisibilityDetail: Array<SpecialVisibilityDetailModal> = [];
   incentiveTargetDetail: Array<IntcentiveTargetDetailModal> = [];
+  rois: Array<ROI> = [];
+  targets: Array<IntcentiveTargetDetailModal> = [];
+  tradespends: Array<IntcentiveTargetDetailModal> = [];
 }

@@ -7,17 +7,17 @@ import { saveAs } from "file-saver";
 import * as $ from "jquery";
 import { Dictionary } from "src/providers/Generic/Code/Dictionary";
 import { ZerothIndex } from 'src/providers/constants';
-import { ExcelUploadModal, ROI } from "../promotionheader/promotionheader.component";
+import { ExcelUploadModal, ROI, TargetModal, TraderSpendsModal } from "../promotionheader/promotionheader.component";
 
 @Component({
-  selector: 'app-uploadbudgetplan',
-  templateUrl: './uploadbudgetplan.component.html',
-  styleUrls: ['./uploadbudgetplan.component.scss']
+  selector: 'app-traderspends',
+  templateUrl: './traderspends.component.html',
+  styleUrls: ['./traderspends.component.scss']
 })
-export class UploadbudgetplanComponent implements OnInit {
+export class TraderspendsComponent  implements OnInit {
   wbout = [];
   table = [];
-  entity: ROI;
+  entity: TraderSpendsModal;
   file: File;
   isUpdate: boolean = false;
   fileSize: string;
@@ -51,7 +51,7 @@ export class UploadbudgetplanComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.entity = new ROI();
+    this.entity = new TraderSpendsModal();
     this.ExcelTableHeader = [];
     this.ExcelTableData = [];
     this.excelUploadModal = new ExcelUploadModal();
@@ -61,12 +61,16 @@ export class UploadbudgetplanComponent implements OnInit {
   initHeader() {
     this.ExcelTableHeader = [
       { ColumnName: "Id" },
+      { ColumnName: "TargetYear" },
       { ColumnName: "ChainCode" },
       { ColumnName: "ChainName" },
-      { ColumnName: "SkuCode" },
-      { ColumnName: "SkuName" },
-      { ColumnName: "MAC" },
-      { ColumnName: "BaseLineOfftake" },
+      { ColumnName: "DirectIn" },
+      { ColumnName: "Promotions" },
+      { ColumnName: "Visibility" },
+      { ColumnName: "FixedVisibility" },
+      { ColumnName: "RDSoffInvoiceMargin" },
+      { ColumnName: "MTCustomeroffInvoiceMargin" },
+      { ColumnName: "DE" },
     ];
   }
 
@@ -189,12 +193,12 @@ export class UploadbudgetplanComponent implements OnInit {
   }
 
   closePopup() {
-    this.entity = new ROI();
+    this.entity = new TraderSpendsModal();
     this.enablePP = false;
   }
 
   newEntry() {
-    this.entity = new ROI();
+    this.entity = new TraderSpendsModal();
     this.isUpdate = false;
     this.enablePP = true;
   }
@@ -206,29 +210,39 @@ export class UploadbudgetplanComponent implements OnInit {
   saveRecord() {
     if(this.entity !== null) {
       let error: Array<string> = [];
-      if(!IsValidType(this.entity.SkuCode))
-        error.push("SkuCode");
-      
-      if(!IsValidType(this.entity.MAC))
-        error.push("MAC");
-      
-      if(!IsValidType(this.entity.BaseLineOfftake))
-        error.push("BaseLineOfftake");
-      
-      if(!IsValidType(this.entity.ChainName))
-        error.push("ChainName");
+      if(!IsValidType(this.entity.TargetYear))
+        error.push("TargetYear");
       
       if(!IsValidType(this.entity.ChainCode))
         error.push("ChainCode");
       
-      if(!IsValidType(this.entity.SkuName))
-        error.push("SkuName");
+      if(!IsValidType(this.entity.ChainName))
+        error.push("ChainName");
+      
+      if(!IsValidType(this.entity.DirectIn))
+        error.push("DirectIn");
+      
+      if(!IsValidType(this.entity.Promotions))
+        error.push("Promotions");
+      
+      if(!IsValidType(this.entity.Visibility))
+        error.push("Visibility");
+
+        if(!IsValidType(this.entity.FixedVisibility))
+        error.push("FixedVisibility");
+
+        if(!IsValidType(this.entity.RDSoffInvoiceMargin))
+        error.push("RDSoffInvoiceMargin");
+        if(!IsValidType(this.entity.MTCustomeroffInvoiceMargin))
+        error.push("MTCustomeroffInvoiceMargin");
+        if(!IsValidType(this.entity.DE))
+        error.push("DE");
 
       if(error.length  === 0) {
         this.enablePP = false;
-        let url = "Webportal/AddRecord";
+        let url = "Webportal/AddTraderSpends";
         if(this.isUpdate)
-          url = "Webportal/UpdateROI";
+          url = "Webportal/UpdateTraderSpends";
         this.http.post(url, this.entity).then(response => {
           if(IsValidType(response)) {
             this.isFileReady = false;
@@ -267,8 +281,8 @@ export class UploadbudgetplanComponent implements OnInit {
   }
 
   uploadExcelSheet() {
-    this.excelUploadModal.rois = this.ExcelTableData;
-    this.excelUploadModal.Name = "roi";
+    this.excelUploadModal.tradespends = this.ExcelTableData;
+    this.excelUploadModal.Name = "tradespend";
     this.http.post('Webportal/ImportBulkData', this.excelUploadModal).then(response => {
       if(IsValidResponse(response)) {
         this.isFileReady = false;
@@ -282,7 +296,7 @@ export class UploadbudgetplanComponent implements OnInit {
   }
 
   loadData() {
-    this.http.get('Webportal/Fetchrois?searchString=1=1').then(response => {
+    this.http.get('Webportal/FetchTraderSpends?searchString=1=1').then(response => {
       if(IsValidResponse(response)) {
         this.isFileReady = false;
         this.isActionEnalbed = true;

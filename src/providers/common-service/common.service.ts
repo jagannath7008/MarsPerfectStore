@@ -5,7 +5,7 @@ import { MappedActionPage } from "./../MappedActionPage";
 import * as XLSX from "xlsx";
 
 const AllowedKey = [8, 9, 46];
-const AuthenticationBase = "marsauth";
+const AuthenticationBase = "MarsAuth";
 const OperationBase = "marsauth"; //"MarsMerchandiser";
 @Injectable({
   providedIn: "root",
@@ -549,6 +549,8 @@ export function IsValidType(Value: any): boolean {
         } else {
           if (Object.keys(Value).length > 0) Flag = true;
         }
+      } else if(ValueDataType === "number") {
+        Flag = true;
       }
     }
   }

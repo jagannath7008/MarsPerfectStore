@@ -7,17 +7,17 @@ import { saveAs } from "file-saver";
 import * as $ from "jquery";
 import { Dictionary } from "src/providers/Generic/Code/Dictionary";
 import { ZerothIndex } from 'src/providers/constants';
-import { ExcelUploadModal, ROI } from "../promotionheader/promotionheader.component";
+import { ExcelUploadModal, ROI, TargetModal } from "../promotionheader/promotionheader.component";
 
 @Component({
-  selector: 'app-uploadbudgetplan',
-  templateUrl: './uploadbudgetplan.component.html',
-  styleUrls: ['./uploadbudgetplan.component.scss']
+  selector: 'app-target',
+  templateUrl: './target.component.html',
+  styleUrls: ['./target.component.scss']
 })
-export class UploadbudgetplanComponent implements OnInit {
+export class TargetComponent implements OnInit {
   wbout = [];
   table = [];
-  entity: ROI;
+  entity: TargetModal;
   file: File;
   isUpdate: boolean = false;
   fileSize: string;
@@ -34,6 +34,7 @@ export class UploadbudgetplanComponent implements OnInit {
   excelUploadModal: ExcelUploadModal;
   isActionEnalbed: boolean = false;
   enablePP: boolean = false;
+  TotalCount: Array<number>;
 
   constructor(
     private http: AjaxService,
@@ -51,7 +52,8 @@ export class UploadbudgetplanComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.entity = new ROI();
+    this.TotalCount = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+    this.entity = new TargetModal();
     this.ExcelTableHeader = [];
     this.ExcelTableData = [];
     this.excelUploadModal = new ExcelUploadModal();
@@ -61,12 +63,27 @@ export class UploadbudgetplanComponent implements OnInit {
   initHeader() {
     this.ExcelTableHeader = [
       { ColumnName: "Id" },
+      { ColumnName: "TargetYear" },
       { ColumnName: "ChainCode" },
       { ColumnName: "ChainName" },
-      { ColumnName: "SkuCode" },
-      { ColumnName: "SkuName" },
-      { ColumnName: "MAC" },
-      { ColumnName: "BaseLineOfftake" },
+      { ColumnName: "DirectIn" },
+      { ColumnName: "Jan" },
+      { ColumnName: "Feb" },
+      { ColumnName: "Mar" },
+      { ColumnName: "Apr" },
+      { ColumnName: "May" },
+      { ColumnName: "Jun" },
+      { ColumnName: "Jul" },
+      { ColumnName: "Aug" },
+      { ColumnName: "Sep" },
+      { ColumnName: "Oct" },
+      { ColumnName: "Nov" },
+      { ColumnName: "Dec" },
+      { ColumnName: "Status" },
+      { ColumnName: "Remakrs" },
+      // { ColumnName: "ContactGid" },
+      // { ColumnName: "CHContactGid" },
+      // { ColumnName: "Gid" },
     ];
   }
 
@@ -189,12 +206,12 @@ export class UploadbudgetplanComponent implements OnInit {
   }
 
   closePopup() {
-    this.entity = new ROI();
+    this.entity = new TargetModal();
     this.enablePP = false;
   }
 
   newEntry() {
-    this.entity = new ROI();
+    this.entity = new TargetModal();
     this.isUpdate = false;
     this.enablePP = true;
   }
@@ -206,29 +223,29 @@ export class UploadbudgetplanComponent implements OnInit {
   saveRecord() {
     if(this.entity !== null) {
       let error: Array<string> = [];
-      if(!IsValidType(this.entity.SkuCode))
-        error.push("SkuCode");
-      
-      if(!IsValidType(this.entity.MAC))
-        error.push("MAC");
-      
-      if(!IsValidType(this.entity.BaseLineOfftake))
-        error.push("BaseLineOfftake");
-      
-      if(!IsValidType(this.entity.ChainName))
-        error.push("ChainName");
+      if(!IsValidType(this.entity.TargetYear))
+        error.push("TargetYear");
       
       if(!IsValidType(this.entity.ChainCode))
         error.push("ChainCode");
       
-      if(!IsValidType(this.entity.SkuName))
-        error.push("SkuName");
+      if(!IsValidType(this.entity.ChainName))
+        error.push("ChainName");
+      
+      if(!IsValidType(this.entity.DirectIn))
+        error.push("DirectIn");
+      
+      if(!IsValidType(this.entity.Status))
+        error.push("Status");
+      
+      if(!IsValidType(this.entity.Remakrs))
+        error.push("Remakrs");
 
       if(error.length  === 0) {
         this.enablePP = false;
-        let url = "Webportal/AddRecord";
+        let url = "Webportal/AddTarget";
         if(this.isUpdate)
-          url = "Webportal/UpdateROI";
+          url = "Webportal/UpdateTarget";
         this.http.post(url, this.entity).then(response => {
           if(IsValidType(response)) {
             this.isFileReady = false;
@@ -267,8 +284,8 @@ export class UploadbudgetplanComponent implements OnInit {
   }
 
   uploadExcelSheet() {
-    this.excelUploadModal.rois = this.ExcelTableData;
-    this.excelUploadModal.Name = "roi";
+    this.excelUploadModal.targets = this.ExcelTableData;
+    this.excelUploadModal.Name = "target";
     this.http.post('Webportal/ImportBulkData', this.excelUploadModal).then(response => {
       if(IsValidResponse(response)) {
         this.isFileReady = false;
@@ -282,15 +299,35 @@ export class UploadbudgetplanComponent implements OnInit {
   }
 
   loadData() {
-    this.http.get('Webportal/Fetchrois?searchString=1=1').then(response => {
+    this.http.get('Webportal/FetchTarget?searchString=1=1').then(response => {
       if(IsValidResponse(response)) {
         this.isFileReady = false;
         this.isActionEnalbed = true;
         this.initHeader();
         this.ExcelTableData = response.content.data;
+        this.CalculateTotal();
       } else {
         this.common.ShowToast('Fail to upload. Please contact admin.');
       }
     });
+  }
+
+  CalculateTotal() {
+    let index = 0;
+    while(index < this.ExcelTableData.length) {
+      this.TotalCount[0] = this.TotalCount[0] + parseInt(this.ExcelTableData[index]['Jan']);
+      this.TotalCount[1] = this.TotalCount[1] + parseInt(this.ExcelTableData[index]['Feb']);
+      this.TotalCount[2] = this.TotalCount[2] + parseInt(this.ExcelTableData[index]['Mar']);
+      this.TotalCount[3] = this.TotalCount[3] + parseInt(this.ExcelTableData[index]['Apr']);
+      this.TotalCount[4] = this.TotalCount[4] + parseInt(this.ExcelTableData[index]['May']);
+      this.TotalCount[5] = this.TotalCount[5] + parseInt(this.ExcelTableData[index]['Jun']);
+      this.TotalCount[6] = this.TotalCount[6] + parseInt(this.ExcelTableData[index]['Jul']);
+      this.TotalCount[7] = this.TotalCount[7] + parseInt(this.ExcelTableData[index]['Aug']);
+      this.TotalCount[8] = this.TotalCount[8] + parseInt(this.ExcelTableData[index]['Sep']);
+      this.TotalCount[9] = this.TotalCount[9] + parseInt(this.ExcelTableData[index]['Oct']);
+      this.TotalCount[10] = this.TotalCount[10] + parseInt(this.ExcelTableData[index]['Nov']);
+      this.TotalCount[11] = this.TotalCount[11] + parseInt(this.ExcelTableData[index]['Dec']);
+      index++;
+    }
   }
 }

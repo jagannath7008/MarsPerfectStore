@@ -9,116 +9,213 @@
         <div class="card-body row">
           <div class="col-md-6">
             <button class="btn btn-dark">
-                    Pending for approval <span class="badge badge-primary"></span>
+                    {{GridTitle}} <span class="badge badge-primary"></span>
             </button>
           </div>
           <div class="col-md-6">
-            <ul class="nav float-right">
-              <li class="nav-item">
-                <a class="nav-link active" href="#">Approved</a>
+            <ul class="nav float-right" id="action-btns">
+              <li class="nav-item bg-success" (click)="changeGrid('pending')">
+                <a class="nav-link text-white" href="javascript:void(0)">Pending</a>
               </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#">Rejected</a>
+              <li class="nav-item" (click)="changeGrid('approve')">
+                <a class="nav-link active" href="javascript:void(0)">Approved</a>
               </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#">Changed</a>
+              <li class="nav-item" (click)="changeGrid('reject')">
+                <a class="nav-link" href="javascript:void(0)">Rejected</a>
               </li>
             </ul>
+          </div>
+          <div class="col-md-12 row mt-4">
+            <div class="col-4 form-group">
+              <label for="kam">Select KAM</label>
+              <select name="kam" class="form-control" (change)="onKamSelection()" [(ngModel)]="entity.KAMGid">
+                <option value="">Select KAM</option>
+                <option *ngFor="let item of KamData" [attr.value]="item.Gid">
+                  {{item.LoginId}} ({{item.Name}})
+                </option>
+              </select>
+            </div>
+            <div class="row col-4 form-group">
+              <label for="KAMName">KAM Name</label>
+              <input type="text" name="KAMName" [(ngModel)]="entity.KAMName" 
+                class="form-control" placeholder="KAM Name" readonly>
+            </div>
           </div>
         </div>
     </div>
   
     <div class="card mt-4">
-      <div class="card-body">        
+      <div class="card-header tbl-title">SUMMARY</div>
+      <div class="card-body">
         <ng-container *ngIf="isDataAvailable">
-            <table class="table">
+          <table class="table bg-white">
+              <thead>
+                <tr>
+                  <th rowspan="3" colspan="2" class="align-middle"></th>
+                  <th>Data</th>
+                  <th>FY Plan</th>
+                  <th>JAN-{{CurrentYear}}</th>
+                  <th>FEB-{{CurrentYear}}</th>
+                  <th>MAR-{{CurrentYear}}</th>
+                  <th>APR-{{CurrentYear}}</th>
+                  <th>MAY-{{CurrentYear}}</th>
+                  <th>JUN-{{CurrentYear}}</th>
+                  <th>JUL-{{CurrentYear}}</th>
+                  <th>AUG-{{CurrentYear}}</th>
+                  <th>SEP-{{CurrentYear}}</th>
+                  <th>OCT-{{CurrentYear}}</th>
+                  <th>NOV-{{CurrentYear}}</th>
+                  <th>DEC-{{CurrentYear}}</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td rowspan="3" colspan="2" class="align-middle bg-warning">Total</td>
+                  <td>Sec Target</td>
+                  <td>{{TotalKamTarget.FYPlan}}</td>
+                  <td>{{TotalKamTarget.Jan}}</td>
+                  <td>{{TotalKamTarget.Feb}}</td>
+                  <td>{{TotalKamTarget.Mar}}</td>
+                  <td>{{TotalKamTarget.Apr}}</td>
+                  <td>{{TotalKamTarget.May}}</td>
+                  <td>{{TotalKamTarget.Jun}}</td>
+                  <td>{{TotalKamTarget.Jul}}</td>
+                  <td>{{TotalKamTarget.Aug}}</td>
+                  <td>{{TotalKamTarget.Sep}}</td>
+                  <td>{{TotalKamTarget.Oct}}</td>
+                  <td>{{TotalKamTarget.Nov}}</td>
+                  <td>{{TotalKamTarget.Dec}}</td>
+                </tr>
+                <tr>
+                  <td>TS Value</td>
+                  <td>{{TotalKamTargetPercentage.FYPlan}}</td>
+                  <td>{{TotalKamTargetPercentage.Jan}}</td>
+                  <td>{{TotalKamTargetPercentage.Feb}}</td>
+                  <td>{{TotalKamTargetPercentage.Mar}}</td>
+                  <td>{{TotalKamTargetPercentage.Apr}}</td>
+                  <td>{{TotalKamTargetPercentage.May}}</td>
+                  <td>{{TotalKamTargetPercentage.Jun}}</td>
+                  <td>{{TotalKamTargetPercentage.Jul}}</td>
+                  <td>{{TotalKamTargetPercentage.Aug}}</td>
+                  <td>{{TotalKamTargetPercentage.Sep}}</td>
+                  <td>{{TotalKamTargetPercentage.Oct}}</td>
+                  <td>{{TotalKamTargetPercentage.Nov}}</td>
+                  <td>{{TotalKamTargetPercentage.Dec}}</td>
+                </tr>
+                <!-- <tr class="bg-warning">               
+                  <td>% TS</td>
+                  <td>0%</td>
+                  <td>0</td>
+                  <td>0</td>
+                  <td>0</td>
+                  <td>0</td>
+                  <td>0</td>
+                  <td>0</td>
+                  <td>0</td>
+                  <td>0</td>
+                  <td>0</td>
+                  <td>0</td>
+                  <td>0</td>
+                  <td>0</td>
+                </tr> -->
+              </tbody>
+            </table>
+        </ng-container>
+      </div>
+    </div>
+
+    <div class="card mt-5">
+      <div class="card-header tbl-title">DETAIL</div>
+      <div class="card-body">      
+        <ng-container>
+            <table class="table bg-white" id="approval-table">
                 <thead>
                   <tr>
                     <th>
                       <input type="checkbox">
                     </th>
                     <th>Chain Name</th>
+                    <th>Data</th>
                     <th>FY Plan</th>
-                    <th>JAN-21</th>
-                    <th>FEB</th>
-                    <th>MAR</th>
-                    <th>APR</th>
-                    <th>MAY</th>
-                    <th>JUN</th>
-                    <th>JUL</th>
-                    <th>AUG</th>
-                    <th>SEP</th>
-                    <th>OCT</th>
-                    <th>NOV</th>
-                    <th>DEC</th>
-                    <th>Reject/Change</th>
-                    <th>Remarks</th>
+                    <th>JAN-{{CurrentYear}}</th>
+                    <th>FEB-{{CurrentYear}}</th>
+                    <th>MAR-{{CurrentYear}}</th>
+                    <th>APR-{{CurrentYear}}</th>
+                    <th>MAY-{{CurrentYear}}</th>
+                    <th>JUN-{{CurrentYear}}</th>
+                    <th>JUL-{{CurrentYear}}</th>
+                    <th>AUG-{{CurrentYear}}</th>
+                    <th>SEP-{{CurrentYear}}</th>
+                    <th>OCT-{{CurrentYear}}</th>
+                    <th>NOV-{{CurrentYear}}</th>
+                    <th>DEC-{{CurrentYear}}</th>
                   </tr>
                 </thead>
                 <tbody>
-                      <tr>
-                        <td>
-                          <input type="checkbox">
-                        </td>
-                        <td>Telangana</td>
-                        <td>None</td>
-                        <td>23,453</td>
-                        <td>45,893</td>
-                        <td>65,553</td>
-                        <td>55,553</td>
-                        <td>45,753</td>
-                        <td>23,993</td>
-                        <td>23,473</td>
-                        <td>65,553</td>
-                        <td>55,553</td>
-                        <td>65,553</td>
-                        <td>55,553</td>
-                        <td>55,553</td>
-                        <td>NA</td>
-                        <td>NA</td>
-                      </tr>
-                      <tr>
-                        <td>
-                          <input type="checkbox">
-                        </td>
-                        <td>Telangana</td>
-                        <td>None</td>
-                        <td>23,453</td>
-                        <td>45,893</td>
-                        <td>65,553</td>
-                        <td>55,553</td>
-                        <td>45,753</td>
-                        <td>23,993</td>
-                        <td>23,473</td>
-                        <td>65,553</td>
-                        <td>55,553</td>
-                        <td>65,553</td>
-                        <td>55,553</td>
-                        <td>55,553</td>
-                        <td>NA</td>
-                        <td>NA</td>
-                      </tr>
-                      <tr>
-                        <td>
-                          <input type="checkbox">
-                        </td>
-                        <td>Telangana</td>
-                        <td>None</td>
-                        <td>23,453</td>
-                        <td>45,893</td>
-                        <td>65,553</td>
-                        <td>55,553</td>
-                        <td>45,753</td>
-                        <td>23,993</td>
-                        <td>23,473</td>
-                        <td>65,553</td>
-                        <td>55,553</td>
-                        <td>65,553</td>
-                        <td>55,553</td>
-                        <td>55,553</td>
-                        <td>NA</td>
-                        <td>NA</td>
-                      </tr>
+                  <ng-container *ngFor="let item of gridData">
+                    <tr class="plain">
+                      <td rowspan="3" (change)="getCurrentRowData(item.targets[0].Gid)" class="align-middle">
+                        <input class="ac-data" name={{item.targets[0].Gid}} type="checkbox">
+                      </td>
+                      
+                        <td rowspan="3" class="align-middle">{{item.targets[0].ChainName}}</td>
+                        <td>Sec Target</td>
+                        <td name="FYplan"><input readonly type="text" value={{item.targets[0].FYPlan}} /></td>
+                        <td><input name="jan" type="text" value={{item.targets[0].Jan}} /></td>
+                        <td><input name="feb" type="text" value={{item.targets[0].Feb}} /></td>
+                        <td><input name="mar" type="text" value={{item.targets[0].Mar}} /></td>
+                        <td><input name="apr" type="text" value={{item.targets[0].Apr}} /></td>
+                        <td><input name="may" type="text" value={{item.targets[0].May}} /></td>
+                        <td><input name="jun" type="text" value={{item.targets[0].Jun}} /></td>
+                        <td><input name="jul" type="text" value={{item.targets[0].Jul}} /></td>
+                        <td><input name="aug" type="text" value={{item.targets[0].Aug}} /></td>
+                        <td><input name="sep" type="text" value={{item.targets[0].Sep}} /></td>
+                        <td><input name="oct" type="text" value={{item.targets[0].Oct}} /></td>
+                        <td><input name="nov" type="text" value={{item.targets[0].Nov}} /></td>
+                        <td><input name="dec" type="text" value={{item.targets[0].Dec}} /></td>
+                    </tr>
+                    <tr>
+                      <td>TS Value</td>
+                      <td>{{getTotalTsValue(item.targets[0], item.approvalPercent)}}</td>
+                      <td>{{ getPercentValue(item.targets[0].Jan, item.approvalPercent) }}</td>
+                      <td>{{ getPercentValue(item.targets[0].Feb, item.approvalPercent) }}</td>
+                      <td>{{ getPercentValue(item.targets[0].Mar, item.approvalPercent) }}</td>
+                      <td>{{ getPercentValue(item.targets[0].Apr, item.approvalPercent) }}</td>
+                      <td>{{ getPercentValue(item.targets[0].May, item.approvalPercent) }}</td>
+                      <td>{{ getPercentValue(item.targets[0].Jun, item.approvalPercent) }}</td>
+                      <td>{{ getPercentValue(item.targets[0].Jul, item.approvalPercent) }}</td>
+                      <td>{{ getPercentValue(item.targets[0].Aug, item.approvalPercent) }}</td>
+                      <td>{{ getPercentValue(item.targets[0].Sep, item.approvalPercent) }}</td>
+                      <td>{{ getPercentValue(item.targets[0].Oct, item.approvalPercent) }}</td>
+                      <td>{{ getPercentValue(item.targets[0].Nov, item.approvalPercent) }}</td>
+                      <td>{{ getPercentValue(item.targets[0].Dec, item.approvalPercent) }}</td>
+                    </tr>
+                    <tr class="bg-warning">               
+                      <td>% TS</td>
+                      <td>0%</td>
+                      <td>{{item.approvalPercent}}%</td>
+                      <td>{{item.approvalPercent}}%</td>
+                      <td>{{item.approvalPercent}}%</td>
+                      <td>{{item.approvalPercent}}%</td>
+                      <td>{{item.approvalPercent}}%</td>
+                      <td>{{item.approvalPercent}}%</td>
+                      <td>{{item.approvalPercent}}%</td>
+                      <td>{{item.approvalPercent}}%</td>
+                      <td>{{item.approvalPercent}}%</td>
+                      <td>{{item.approvalPercent}}%</td>
+                      <td>{{item.approvalPercent}}%</td>
+                      <td>{{item.approvalPercent}}%</td>
+                    </tr>
+                  </ng-container>            
+                  <ng-container *ngIf="!isDataAvailable">
+                    <tr>
+                      <td colspan="16">
+                        <div class="col-md-12 dumy">
+                          Please select KAM to get data.
+                        </div>
+                      </td>
+                    </tr>
+                  </ng-container>
                 </tbody>
                 <tfoot>
                   <tr>
@@ -126,13 +223,13 @@
                       <div class="pt-4 d-block text-center">
                         <div class="d-inline">
                           <div class="mr-1 d-inline">
-                            <button class="btn btn-success">Approve</button>
+                            <button class="btn btn-success" (click)="approveItems(1)">Approve</button>
                           </div>
                           <div class="mr-1 ml-1  d-inline">
-                            <button class="btn btn-danger">Reject</button>
+                            <button class="btn btn-danger" (click)="approveItems(0)">Reject</button>
                           </div>
                           <div class="ml-1 d-inline">
-                            <button class="btn btn-warning">Change</button>
+                            <button class="btn btn-warning" (click)="approveItems(-1)">Change</button>
                           </div>
                         </div>
                       </div>

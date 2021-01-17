@@ -1,9 +1,9 @@
 <div class="page-card pb-4">
     <app-pagebreadcrumb></app-pagebreadcrumb>
     <h4 class="card-title">
-      <b class="text-uppercase">Upload ROI</b>
+      <b class="text-uppercase">Upload or Manage Target</b>
       <input type="file" id="uploadexcel" (change)="readExcelData($event)" class="d-none" />
-      <a href="http://ec2-52-66-251-20.ap-south-1.compute.amazonaws.com/MarsAuth/Documents/ROI.xlsx" class="float-right">Download Sample</a>
+      <a href="http://ec2-52-66-251-20.ap-south-1.compute.amazonaws.com/MarsAuth/Documents/TraderSpends.xlsx" class="float-right">Download Sample</a>
     </h4>
 
     <div class="position-fixed bhpopup-container" *ngIf="enablePP">
@@ -11,35 +11,53 @@
         <div class="bhpopup-container__header"></div>
         <div class="bhpopup-container__content">
           <div class="row col-12 form-group">
-            <div class="col-md-6">
-              <label for="chaincode">Chain Code</label>
+            <div class="col-md-4">
+              <label for="TargetYear">Target Year</label>
+              <input type="text" (focus)="removeErrorField()" name="TargetYear" [(ngModel)]="entity.TargetYear" class="form-control" placeholder="Target Year">
+            </div>
+            <div class="col-md-4">
+              <label for="ChainCode">Chain Code</label>
               <input type="text" (focus)="removeErrorField()" name="ChainCode" [(ngModel)]="entity.ChainCode" class="form-control" placeholder="Chain Code">
             </div>
-            <div class="col-md-6">
-              <label for="chainname">Chain Name</label>
-              <input type="text" (focus)="removeErrorField()" name="ChainName" [(ngModel)]="entity.ChainName" class="form-control" placeholder="Chain Name">
+            <div class="col-md-4">
+                <label for="ChainName">Chain Name</label>
+                <input type="text" name="ChainName" (focus)="removeErrorField()" [(ngModel)]="entity.ChainName" class="form-control" placeholder="Chain Name">
             </div>
           </div>
           <div class="row col-12 form-group">
-            <div class="col-md-6">
-              <label for="skucode">SKU Code</label>
-              <input type="text" name="SkuCode" (focus)="removeErrorField()" [(ngModel)]="entity.SkuCode" class="form-control" placeholder="SKU Code">
+            <div class="col-md-4">
+                <label for="DirectIn">DirectIn</label>
+                <input type="text" name="DirectIn" [(ngModel)]="entity.DirectIn" (focus)="removeErrorField()" class="form-control" placeholder="Direct In">
+            </div>              
+            <div class="col-md-4">
+              <label for="Promotions">Promotions</label>
+              <input type="text" (focus)="removeErrorField()" name="Promotions" [(ngModel)]="entity.Promotions" class="form-control" placeholder="Promotions">
             </div>
-            <div class="col-md-6">
-              <label for="skuname">SKU Name</label>
-              <input type="text" name="SkuName" [(ngModel)]="entity.SkuName" (focus)="removeErrorField()" class="form-control" placeholder="SKU Name">
+            <div class="col-md-4">
+              <label for="Visibility">Visibility</label>
+              <input type="text" name="Visibility" (focus)="removeErrorField()" [(ngModel)]="entity.Visibility" class="form-control" placeholder="Visibility">
             </div>
           </div>
           <div class="row col-12 form-group">
-            <div class="col-md-6">
-              <label for="mac">MAC</label>
-              <input type="text" (focus)="removeErrorField()" name="MAC" [(ngModel)]="entity.MAC" class="form-control" placeholder="MAC">
+            <div class="col-md-4">
+                <label for="FixedVisibility">FixedVisibility</label>
+                <input type="text" (focus)="removeErrorField()" name="FixedVisibility" [(ngModel)]="entity.FixedVisibility" class="form-control" placeholder="FixedVisibility">
             </div>
-            <div class="col-md-6">
-              <label for="baseline">BaseLine Offtake</label>
-              <input type="text" name="BaseLineOfftake" (focus)="removeErrorField()" [(ngModel)]="entity.BaseLineOfftake" class="form-control" placeholder="Baseline Offtake">
+            <div class="col-md-4">
+              <label for="RDSoffInvoiceMargin">RDSoffInvoiceMargin</label>
+              <input type="text" (focus)="removeErrorField()" name="RDSoffInvoiceMargin" [(ngModel)]="entity.RDSoffInvoiceMargin" class="form-control" placeholder="RDSoffInvoiceMargin">
+            </div>
+            <div class="col-md-4">
+                <label for="DE">DE</label>
+                <input type="text" name="DE" (focus)="removeErrorField()" [(ngModel)]="entity.DE" class="form-control" placeholder="DE">
             </div>
           </div>
+          <div class="row col-12 form-group">
+            <div class="col-md-4">
+                <label for="MTCustomeroffInvoiceMargin">MT Customeroff InvoiceMargin</label>
+                <input type="text" name="MTCustomeroffInvoiceMargin" (focus)="removeErrorField()" [(ngModel)]="entity.MTCustomeroffInvoiceMargin" class="form-control" placeholder="MTCustomeroffInvoiceMargin">
+            </div>
+        </div>
         </div>
         <div class="bhpopup-container__footer">
           <div class="col-12 text-right row">
@@ -65,9 +83,6 @@
           <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
               <div role="tabpanel" class="active in mt-4" id="tab_content1" aria-labelledby="home-tab">
                 <div id="classmasterdata" class="col-md-12 col-sm-12 col-xs-12">
-                  <!-- <div name="imgdv" class="show-case-dv">
-                    <img src="assets/img/roi.png" class="show-case" />
-                  </div> -->
                   <div name="ifilezone" class="ifilezone" (click)="fireBrowserFile()">
                     <div *ngIf="!isFileReady">
                       <span style="color: darkgray;margin-top: 30px;display: block;">
@@ -121,39 +136,40 @@
       </div>
     </div>
 
-    <div class="col-md-12 text-right mt-4">
-      <div class="row">
-        <div class="mr-2">
-          <button class="btn btn btn-outline-dark" (click)="loadData()">
-            <i class="fa fa-add">
-            </i>
-            Reset
-          </button>
-        </div>
-        <div class="">
-          <button class="btn btn btn-outline-dark" (click)="newEntry()">
-            <i class="fa fa-add">
-            </i>
-            Add New
-          </button>
-        </div>
-      </div>      
+    <div class="col-md-12 row text-right mt-4">
+      <div class="mr-2">
+        <button class="btn btn btn-outline-dark" (click)="loadData()">
+          <i class="fa fa-add">
+          </i>
+          Reset
+        </button>
+      </div>
+      <div class="">
+        <button class="btn btn btn-outline-dark" (click)="newEntry()">
+          <i class="fa fa-add">
+          </i>
+          Add New
+        </button>
+      </div>
     </div>
 
     <div class="card mt-2">
       <div class="card-body">        
         <ng-container *ngIf="ExcelTableHeader.length > 0">
+          <h3 class="mb-2 high-1">All value are in percentage</h3>
           <table class="table">
             <thead>
               <tr>
                 <th *ngFor="let item of ExcelTableHeader;">{{item.ColumnName}}</th>
+                <th>Total</th>
                 <th *ngIf="isActionEnalbed">Action</th>
               </tr>
             </thead>
             <tbody>
-                <ng-container  *ngFor="let data of ExcelTableData;">
+                <ng-container  *ngFor="let data of ExcelTableData;let last = last">
                   <tr>
                     <td *ngFor="let item of ExcelTableHeader;">{{data[item.ColumnName]}}</td>
+                    <td>0</td>
                     <td *ngIf="isActionEnalbed">
                       <a (click)='editCurrent(data["Id"])'>
                         <i class="fa fa-edit"></i>

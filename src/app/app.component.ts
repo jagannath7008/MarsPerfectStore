@@ -43,6 +43,8 @@ import {
   ApprovalBudgetPlan,
   MonthPromoAndComm,
   Promotions,
+  Target,
+  TraderSpends,
 } from "src/providers/constants";
 import {
   CommonService,
@@ -169,14 +171,18 @@ export class AppComponent {
                 break;
               case "/" + KamchainMap:
                 break;
-                case "/" + UploadBudgetPlan:
-                  break;
-                  case "/" + ApprovalBudgetPlan:
-                    break;
-                    case "/" + MonthPromoAndComm:
-                      break;
-                      case "/" + Promotions:
-                        break;
+              case "/" + UploadBudgetPlan:
+                break;
+              case "/" + ApprovalBudgetPlan:
+                break;
+              case "/" + MonthPromoAndComm:
+                break;
+              case "/" + Promotions:
+                break;
+              case "/" + Target:
+                break;
+              case "/" + TraderSpends:
+                break;                
               default:
                 this.commonService.EnableAuthBase();
                 this.IsLogin = true;

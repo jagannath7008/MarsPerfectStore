@@ -36,7 +36,7 @@ export const KYCReport = "kycreport";
 export const PerfectStore = "perfectstore";
 export const RowDataDump = "rowdatadump";
 export const KamchainMap = "kamchainmap";
-export const UploadBudgetPlan = "uploadbudgeplan";
+export const UploadBudgetPlan = "manageroi";
 export const ApprovalBudgetPlan = "approvalbudgetplan";
 export const MonthPromoAndComm = "monthpromoandcomm";
 export const Promotions = "promotions";
@@ -47,6 +47,8 @@ export const AvailabilityDump = "availabilitydump";
 export const PromotionRunning = "promotionrunningdump";
 export const IncentiveEarningDump = "incentiveearningdump";
 export const DAndEDump = "dandedump";
+export const Target = "managetarget";
+export const TraderSpends = "traderspends";
 
 //---------------- Master fields names ------------------------------
 

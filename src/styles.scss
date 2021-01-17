@@ -64,6 +64,8 @@ input,
 select,
 area {
   line-height: 1 !important;
+  padding-bottom: 6px !important;
+  padding-top: 10px !important;
 }
 
 .table thead th {
@@ -784,4 +786,56 @@ body {
 body {
   margin: 0;
   font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+/*-----------------------  popup ----------------------------*/
+
+.bhpopup-container {
+  background: hsl(0deg 0% 0% / 42%);
+  z-index: 9999999;
+  top: 0px;
+  bottom: 0px;
+  left: 0px;
+  right: 0px;
+
+  &__body {
+    width: 60%;
+    z-index: 99999999;
+    background: #fff;
+    height: 400px;
+    left: 0px;
+    right: 0px;
+    top: 0px;
+    bottom: 0px;
+    margin: auto;
+    border-radius: 4px;
+  }
+
+  &__header {
+    height: 65px;
+    border-radius: 4px 4px 0px 0px;
+    padding: 18px;
+    border-bottom: 1px solid #d9d9d9;
+  }
+
+  &__content {
+    position: absolute;
+    height: calc(100% - 135px);
+    width: 100%;
+    padding: 20px;
+  }
+
+  &__footer {
+    height: 70px;
+    border-radius: 0px 0px 4px 4px;
+    padding: 18px;
+    border-top: 1px solid #d9d9d9;
+    bottom: 0px;
+    position: absolute;
+    width: 100%;
+  }
+}
+
+.error-field {
+  border: 1.4px solid red !important;
 }

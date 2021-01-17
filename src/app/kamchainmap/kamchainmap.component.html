@@ -4,35 +4,65 @@
       <b class="text-uppercase">kam chain map</b>
     </h4>
   
-    <div class="col-md-12 mt-3 filter mb-3">
-      <div class="filter-cell">
-        <div class="col-6 row">
-          <div class="col-4 p-0 title-header">
-            Region
+    <div class="position-fixed bhpopup-container" *ngIf="enablePP">
+      <div class="position-absolute bhpopup-container__body" id="roi-form">
+        <div class="bhpopup-container__header"></div>
+        <div class="bhpopup-container__content">
+          <div class="row col-12 form-group">
+            <div class="col-md-6">
+              <label for="ChainName">Chain Name</label>
+              <select name="ChainCode" class="form-control" (change)="onChainChange()" [(ngModel)]="entity.ChainCode">
+                <option value="">Chain Name</option>
+                <option *ngFor="let item of ChainName" [attr.value]="item.Code">
+                  {{item.Value}}
+                </option>
+              </select>
+            </div>
+            <div class="col-md-6">
+              <label for="KAMName">KAM Name</label>
+              <input type="text" readonly (focus)="removeErrorField()" name="KAMName" 
+                [(ngModel)]="entity.KAMName" class="form-control" placeholder="KAM Name">
+            </div>
           </div>
-          <div class="col-8 p-0">
-            <select
-              name="Region"
-              class="form-control"
-              [(ngModel)]="Region"
-              (change)="LoadNextField()"
-            >
-              <option value="">All Region</option>
-              <option
-                *ngFor="let c of MasterData.M_Region"
-                [attr.value]="c.Gid"
-                >{{ c.Name }}</option
-              >
-            </select>
+          <div class="row col-12 form-group">
+            <div class="col-md-6">
+              <label for="KAMEmail">KAM Email</label>
+              <input type="text" readonly name="KAMEmail" (focus)="removeErrorField()" 
+                [(ngModel)]="entity.KAMEmail" class="form-control" placeholder="KAM Email">
+            </div>
+            <div class="col-md-6">
+              <label for="KAMLoginId">KAM Login Id</label>
+              <select name="KAMLoginId" class="form-control" (change)="onKamSelection()" [(ngModel)]="entity.KAMLoginId">
+                <option value="">Select KAM</option>
+                <option *ngFor="let item of KamData" [attr.value]="item.Code">
+                  {{item.LoginId}} ({{item.Name}})
+                </option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="bhpopup-container__footer">
+          <div class="col-12 text-right row">
+            <div class="d-inine">
+              <button class="btn btn-outline-dark" (click)="closeKamPopUp()">
+                <i class="fa fa-times-circle pr-1"></i>
+                Cancel
+              </button>
+            </div>
+            <div class="d-inine ml-2">
+              <button class="btn btn-success" (click)="saveRecord()">
+                <i class="fa fa-save pr-1"></i>
+                Save</button>
+            </div>
           </div>
         </div>
       </div>
     </div>
   
     <div class="col-12 p-0 mt-2 mb-2">
-      <button class="btn btn-outline-info" (click)="ResetResult()">Reset</button>
-      <button class="ml-2 btn btn-primary" (click)="SubmitSearchCriateria()">
-        Filter
+      <button class="btn btn-outline-info" (click)="closeKamPopUp()">Reset</button>
+      <button class="ml-2 btn btn-primary" (click)="openKamPopUp()">
+        Add New
       </button>
     </div>
   
@@ -42,17 +72,29 @@
           <table class="table table-striped table-bordered table-hover">
             <thead>
               <tr>
-                <th Width="10%">IsActive</th>
+                <th>Id</th>
+                <th>KAM Login Id</th>
+                <th>KAM Name</th>
+                <th>KAM Email</th>
+                <th>Chain Code</th>
                 <th>Chain Name</th>
+                <th>Action</th>
               </tr>
             </thead>
             <tbody>
-              <tr *ngFor="let chain of KamchainData">
+              <tr *ngFor="let chain of bindGridModal">
+                <td>{{ chain.Index }}</td>
+                <td>{{ chain.LoginId }}</td>
+                <td>{{ chain.Name }}</td>
+                <td>{{ chain.Email }}</td>
+                <td>{{ chain.ChainCode }}</td>
+                <td>{{ chain.ChainName }}</td>
                 <td>
-                <h3>{{ chain.IsCheck }}</h3>
-                </td>
-                <td>
-                <h3>{{ chain.ChainName }}</h3>
+                  <div class="action text-center">
+                    <a href="javascript:void(0)" (click)="editCurrent(chain.Index)">
+                      <i class="fa fa-edit"></i>
+                    </a>
+                </div>
                 </td>
               </tr>
             </tbody>

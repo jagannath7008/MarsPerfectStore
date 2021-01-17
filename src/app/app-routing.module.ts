@@ -44,6 +44,8 @@ import {
   ApprovalBudgetPlan,
   UploadBudgetPlan,
   KamchainMap,
+  Target,
+  TraderSpends,
 } from "src/providers/constants";
 import { LoginComponent } from "./login/login.component";
 import { DashboardComponent } from "./dashboard/dashboard.component";
@@ -89,6 +91,8 @@ import { UploadbudgetplanComponent } from './uploadbudgetplan/uploadbudgetplan.c
 import { ApprovalbudgetplanComponent } from './approvalbudgetplan/approvalbudgetplan.component';
 import { MonthpromoandcommComponent } from './monthpromoandcomm/monthpromoandcomm.component';
 import { PromotionsComponent } from './promotions/promotions.component';
+import { TargetComponent } from "./target/target.component";
+import { TraderspendsComponent } from "./traderspends/traderspends.component";
 
 const routes: Routes = [
   { path: "", component: LoginComponent },
@@ -156,6 +160,8 @@ const routes: Routes = [
   { path: ApprovalBudgetPlan, component: ApprovalbudgetplanComponent },
   { path: MonthPromoAndComm, component: MonthpromoandcommComponent },
   { path: Promotions, component: PromotionsComponent },
+  { path: Target, component: TargetComponent },
+  { path: TraderSpends, component: TraderspendsComponent },
 ];
 
 @NgModule({
